@@ -1,4 +1,5 @@
-# vue-router-dom
+# vue-router-dom [![CircleCI](https://circleci.com/gh/PatrykWalach/vue-router-dom.svg?style=svg)](https://circleci.com/gh/PatrykWalach/vue-router-dom) [![codecov](https://codecov.io/gh/PatrykWalach/vue-router-dom/branch/master/graph/badge.svg)](https://codecov.io/gh/PatrykWalach/vue-router-dom)
+
 
 - [Install](#install)
 - [API](#api)
