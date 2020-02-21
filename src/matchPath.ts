@@ -21,14 +21,11 @@ const cache = new Map<string, Map<string, CompilePathResult>>()
 const cacheLimit = 10000
 let cacheCount = 0
 
-function compilePath(
+const compilePath = (
   path: string,
   options: CompilePathOptions,
-): CompilePathResult {
+): CompilePathResult => {
   const cacheKey = `${options.end}${options.strict}${options.sensitive}`
-
-  // cache.has(cacheKey) &&
-  //   cache.set(cacheKey, new Map<string, CompilePathResult>())
 
   const pathCache = cache.get(cacheKey) || new Map<string, CompilePathResult>()
 
@@ -49,10 +46,10 @@ function compilePath(
   return result
 }
 
-export function matchPath(
+export const matchPath = (
   pathname: string,
   rawOptions: MatchPathOptions | MatchPathOptionsPath = {},
-) {
+) => {
   const options: MatchPathOptions =
     typeof rawOptions === 'string' || Array.isArray(rawOptions)
       ? { path: rawOptions }
@@ -63,8 +60,12 @@ export function matchPath(
   const paths = path instanceof Array ? path : [path]
 
   return paths.reduce((matched, path) => {
-    if (!path && path !== '') return null
-    if (matched) return matched
+    if (!path && path !== '') {
+      return null
+    }
+    if (matched) {
+      return matched
+    }
 
     const { regexp, keys } = compilePath(path, {
       end: exact,
@@ -73,12 +74,16 @@ export function matchPath(
     })
     const match = regexp.exec(pathname)
 
-    if (!match) return null
+    if (!match) {
+      return null
+    }
 
     const [url, ...values] = match
     const isExact = pathname === url
 
-    if (exact && !isExact) return null
+    if (exact && !isExact) {
+      return null
+    }
 
     return {
       isExact,
