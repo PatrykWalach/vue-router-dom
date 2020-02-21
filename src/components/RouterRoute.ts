@@ -5,8 +5,8 @@ import { useRouteMatch } from '../hooks/useRouteMatch'
 export const RouterRoute = defineComponent({
   props: {
     path: {
-      default: '/',
-      required: false,
+      default: null,
+      required: true,
       type: String,
     },
   },
