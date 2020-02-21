@@ -3,6 +3,11 @@ import { useHistory } from '../hooks/useHistory'
 
 export const RouterLink = defineComponent({
   props: {
+    tag: {
+      default: 'a',
+      required: false,
+      type: String,
+    },
     to: {
       default: '',
       required: true,
@@ -12,16 +17,18 @@ export const RouterLink = defineComponent({
   setup(props, { slots }) {
     const history = useHistory()
 
+    const onClick = (event: MouseEvent) => {
+      event.stopPropagation()
+      event.preventDefault()
+      history.push(props.to)
+    }
+
     return () =>
       h(
-        'a',
+        props.tag,
         {
           href: props.to,
-          onClick(event: MouseEvent) {
-            event.stopPropagation()
-            event.preventDefault()
-            history.push(props.to)
-          },
+          onClick,
         },
         slots.default(),
       )

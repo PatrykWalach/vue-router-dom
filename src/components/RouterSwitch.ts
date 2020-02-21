@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-import { testPath } from '../hooks/useRouteMatch'
+import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
 export const RouterSwitch = defineComponent({
@@ -7,9 +7,15 @@ export const RouterSwitch = defineComponent({
     const location = useLocation()
 
     return () =>
+      // h(
+      //   'div',
       slots.default().find(({ props }) => {
         const path = (props && props.path) || ''
-        return testPath(path, location.value.pathname)
+        return matchPath(location.value.pathname, {
+          path: path,
+        })
       })
+    // ,
+    // )
   },
 })

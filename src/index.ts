@@ -5,7 +5,6 @@ export { RouterSwitch } from './components/RouterSwitch'
 
 export { useHistory } from './hooks/useHistory'
 export { useLocation } from './hooks/useLocation'
-export { useParams } from './hooks/useParams'
 export { useRouteMatch } from './hooks/useRouteMatch'
 
 export * from './keys'
