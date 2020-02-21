@@ -7,6 +7,9 @@ import { useLocation } from './useLocation'
 export const parsePath = (path: string) =>
   '^' + path.replace(RegExp(PARAM, 'g'), '[^/]+')
 
+export const testPath = (path: string, pathname: string) =>
+  RegExp(parsePath(path)).test(pathname)
+
 export const useRouteMatch = (pathValue: ComputedCallback<string>) => {
   const path = computedCallback(pathValue)
   const location = useLocation()
