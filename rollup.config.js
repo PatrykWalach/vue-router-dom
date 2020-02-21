@@ -5,6 +5,8 @@ import typescript from 'rollup-plugin-typescript2'
 const outputOptions = {
   exports: 'named',
   globals: {
+    history: 'History',
+    'path-to-regex': 'PathToRegex',
     vue: 'Vue',
   },
 }

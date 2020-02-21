@@ -1,10 +1,16 @@
+import {
+  BrowserHistory,
+  HashHistory,
+  HashLocation,
+  Location,
+  MemoryHistory,
+} from 'history'
 import { InjectionKey, Ref } from 'vue'
-import { RouterHistory, RouterLocation } from './types'
 
 export const ROUTER_LOCATION: InjectionKey<Readonly<
-  Ref<RouterLocation>
+  Ref<Location | HashLocation>
 >> = Symbol('ROUTER_LOCATION')
 
-export const ROUTER_HISTORY: InjectionKey<RouterHistory> = Symbol(
-  'ROUTER_HISTORY',
-)
+export const ROUTER_HISTORY: InjectionKey<
+  MemoryHistory | HashHistory | BrowserHistory
+> = Symbol('ROUTER_HISTORY')

@@ -1,8 +1,7 @@
+import { BrowserHistory, HashHistory, MemoryHistory } from 'history'
 import { ROUTER_HISTORY } from '../keys'
 import { inject } from 'vue'
-import { throwError } from '../utils'
 
-export const useHistory = () =>
-  inject(ROUTER_HISTORY, {
-    push: throwError,
-  })
+export const useHistory = <
+  T extends MemoryHistory | HashHistory | BrowserHistory = MemoryHistory
+>() => inject(ROUTER_HISTORY) as T

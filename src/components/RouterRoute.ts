@@ -3,6 +3,7 @@ import { useRouteMatch } from '../hooks/useRouteMatch'
 
 export const RouterRoute = defineComponent({
   props: {
+    exact: { default: false, required: false, type: Boolean },
     path: {
       default: null,
       // require path for RouterSwitch to work
@@ -11,7 +12,7 @@ export const RouterRoute = defineComponent({
     },
   },
   setup(props, { slots }) {
-    const match = useRouteMatch(() => props.path)
+    const match = useRouteMatch(() => props)
 
     return () => match.value && slots.default(match.value)
   },

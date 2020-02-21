@@ -36,7 +36,7 @@ const compilePath = (
 
   const keys: Key[] = []
   const regexp = pathToRegexp(path, keys, options)
-  const result = { regexp, keys }
+  const result = { keys, regexp }
 
   if (cacheCount < cacheLimit) {
     pathCache.set(path, result)

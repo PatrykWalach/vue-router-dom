@@ -1,4 +1,6 @@
 export { BrowserRouter } from './components/BrowserRouter'
+export { HashRouter } from './components/HashRouter'
+export { MemoryRouter } from './components/MemoryRouter'
 export { RouterLink } from './components/RouterLink'
 export { RouterRoute } from './components/RouterRoute'
 export { RouterSwitch } from './components/RouterSwitch'

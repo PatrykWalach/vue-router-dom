@@ -46,6 +46,7 @@
     "vue": "^3.0.0-alpha.4"
   },
   "dependencies": {
+    "history": "^4.10.1",
     "path-to-regexp": "^6.1.0"
   }
 }
