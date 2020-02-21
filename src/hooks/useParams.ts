@@ -22,7 +22,7 @@ export const useRegisterParams = (routeValue: ComputedCallback<string>) => {
       onCleanup(unregisterParams)
     },
     {
-      // registers params before render
+      // registers params before contents render
       flush: 'pre',
     },
   )
