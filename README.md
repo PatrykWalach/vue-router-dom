@@ -88,6 +88,31 @@ Displays content if path matches current url
 
 In the above example both components will render for path `/user/:userId/settings`, second will also render for `/user/:userId`, and none will render for other paths
 
+Route nesting
+
+```html
+<!-- TheMain.vue -->
+<template>
+  <!-- ... -->
+  <RouterRoute path="/user/:userId" v-slot="{ params, url }">
+    <ViewUser :userId="params.userId" :url="url" />
+  </RouterRoute>
+  <!-- ... -->
+</template>
+```
+
+```html
+<!-- ViewUser.vue -->
+<template>
+  <RouterRoute :path="url + '/about'">
+    <UserViewAbout :userId="userId" />
+  </RouterRoute>
+  <RouterRoute :path="url + '/follows'">
+    <UserViewFeed :userId="userId" />
+  </RouterRoute>
+</template>
+```
+
 #### RouterSwitch
 
 Displays first route which matched current url
@@ -100,13 +125,13 @@ It's important to place more specific route first: `/user/user1` first, then `/u
   <main>
     <RouterSwitch>
       <RouterRoute path="/user/:userId" v-slot="{ params }">
-        <UserView :userId="params.userId" />
+        <ViewUser :userId="params.userId" />
       </RouterRoute>
       <RouterRoute path="/settings">
-        <SettingsView />
+        <ViewSettings />
       </RouterRoute>
       <RouterRoute path="/">
-        <HomeView />
+        <ViewHome />
       </RouterRoute>
     </RouterSwitch>
   </main>
