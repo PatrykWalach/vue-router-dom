@@ -154,13 +154,19 @@ It's important to place more specific route first: `/user/user1` first, then `/u
 
 
 
+### Functions
+
+#### matchPath
+  Useful links:
+  - [react-router](https://reacttraining.com/react-router/web/api/matchPath)
+
 ### Other
 
 #### history
-
   Useful links:
   - [react-router](https://reacttraining.com/react-router/web/api/history)
   - [history](https://github.com/ReactTraining/history/)
+
 #### match
   Useful links:
   - [react-router](https://reacttraining.com/react-router/web/api/match) 
