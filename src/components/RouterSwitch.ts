@@ -1,4 +1,4 @@
-import { defineComponent, h } from 'vue'
+import { defineComponent } from 'vue'
 import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
@@ -9,15 +9,12 @@ export const RouterSwitch = defineComponent({
     const location = useLocation()
 
     return () =>
-      h(
-        'div',
-        slots.default().find(vm => {
-          const path = (vm.props && vm.props.path) || ''
-          return matchPath(location.value.pathname, {
-            exact: props.exact,
-            path,
-          })
-        }),
-      )
+      slots.default().find(vm => {
+        const path = (vm.props && vm.props.path) || ''
+        return matchPath(location.value.pathname, {
+          exact: props.exact,
+          path,
+        })
+      })
   },
 })
