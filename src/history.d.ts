@@ -19,16 +19,16 @@ declare module 'history' {
   type HistoryUnlisten = () => void
 
   interface Path {
-    pathname?: string
-    search?: string
-    hash?: string
-    state?: any
+    pathname: string
+    search: string
+    hash: string
+    state: any
   }
 
   interface BaseHistory {
-    push(path: Path | string): void
+    push(path: Partial<Path> | string): void
     push(path: string, state: any): void
-    replace(path: Path | string): void
+    replace(path: Partial<Path> | string): void
     replace(path: string, state: any): void
     go(n: number): void
     goBack(): void

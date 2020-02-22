@@ -1,24 +1,31 @@
+import { Path } from 'history'
 import { defineComponent } from 'vue'
 import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
 export interface RouterSwitchProps {
-  exact: boolean
+  location: Path
 }
 
 export const RouterSwitch = defineComponent({
   name: 'RouterSwitch',
-  props: { exact: { default: false, required: false, type: Boolean } },
-  setup(props: Readonly<RouterSwitchProps>, { slots }) {
+  props: { location: { default: null, required: false, type: null } },
+  setup(switchProps: Readonly<RouterSwitchProps>, { slots }) {
     const location = useLocation()
 
     return () =>
-      slots.default().find(vm => {
-        const path = (vm.props && vm.props.path) || ''
-        return matchPath(location.value.pathname, {
-          exact: props.exact,
-          path,
-        })
+      slots.default().find(({ props }) => {
+        const path = (props && (props.path || props.from)) || ''
+        const exact = (props && props.exact) || false
+        const strict = (props && props.strict) || false
+        return matchPath(
+          switchProps.location.pathname && location.value.pathname,
+          {
+            exact,
+            path,
+            strict,
+          },
+        )
       })
   },
 })

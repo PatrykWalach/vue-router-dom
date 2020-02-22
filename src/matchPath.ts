@@ -48,7 +48,7 @@ const compilePath = (
 
 export const matchPath = <P extends RouterParams = RouterParams>(
   pathname: string,
-  rawOptions: MatchPathOptions | MatchPathOptionsPath = {},
+  rawOptions: MatchPathOptions | MatchPathOptionsPath,
 ) => {
   const options: MatchPathOptions =
     typeof rawOptions === 'string' || Array.isArray(rawOptions)
