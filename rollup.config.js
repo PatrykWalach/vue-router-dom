@@ -6,7 +6,7 @@ const outputOptions = {
   exports: 'named',
   globals: {
     history: 'History',
-    'path-to-regex': 'PathToRegex',
+    'path-to-regexp': 'PathToRegexp',
     vue: 'Vue',
   },
 }
