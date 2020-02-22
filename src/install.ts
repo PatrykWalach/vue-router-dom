@@ -1,17 +1,16 @@
+import { BrowserHistory, HashHistory, MemoryHistory } from 'history'
 import { App } from 'vue'
-//install temporarly disabled because of type error
+import { ROUTER_HISTORY } from './keys'
 
-// export { BrowserRouter } from './components/BrowserRouter'
-// export { HashRouter } from './components/HashRouter'
-// export { MemoryRouter } from './components/MemoryRouter'
+//install temporarly disabled because of type error
 // import { RouterLink } from './components/RouterLink'
 // import { RouterRoute } from './components/RouterRoute'
 // import { RouterSwitch } from './components/RouterSwitch'
 
-export const install = (app: App) => app
-// .component('BrowserRouter', BrowserRouter)
-// .component('HashRouter', HashRouter)
-// .component('MemoryRouter', MemoryRouter)
+export const install = (
+  app: App,
+  history: MemoryHistory | BrowserHistory | HashHistory,
+) => app.provide(ROUTER_HISTORY, history)
 // .component('RouterLink', RouterLink)
 // .component('RouterRoute', RouterRoute)
 // .component('RouterSwitch', RouterSwitch)

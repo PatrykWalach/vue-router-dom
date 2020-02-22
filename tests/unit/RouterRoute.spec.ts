@@ -1,5 +1,4 @@
-import { RouterParams, RouterRoute } from '../../src'
-import { BaseRouter } from '../../src/components/BaseRouter'
+import VueRouterDom, { RouterParams, RouterRoute } from '../../src'
 import { createMemoryHistory } from 'history'
 import { h } from 'vue'
 import { mount } from './utils'
@@ -11,23 +10,23 @@ const testMatch = (path: string, pathname = '/', exact = false) => {
 
   const fn = jest.fn()
 
-  mount({
+  const App = {
     setup() {
       return () =>
-        h(BaseRouter, { history }, () =>
-          h(
-            RouterRoute,
-            { exact, path },
-            {
-              default: (props: RouterParams) => {
-                fn(props)
-                return null
-              },
+        h(
+          RouterRoute,
+          { exact, path },
+          {
+            default: (props: RouterParams) => {
+              fn(props)
+              return null
             },
-          ),
+          },
         )
     },
-  })
+  }
+
+  mount(App, app => app.use(VueRouterDom, history))
   return fn
 }
 

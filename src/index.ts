@@ -1,7 +1,3 @@
-export { BaseRouter } from './components/BaseRouter'
-export { BrowserRouter } from './components/BrowserRouter'
-export { HashRouter } from './components/HashRouter'
-export { MemoryRouter } from './components/MemoryRouter'
 export { RouterLink } from './components/RouterLink'
 export { RouterRoute } from './components/RouterRoute'
 export { RouterSwitch } from './components/RouterSwitch'
@@ -16,6 +12,8 @@ export { matchPath } from './matchPath'
 
 export * from './keys'
 export * from './types'
+
+export * from 'history'
 
 import { install } from './install'
 

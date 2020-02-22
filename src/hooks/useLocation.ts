@@ -1,7 +1,23 @@
-import { HashLocation, Location } from 'history'
-import { Ref, computed, inject } from 'vue'
-import { ROUTER_LOCATION } from '../keys'
-import { throwError } from '../utils'
+import { readonly, ref, watch } from 'vue'
 
-export const useLocation = <T extends Location | HashLocation = Location>() =>
-  inject(ROUTER_LOCATION, computed(throwError)) as Readonly<Ref<T>>
+import { useHistory } from './useHistory'
+
+export const useLocation = () => {
+  const history = useHistory()
+
+  const location = ref(history.location)
+
+  watch(
+    () => history,
+    (history, prevHistory, onCleanup) => {
+      const unlisten = history.listen(newLocation => {
+        location.value = newLocation
+      })
+
+      onCleanup(unlisten)
+    },
+    { immediate: true },
+  )
+
+  return readonly(location)
+}
