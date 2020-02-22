@@ -6,9 +6,9 @@ import { inject } from 'vue'
 export const useHistory = <
   T extends MemoryHistory | HashHistory | BrowserHistory = BrowserHistory
 >() => {
-  const history = inject(ROUTER_HISTORY)
+  const history = inject<T>(ROUTER_HISTORY)
 
   assert(history, `no history provided to injection`)
 
-  return history as T
+  return history
 }

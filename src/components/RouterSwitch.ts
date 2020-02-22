@@ -2,10 +2,14 @@ import { defineComponent } from 'vue'
 import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
+export interface RouterSwitchProps {
+  exact: boolean
+}
+
 export const RouterSwitch = defineComponent({
   name: 'RouterSwitch',
   props: { exact: { default: false, required: false, type: Boolean } },
-  setup(props, { slots }) {
+  setup(props: Readonly<RouterSwitchProps>, { slots }) {
     const location = useLocation()
 
     return () =>

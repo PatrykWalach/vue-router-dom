@@ -1,5 +1,11 @@
 import { defineComponent, h } from 'vue'
+import { Path } from 'history'
 import { useHistory } from '../hooks/useHistory'
+
+export interface RouterLinkProps {
+  to: Path | string
+  tag: string
+}
 
 export const RouterLink = defineComponent({
   name: 'RouterLink',
@@ -15,7 +21,7 @@ export const RouterLink = defineComponent({
       type: [String, Object],
     },
   },
-  setup(props, { slots }) {
+  setup(props: Readonly<RouterLinkProps>, { slots }) {
     const history = useHistory()
 
     const onClick = (event: MouseEvent) => {

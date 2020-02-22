@@ -26,10 +26,10 @@ declare module 'history' {
   }
 
   interface BaseHistory {
-    push(path: Path): void
-    push(path: string, state?: any): void
-    replace(path: Path): void
-    replace(path: string, state?: any): void
+    push(path: Path | string): void
+    push(path: string, state: any): void
+    replace(path: Path | string): void
+    replace(path: string, state: any): void
     go(n: number): void
     goBack(): void
     goForward(): void
