@@ -7,6 +7,6 @@ export const HashRouter = defineComponent({
   setup(props: Readonly<HashHistoryOptions>, { slots }) {
     const history = createHashHistory(props)
 
-    return () => h(BaseRouter, { history }, slots.default())
+    return () => h(BaseRouter, { history }, slots.default)
   },
 })

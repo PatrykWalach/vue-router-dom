@@ -7,6 +7,6 @@ export const MemoryRouter = defineComponent({
   setup(props: Readonly<MemoryHistoryOptions>, { slots }) {
     const history = createMemoryHistory(props)
 
-    return () => h(BaseRouter, { history }, slots.default())
+    return () => h(BaseRouter, { history }, slots.default)
   },
 })

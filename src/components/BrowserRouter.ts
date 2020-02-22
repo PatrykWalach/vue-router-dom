@@ -7,6 +7,6 @@ export const BrowserRouter = defineComponent({
   setup(props: Readonly<BrowserHistoryOptions>, { slots }) {
     const history = createBrowserHistory(props)
 
-    return () => h(BaseRouter, { history }, slots.default())
+    return () => h(BaseRouter, { history }, slots.default)
   },
 })
