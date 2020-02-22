@@ -46,7 +46,7 @@ const compilePath = (
   return result
 }
 
-export const matchPath = (
+export const matchPath = <P extends RouterParams = RouterParams>(
   pathname: string,
   rawOptions: MatchPathOptions | MatchPathOptionsPath = {},
 ) => {
@@ -59,7 +59,7 @@ export const matchPath = (
 
   const paths = path instanceof Array ? path : [path]
 
-  return paths.reduce((matched, path) => {
+  return paths.reduce<RouterMatch<P> | null>((matched, path) => {
     if (!path && path !== '') {
       return null
     }
@@ -87,12 +87,12 @@ export const matchPath = (
 
     return {
       isExact,
-      params: keys.reduce((memo, key, index) => {
+      params: keys.reduce<RouterParams>((memo, key, index) => {
         memo[key.name] = values[index]
         return memo
-      }, {} as RouterParams),
+      }, {}),
       path,
       url: path === '/' && url === '' ? '/' : url,
-    }
-  }, null as RouterMatch | null)
+    } as RouterMatch<P>
+  }, null)
 }

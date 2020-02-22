@@ -1,8 +1,8 @@
 import { Ref } from 'vue'
 
-export interface RouterMatch {
+export interface RouterMatch<Params extends RouterParams = RouterParams> {
   isExact: boolean
-  params: RouterParams
+  params: Params
   path: string
   url: string
 }

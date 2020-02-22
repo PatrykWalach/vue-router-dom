@@ -12,7 +12,7 @@ export const RouterLink = defineComponent({
     to: {
       default: '',
       required: true,
-      type: String,
+      type: [String, Object],
     },
   },
   setup(props, { slots }) {
