@@ -3,6 +3,7 @@ import { defineComponent, h } from 'vue'
 import { BaseRouter } from './BaseRouter'
 
 export const BrowserRouter = defineComponent({
+  name: 'BrowserRouter',
   setup(props: Readonly<BrowserHistoryOptions>, { slots }) {
     const history = createBrowserHistory(props)
 

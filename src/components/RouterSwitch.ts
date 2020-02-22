@@ -3,6 +3,7 @@ import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
 export const RouterSwitch = defineComponent({
+  name: 'RouterSwitch',
   props: { exact: { default: false, required: false, type: Boolean } },
   setup(props, { slots }) {
     const location = useLocation()

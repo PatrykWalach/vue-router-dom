@@ -2,6 +2,7 @@ import { defineComponent, h } from 'vue'
 import { useHistory } from '../hooks/useHistory'
 
 export const RouterLink = defineComponent({
+  name: 'RouterLink',
   props: {
     tag: {
       default: 'a',

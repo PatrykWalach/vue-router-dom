@@ -3,6 +3,7 @@ import { defineComponent, h } from 'vue'
 import { BaseRouter } from './BaseRouter'
 
 export const HashRouter = defineComponent({
+  name: 'HashRouter',
   setup(props: Readonly<HashHistoryOptions>, { slots }) {
     const history = createHashHistory(props)
 

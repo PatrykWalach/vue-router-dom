@@ -2,6 +2,7 @@ import { defineComponent } from 'vue'
 import { useRouteMatch } from '../hooks/useRouteMatch'
 
 export const RouterRoute = defineComponent({
+  name: 'RouterRoute',
   props: {
     exact: { default: false, required: false, type: Boolean },
     path: {

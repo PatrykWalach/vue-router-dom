@@ -12,6 +12,7 @@ interface Props {
 }
 
 export const BaseRouter = defineComponent({
+  name: 'BaseRouter',
   props: {
     history: { default: createBrowserHistory, required: true, type: null },
   },
