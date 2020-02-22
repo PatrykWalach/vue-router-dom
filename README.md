@@ -1,19 +1,27 @@
-# vue-router-dom [![CircleCI](https://circleci.com/gh/PatrykWalach/vue-router-dom.svg?style=svg)](https://circleci.com/gh/PatrykWalach/vue-router-dom) [![codecov](https://codecov.io/gh/PatrykWalach/vue-router-dom/branch/master/graph/badge.svg)](https://codecov.io/gh/PatrykWalach/vue-router-dom)
+# vue-router-dom [![CircleCI](https://circleci.com/gh/PatrykWalach/vue-router-dom.svg?style=svg)](https://circleci.com/gh/PatrykWalach/vue-router-dom) [![codecov](https://codecov.io/gh/PatrykWalach/vue-router-dom/branch/master/graph/badge.svg)](https://codecov.io/gh/PatrykWalach/vue-router-dom) ![](https://img.shields.io/npm/v/vue-router-dom)
 
+`vue-router-dom` is a library for vue 3, providing components and hooks for routing.
+It is largely a port of [react-router](https://reacttraining.com/react-router/web/guides/philosophy).
 
 - [Install](#install)
 - [API](#api)
   - [Default](#default)
   - [Components](#Components)
-    - [BrowserRouter](#BrowserRouter)
-    - [RouterLink](#RouterLink)
-    - [RouterRoute](#RouterRoute)
-    - [RouterSwitch](#RouterSwitch)
+    - [BrowserRouter 🗹](#BrowserRouter)
+    - [MemoryRouter 🗹](#MemoryRouter)
+    - [BaseRouter 🗹](#BaseRouter)
+    - [StaticRouter 🗷](#StaticRouter)
+    - [HashRouter 🗹](#HashRouter)
+    - [RouterLink 🗹](#RouterLink)
+    - [NavLink 🗷](#NavLink)
+    - [RouterRoute 🗹](#RouterRoute)
+    - [RouterSwitch 🗹](#RouterSwitch)
+    - [Redirect 🗹](#Redirect)
   - [Hooks](#hooks)
-    - [useHistory](#useHistory)
-    - [useLocation](#useLocation)
-    - [useParams](#useParams)
-    - [useRouteMatch](#useRouteMatch)
+    - [useHistory 🗹](#useHistory)
+    - [useLocation 🗹](#useLocation)
+    - [useParams 🗹](#useParams)
+    - [useRouteMatch 🗹](#useRouteMatch)
 
 ## Install
 
@@ -43,7 +51,7 @@ app.mount('#app')
 
 #### BrowserRouter
 
-Place it at the root of the App
+The go to router in the browser enviorment
 
 ```html
 <!-- App.vue -->
