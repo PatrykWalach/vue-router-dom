@@ -5,16 +5,18 @@ It is largely a port of [react-router](https://reacttraining.com/react-router/we
 
 Feel free to suggest any missing features from [react-router](https://reacttraining.com/react-router/web/api) API and additional ones
 
+## Table of contents
+
 - [Install](#install)
 - [Manual Setup](#Manual-Setup)
 - [API](#api)
   - [Default](#default)
   - [Components](#Components)
     - [RouterLink 🗹](#RouterLink)
-    - [NavLink 🗷](#NavLink)
+    - [NavLink 🗹](#NavLink)
+    - [RouterRedirect 🗹](#RouterRedirect)
     - [RouterRoute 🗹](#RouterRoute)
     - [RouterSwitch 🗹](#RouterSwitch)
-    - [Redirect 🗹](#Redirect)
   - [Hooks](#hooks)
     - [useHistory 🗹](#useHistory)
     - [useLocation 🗹](#useLocation)
