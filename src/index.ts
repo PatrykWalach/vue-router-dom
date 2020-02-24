@@ -10,6 +10,7 @@ export { useRouteMatch } from './hooks/useRouteMatch'
 export { useParams } from './hooks/useParams'
 
 export { matchPath } from './matchPath'
+export { generatePath } from './generatePath'
 
 export * from './keys'
 export * from './types'

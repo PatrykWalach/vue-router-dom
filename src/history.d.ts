@@ -5,8 +5,8 @@ declare module 'history' {
     hash: string
   }
 
-  interface Location extends HashLocation {
-    state: any
+  interface Location<S = unknown> extends HashLocation {
+    state: S
     key: string
   }
 
@@ -18,11 +18,11 @@ declare module 'history' {
   type Listen<Listener> = (listener: Listener) => HistoryUnlisten
   type HistoryUnlisten = () => void
 
-  interface Path {
+  interface Path<S = unknown> {
     pathname: string
     search: string
     hash: string
-    state: any
+    state: S
   }
 
   interface BaseHistory {
