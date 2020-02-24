@@ -2,50 +2,78 @@ import { createVariations } from './utils'
 import { matchPath } from '../../src'
 
 describe('matchPath', () => {
-  createVariations({
-    path: () => ['/user', '/:param', '', '/'],
-    pathname: () => ['/user', '/user/about'],
-  }).forEach(({ path, pathname }, i) => {
-    it(`matches ${i}`, () => {
+  describe(`exact`, () => {
+    const path = '/one'
+    const pathname = path + '/two'
+
+    it(`does not match`, () => {
+      const match = matchPath(pathname, { path, exact: true })
+      expect(match).toStrictEqual(null)
+    })
+
+    it(`matches`, () => {
       const match = matchPath(pathname, path)
       expect(match).not.toStrictEqual(null)
     })
   })
 
-  createVariations({
-    path: () => [
-      '/user/home',
-      '/:param/home',
-      '/settings',
-      '/settings/about',
-      '/settings/:param',
-    ],
-    pathname: () => ['/user', '/user/about', '/'],
-  }).forEach(({ path, pathname }, i) => {
-    it(`does not match ${i}`, () => {
-      const match = matchPath(pathname, path)
+  describe(`strict`, () => {
+    const pathname = '/one'
+    const path = pathname + '/'
+
+    it(`does not match`, () => {
+      const match = matchPath(pathname, { strict: true, path })
       expect(match).toStrictEqual(null)
     })
+
+    createVariations({
+      pathname: () => [path, path + 'one/two'],
+    }).forEach(({ pathname }) =>
+      it(`matches`, () => {
+        const match = matchPath(pathname, { strict: true, path })
+        expect(match).not.toStrictEqual(null)
+      }),
+    )
   })
 
-  createVariations({
-    path: () => ['/user/about', '/user/:param', '/:param/:param'],
-    pathname: '/user/about',
-  }).forEach(({ path, pathname }, i) => {
-    it(`matches exact ${i}`, () => {
-      const match = matchPath(pathname, { exact: true, path })
+  describe(`strict and exact`, () => {
+    const path = '/one'
+    const pathname = path
+
+    it(`matches`, () => {
+      const match = matchPath(pathname, { path, strict: true, exact: true })
       expect(match).not.toStrictEqual(null)
-      expect(match && match.isExact).toStrictEqual(true)
     })
+
+    createVariations({
+      pathname: () => [pathname + '/', pathname + '/two'],
+    }).forEach(({ pathname }) =>
+      it(`does not match`, () => {
+        const match = matchPath(pathname, { path, strict: true, exact: true })
+        expect(match).toStrictEqual(null)
+      }),
+    )
   })
 
-  createVariations({
-    path: () => ['/user', '/:param', '/user/home', '/'],
-    pathname: () => ['/user/about'],
-  }).forEach(({ path, pathname }, i) => {
-    it(`does not match exact ${i}`, () => {
-      const match = matchPath(pathname, { exact: true, path })
+  describe(`sensitive`, () => {
+    const pathname = '/one'
+
+    it(`matches`, () => {
+      const path = pathname
+      const match = matchPath(pathname, { path, sensitive: true })
+      expect(match).not.toStrictEqual(null)
+    })
+
+    it(`matches`, () => {
+      const path = '/One'
+      const match = matchPath(pathname, { path, sensitive: true })
       expect(match).toStrictEqual(null)
+    })
+
+    it(`does not match`, () => {
+      const path = '/One'
+      const match = matchPath(pathname, path)
+      expect(match).not.toStrictEqual(null)
     })
   })
 
