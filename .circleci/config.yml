@@ -43,7 +43,8 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo
-      - run: cd pkg && echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/repo/.npmrc && npm publish
+      - run: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/repo/pkg/.npmrc
+      - run: cd pkg && npm publish
 
   install:
     <<: *defaults
