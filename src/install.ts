@@ -11,6 +11,8 @@ export const install = (
   app: App,
   history: MemoryHistory | BrowserHistory | HashHistory,
 ) => app.provide(ROUTER_HISTORY, history)
+// .component('NavLink', NavLink)
 // .component('RouterLink', RouterLink)
+// .component('RouterRedirect', RouterRedirect)
 // .component('RouterRoute', RouterRoute)
 // .component('RouterSwitch', RouterSwitch)
