@@ -1,4 +1,4 @@
-import { defineComponent, watchEffect } from 'vue'
+import { defineComponent, watch } from 'vue'
 import { RouterPath } from 'history'
 import { useHistory } from '../hooks/useHistory'
 
@@ -20,9 +20,12 @@ export const RouterRedirect = defineComponent({
   },
   setup(props: Readonly<RouterRedirectProps>) {
     const history = useHistory()
-    watchEffect(() => {
-      ;(props.push ? history.push : history.replace)(props.to)
-    })
+    watch(
+      () => props.to,
+      to => {
+        ;(props.push ? history.push : history.replace)(to)
+      },
+    )
     return () => null
   },
 })
