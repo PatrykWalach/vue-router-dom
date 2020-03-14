@@ -1,83 +1,87 @@
 declare module 'history' {
-  interface HashLocation {
+  interface RouterLocation<S = unknown> {
     pathname: string
     search: string
     hash: string
+    state: S
   }
 
-  interface Location<S = unknown> extends HashLocation {
-    state: S
+  interface RouterMemoryLocation<S = unknown> extends RouterLocation<S> {
     key: string
   }
 
-  type Action = 'PUSH' | 'REPLACE' | 'POP'
-
-  type Listener = (location: Location, action: Action) => any
-  type HashListener = (location: HashLocation, action: Action) => any
-
-  type Listen<Listener> = (listener: Listener) => HistoryUnlisten
-  type HistoryUnlisten = () => void
-
-  interface Path<S = unknown> {
-    pathname: string
-    search: string
-    hash: string
-    state: S
+  enum Action {
+    PUSH = 'PUSH',
+    REPLACE = 'REPLACE',
+    POP = 'POP',
+  }
+  interface RouterMemoryHistory<L = RouterMemoryLocation>
+    extends RouterHistory<L> {
+    canGo(index: number): boolean
+    index: number
+    entries: RouterMemoryLocation[]
   }
 
-  interface BaseHistory {
-    push(path: Partial<Path> | string): void
+  type Unlisten = () => void
+  type BlockFunction<L> = (location: L, action: Action) => string
+  interface RouterHistory<L = RouterLocation> {
+    length: number
+    action: Action
+    location: L
+    createHref(path: RouterPath): string
+    block(prompt: string | BlockFunction<L>): Unlisten
+    listen(location: L, action: Action): Unlisten
+    push(path: Partial<RouterPath> | string): void
     push(path: string, state: any): void
-    replace(path: Partial<Path> | string): void
+    replace(path: Partial<RouterPath> | string): void
     replace(path: string, state: any): void
     go(n: number): void
     goBack(): void
     goForward(): void
-    length: number
-    action: Action
   }
 
-  interface HashHistory extends BaseHistory {
-    location: HashLocation
-    listen: Listen<HashListener>
+  interface RouterPath<S = unknown> {
+    pathname: string
+    search: string
+    hash: string
+    state: S
   }
 
-  interface BrowserHistory extends BaseHistory {
-    location: Location
-    listen: Listen<Listener>
+  enum HashType {
+    slash = 'slash',
+    noslash = 'noslash',
+    hashbang = 'hashbang',
   }
 
-  interface MemoryHistory extends BrowserHistory {
-    canGo(n: number): void
-    index: number
-    entries: string[]
+  type GetUserConfirmation = (
+    message: string,
+    next: (go: boolean) => void,
+  ) => void
+  interface HistoryOptions {
+    getUserConfirmation?: GetUserConfirmation
   }
-
-  interface BrowserHistoryOptions {
+  interface BrowserHistoryOptions extends HistoryOptions {
     basename?: string
     forceRefresh?: boolean
     keyLength?: number
-    getUserConfirmation?: Function
   }
 
-  interface HashHistoryOptions {
+  interface HashHistoryOptions extends HistoryOptions {
     basename?: string
-    hashType?: string
-    getUserConfirmation?: Function
+    hashType?: HashType
   }
 
-  interface MemoryHistoryOptions {
+  interface MemoryHistoryOptions extends HistoryOptions {
     initialEntries?: string[]
     initialIndex?: number
     keyLength?: number
-    getUserConfirmation?: Function
   }
 
-  type CreateBrowserHistory = (
-    options?: BrowserHistoryOptions,
-  ) => BrowserHistory
-  type CreateHashHistory = (options?: HashHistoryOptions) => HashHistory
-  type CreateMemoryHistory = (options?: MemoryHistoryOptions) => MemoryHistory
+  type CreateBrowserHistory = (options?: BrowserHistoryOptions) => RouterHistory
+  type CreateHashHistory = (options?: HashHistoryOptions) => RouterHistory
+  type CreateMemoryHistory = (
+    options?: MemoryHistoryOptions,
+  ) => RouterMemoryHistory
 
   export const createBrowserHistory: CreateBrowserHistory
   export const createHashHistory: CreateHashHistory

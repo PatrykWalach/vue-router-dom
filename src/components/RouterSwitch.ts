@@ -15,6 +15,7 @@ export const RouterSwitch = defineComponent({
     const pathname = computed(() => props.location && props.location.pathname)
 
     return () =>
+      slots.default &&
       slots.default().find(({ props }) => {
         const path = (props && (props.path || props.from)) || ''
         const exact = (props && props.exact) || false

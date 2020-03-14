@@ -21,6 +21,6 @@ export const RouterRoute = defineComponent({
   setup(props: Readonly<RouterRouteProps>, { slots }) {
     const match = useRouteMatch(() => props)
 
-    return () => match.value && slots.default(match.value)
+    return () => match.value && slots.default && slots.default(match.value)
   },
 })
