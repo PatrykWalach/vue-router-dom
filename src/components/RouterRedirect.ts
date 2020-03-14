@@ -25,6 +25,9 @@ export const RouterRedirect = defineComponent({
       to => {
         ;(props.push ? history.push : history.replace)(to)
       },
+      {
+        immediate: true,
+      },
     )
     return () => null
   },
