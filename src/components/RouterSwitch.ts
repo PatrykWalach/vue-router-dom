@@ -1,10 +1,10 @@
 import { computed, defineComponent } from 'vue'
-import { Path } from 'history'
+import { RouterPath } from 'history'
 import { matchPath } from '../matchPath'
 import { useLocation } from '../hooks/useLocation'
 
 export interface RouterSwitchProps {
-  location: Path | null
+  location: RouterPath | null
 }
 
 export const RouterSwitch = defineComponent({
