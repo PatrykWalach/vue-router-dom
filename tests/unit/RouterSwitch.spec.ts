@@ -1,7 +1,7 @@
 import { VNode, h } from 'vue'
 import VueRouterDom, { RouterSwitch } from '../../src'
-import { mount } from './utils'
 import { createMemoryHistory } from 'history'
+import { mount } from './utils'
 
 const testSwitch = (
   defaultSlot: (fn: jest.Mock<any, any>) => () => VNode[] | VNode,
