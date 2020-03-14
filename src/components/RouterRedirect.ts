@@ -1,9 +1,9 @@
 import { defineComponent, watchEffect } from 'vue'
-import { Path } from 'history'
+import { RouterPath } from 'history'
 import { useHistory } from '../hooks/useHistory'
 
 export interface RouterRedirectProps {
-  to: Path | string
+  to: RouterPath | string
   push: boolean
   exact: boolean
   strict: boolean
