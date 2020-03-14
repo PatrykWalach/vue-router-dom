@@ -53,10 +53,10 @@
     "@pika/plugin-build-types": "^0.9.2",
     "@pika/plugin-build-web": "^0.9.2",
     "@pika/plugin-standard-pkg": "^0.9.2",
-    "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.1",
-    "@typescript-eslint/eslint-plugin": "^2.20.0",
-    "@typescript-eslint/parser": "^2.20.0",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.1",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
     "codecov": "^3.6.5",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
@@ -64,8 +64,8 @@
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
     "ts-jest": "^25.2.0",
-    "typescript": "^3.8.2",
-    "vue": "^3.0.0-alpha.6"
+    "typescript": "^3.8.3",
+    "vue": "^3.0.0-alpha.8"
   },
   "dependencies": {
     "history": "^4.10.1",
