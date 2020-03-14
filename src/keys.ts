@@ -1,5 +1,5 @@
-import { BrowserHistory, HashHistory, MemoryHistory } from 'history'
 import { InjectionKey, Ref } from 'vue'
+import { RouterHistory, RouterMemoryHistory } from 'history'
 import { RouterParams } from './types'
 
 export const ROUTE_PARAMS: InjectionKey<Readonly<Ref<RouterParams>>> = Symbol(
@@ -7,5 +7,5 @@ export const ROUTE_PARAMS: InjectionKey<Readonly<Ref<RouterParams>>> = Symbol(
 )
 
 export const ROUTER_HISTORY: InjectionKey<
-  MemoryHistory | HashHistory | BrowserHistory
+  RouterHistory | RouterMemoryHistory
 > = Symbol('ROUTER_HISTORY')

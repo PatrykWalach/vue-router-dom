@@ -1,4 +1,4 @@
-import { BrowserHistory, HashHistory, MemoryHistory } from 'history'
+import { RouterHistory, RouterMemoryHistory } from 'history'
 import { App } from 'vue'
 import { ROUTER_HISTORY } from './keys'
 
@@ -9,7 +9,7 @@ import { ROUTER_HISTORY } from './keys'
 
 export const install = (
   app: App,
-  history: MemoryHistory | BrowserHistory | HashHistory,
+  history: RouterHistory | RouterMemoryHistory,
 ) => app.provide(ROUTER_HISTORY, history)
 // .component('NavLink', NavLink)
 // .component('RouterLink', RouterLink)

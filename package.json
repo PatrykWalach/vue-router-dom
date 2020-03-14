@@ -24,10 +24,10 @@
     ]
   },
   "scripts": {
-    "build": "npx @pika/pack",
+    "build": "pika build",
     "coverage": "jest --collect-coverage",
     "codecov": "codecov",
-    "lint": "eslint --fix src/**/*.ts{,x}",
+    "lint": "eslint --fix **/*.ts{,x}",
     "test": "jest",
     "watch": "jest --watch"
   },
@@ -41,7 +41,7 @@
   "author": "Patryk Wałach",
   "license": "MIT",
   "peerDependencies": {
-    "vue": "^3.0.0-alpha.0"
+    "vue": ">=3.0.0-alpha.0"
   },
   "repository": {
     "type": "git",

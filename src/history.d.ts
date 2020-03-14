@@ -23,14 +23,15 @@ declare module 'history' {
   }
 
   type Unlisten = () => void
-  type BlockFunction<L> = (location: L, action: Action) => string
+  type Listener<L> = (location: L, action: Action) => void
+  type Blocker<L> = (location: L, action: Action) => string
   interface RouterHistory<L = RouterLocation> {
     length: number
     action: Action
     location: L
-    createHref(path: RouterPath): string
-    block(prompt: string | BlockFunction<L>): Unlisten
-    listen(location: L, action: Action): Unlisten
+    createHref(path: Partial<RouterPath>): string
+    block(prompt: string | Blocker<L>): Unlisten
+    listen(listener: Listener<L>): Unlisten
     push(path: Partial<RouterPath> | string): void
     push(path: string, state: any): void
     replace(path: Partial<RouterPath> | string): void
