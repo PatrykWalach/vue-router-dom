@@ -7,7 +7,7 @@ export const useLocation = () => {
 
   const location = ref(history.location)
 
-  const unlisten = history.listen(newLocation => {
+  const unlisten = history.listen((newLocation) => {
     location.value = newLocation
   })
 

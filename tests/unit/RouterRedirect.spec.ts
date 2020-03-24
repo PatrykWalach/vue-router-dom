@@ -13,7 +13,7 @@ describe('RouterRedirect()', () => {
       },
     }
 
-    mount(App, app => app.use(VueRouterDom, history))
+    mount(App, (app) => app.use(VueRouterDom, history))
 
     expect(history.location.pathname).toStrictEqual(to)
   })

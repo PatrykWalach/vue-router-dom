@@ -22,7 +22,7 @@ export const RouterRedirect = defineComponent({
     const history = useHistory()
     watch(
       () => props.to,
-      to => {
+      (to) => {
         ;(props.push ? history.push : history.replace)(to)
       },
       {

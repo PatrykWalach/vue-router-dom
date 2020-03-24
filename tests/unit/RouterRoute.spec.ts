@@ -26,7 +26,7 @@ const testMatch = (path: string, pathname = '/', exact = false) => {
     },
   }
 
-  mount(App, app => app.use(VueRouterDom, history))
+  mount(App, (app) => app.use(VueRouterDom, history))
   return fn
 }
 

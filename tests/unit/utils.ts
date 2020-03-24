@@ -16,11 +16,11 @@ type MakeVariations<T> = {
 
 export const mount = (
   AppComponent: Component,
-  isntall: (app: App) => App = app => app,
+  isntall: (app: App) => App = (app) => app,
 ) => isntall(createApp(AppComponent)).mount(document.createElement('template'))
 
 const keyAndArrayToChunks = <K extends string, A>(key: K, permutations: A[]) =>
-  permutations.map(value => ({
+  permutations.map((value) => ({
     [key]: value,
   })) as Chunk<K, A>[]
 
@@ -66,7 +66,7 @@ export const createVariations = <O extends Chunk<any, any>>(
 
   const permutations = chunksMap.reduce((acc, chunk) => acc * chunk.length, 1)
 
-  return createArrayOfLength(permutations).map(i => ({
+  return createArrayOfLength(permutations).map((i) => ({
     ...obj,
     ...reduceChunksMap(chunksMap, i),
   }))

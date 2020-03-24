@@ -19,7 +19,7 @@ const testSwitch = (
     },
   }
 
-  mount(App, app => app.use(VueRouterDom, history))
+  mount(App, (app) => app.use(VueRouterDom, history))
   return fn
 }
 
