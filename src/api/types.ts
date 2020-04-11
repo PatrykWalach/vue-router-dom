@@ -1,5 +1,3 @@
-import { Ref } from 'vue'
-
 export interface RouterMatch<Params extends RouterParams = RouterParams> {
   isExact: boolean
   params: Params
@@ -16,5 +14,3 @@ export interface MatchPathOptions {
 export type MatchPathOptionsPath = string | string[]
 
 export type RouterParams = Record<string, string>
-
-export type ComputedCallback<T> = Ref<T> | (() => T)

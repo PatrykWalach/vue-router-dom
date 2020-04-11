@@ -9,15 +9,14 @@ export { useLocation } from './hooks/useLocation'
 export { useRouteMatch } from './hooks/useRouteMatch'
 export { useParams } from './hooks/useParams'
 
-export { matchPath } from './matchPath'
-export { generatePath } from './generatePath'
+export { matchPath } from './api/matchPath'
+export { generatePath } from './api/generatePath'
+import { install } from './api/install'
 
-export * from './keys'
-export * from './types'
+export * from './api/keys'
+export * from './api/types'
 
 export * from 'history'
-
-import { install } from './install'
 
 const VueRouterDom = { install }
 export default VueRouterDom

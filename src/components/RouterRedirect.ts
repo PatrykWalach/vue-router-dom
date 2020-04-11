@@ -12,10 +12,22 @@ export interface RouterRedirectProps {
 
 export const RouterRedirect = defineComponent({
   props: {
-    exact: { default: false, required: false, type: Boolean },
+    exact: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
     from: { default: '', required: false, type: String },
-    push: { default: false, required: false, type: Boolean },
-    strict: { default: false, required: false, type: Boolean },
+    push: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
+    strict: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
     to: { default: '', required: true, type: [Object, String] },
   },
   setup(props: Readonly<RouterRedirectProps>) {

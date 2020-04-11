@@ -1,8 +1,8 @@
-import { PathFunction, resolvePathFunction } from '../utils'
+import { PathFunction, resolvePath } from '../utils/resolvePath'
 import { RouterLocation, RouterMemoryLocation, RouterPath } from 'history'
 import { computed, defineComponent, h } from 'vue'
 import { RouterLink } from './RouterLink'
-import { RouterMatch } from '../types'
+import { RouterMatch } from '../api/types'
 import { useLocation } from '../hooks/useLocation'
 import { useRouteMatch } from '../hooks/useRouteMatch'
 export interface NavLinkProps {
@@ -30,20 +30,28 @@ export const NavLink = defineComponent({
       required: false,
       type: Object,
     },
-    exact: { default: false, required: false, type: Boolean },
+    exact: {
+      default: false,
+      required: false,
+      //  type: Boolean
+    },
     isActive: {
       default: () => Boolean,
       required: false,
-      type: null,
+      // type: Function,
     },
-    strict: { default: false, required: false, type: Boolean },
+    strict: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
     to: { default: '', required: true, type: [String, Object, Function] },
   },
   setup(props: Readonly<NavLinkProps>, { slots }) {
     const location = useLocation()
 
     const path = computed(() => {
-      const to = resolvePathFunction(props.to, location.value)
+      const to = resolvePath(props.to, location.value)
       const path = to instanceof Object ? to.pathname : to
       return path
     })

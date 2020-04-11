@@ -10,13 +10,21 @@ export interface RouterRouteProps {
 export const RouterRoute = defineComponent({
   name: 'RouterRoute',
   props: {
-    exact: { default: false, required: false, type: Boolean },
+    exact: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
     path: {
       default: '',
       required: false,
       type: String,
     },
-    strict: { default: false, required: false, type: Boolean },
+    strict: {
+      default: false,
+      required: false,
+      // type: Boolean
+    },
   },
   setup(props: Readonly<RouterRouteProps>, { slots }) {
     const match = useRouteMatch(() => props)

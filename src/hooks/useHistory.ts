@@ -1,6 +1,6 @@
 import { RouterHistory, RouterMemoryHistory } from 'history'
-import { ROUTER_HISTORY } from '../keys'
-import { assert } from '../utils'
+import { ROUTER_HISTORY } from '../api/keys'
+import { assert } from '../utils/assert'
 import { inject } from 'vue'
 
 export const useHistory = <

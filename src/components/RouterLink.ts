@@ -1,4 +1,4 @@
-import { PathFunction, resolvePathFunction } from '../utils'
+import { PathFunction, resolvePath } from '../utils/resolvePath'
 import { computed, defineComponent, h } from 'vue'
 import { RouterPath } from 'history'
 import { useHistory } from '../hooks/useHistory'
@@ -16,7 +16,7 @@ export const RouterLink = defineComponent({
     replace: {
       default: false,
       required: false,
-      type: Boolean,
+      // type: Boolean,
     },
     tag: {
       default: 'a',
@@ -29,7 +29,7 @@ export const RouterLink = defineComponent({
     const history = useHistory()
     const location = useLocation()
 
-    const to = computed(() => resolvePathFunction(props.to, location.value))
+    const to = computed(() => resolvePath(props.to, location.value))
 
     const onClick = (event: MouseEvent) => {
       event.stopPropagation()

@@ -1,6 +1,6 @@
 import { computed, defineComponent } from 'vue'
 import { RouterPath } from 'history'
-import { matchPath } from '../matchPath'
+import { matchPath } from '../api/matchPath'
 import { useLocation } from '../hooks/useLocation'
 
 export interface RouterSwitchProps {
