@@ -7,11 +7,7 @@ describe('RouterRedirect()', () => {
   it('works with MemoryRouter', () => {
     const history = createMemoryHistory()
     const to = '/home'
-    const App = {
-      setup() {
-        return () => h(RouterRedirect, { to })
-      },
-    }
+    const App = () => h(RouterRedirect, { to })
 
     mount(App, (app) => app.use(VueRouterDom, history))
 

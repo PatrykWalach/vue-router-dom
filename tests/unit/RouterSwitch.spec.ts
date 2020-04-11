@@ -13,24 +13,17 @@ const testSwitch = (
 
   const fn = jest.fn()
 
-  const App = {
-    setup() {
-      return () => h(RouterSwitch, defaultSlot(fn))
-    },
-  }
+  const App = () => h(RouterSwitch, defaultSlot(fn))
 
   mount(App, (app) => app.use(VueRouterDom, history))
   return fn
 }
 
-const createTestComponent = (fn: jest.Mock<any, any>, props: any) =>
+const createTestRoute = (props?: any) => (fn: jest.Mock<any, any>) => () =>
   h(() => {
     fn()
     return null
   }, props)
-
-const createTestRoute = (props?: any) => (fn: jest.Mock<any, any>) => () =>
-  createTestComponent(fn, props)
 
 describe('RouterSwitch', () => {
   it(`works with from`, () => {
