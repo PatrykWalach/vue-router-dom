@@ -1,23 +1,23 @@
 export class Cache<T> {
   cacheLimit: number
   cacheCount = 0
-  cache = new Map<string, T>()
+  map = new Map<string, T>()
 
   constructor(cacheLimit = 10000) {
     this.cacheLimit = cacheLimit
   }
 
   get(cacheKey: string) {
-    return this.cache.get(cacheKey)
+    return this.map.get(cacheKey)
   }
 
   has(cacheKey: string) {
-    return this.cache.has(cacheKey)
+    return this.map.has(cacheKey)
   }
 
-  set(cacheKey: string, result: T) {
+  set(cacheKey: string, value: T) {
     if (this.cacheCount < this.cacheLimit) {
-      this.set(cacheKey, result)
+      this.map.set(cacheKey, value)
       this.cacheCount++
     }
   }

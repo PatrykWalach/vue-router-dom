@@ -81,7 +81,7 @@ describe('matchPath', () => {
     const userId = '12'
     const postId = '14'
 
-    const POST = (userId = ':userId', postId = ':userId') =>
+    const POST = (userId = ':userId', postId = ':postId') =>
       `/${userId}/${postId}`
 
     const match = matchPath<{
