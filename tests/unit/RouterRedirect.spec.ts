@@ -1,5 +1,4 @@
-import VueRouterDom, { RouterRedirect } from '../../src'
-import { createMemoryHistory } from 'history'
+import VueRouterDom, { RouterRedirect, createMemoryHistory } from '../../src'
 import { h } from 'vue'
 import { mount } from './utils'
 

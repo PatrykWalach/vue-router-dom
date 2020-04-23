@@ -1,5 +1,5 @@
 import { PathFunction, resolvePath } from '../utils/resolvePath'
-import { RouterLocation, RouterMemoryLocation, RouterPath } from 'history'
+import { Location, LocationDescriptor } from 'history'
 import { computed, defineComponent, h } from 'vue'
 import { RouterLink } from './RouterLink'
 import { RouterMatch } from '../api/types'
@@ -9,12 +9,9 @@ export interface NavLinkProps {
   activeClassName: string
   activeStyle: Record<string, string>
   exact: boolean
-  isActive(
-    match: RouterMatch | null,
-    location: RouterLocation | RouterMemoryLocation,
-  ): boolean
+  isActive(match: RouterMatch | null, location: Location): boolean
   strict: boolean
-  to: RouterPath | string | PathFunction
+  to: LocationDescriptor | PathFunction
 }
 
 export const NavLink = defineComponent({

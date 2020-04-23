@@ -1,6 +1,6 @@
 import { PathFunction, resolvePath } from '../utils/resolvePath'
 import { computed, defineComponent, h } from 'vue'
-import { RouterPath } from 'history'
+import { RouterPath } from '../api/types'
 import { useHistory } from '../hooks/useHistory'
 import { useLocation } from '../hooks/useLocation'
 

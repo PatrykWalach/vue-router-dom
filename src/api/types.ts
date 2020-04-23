@@ -5,7 +5,7 @@ export interface RouterMatch<Params extends RouterParams = RouterParams> {
   url: string
 }
 export interface MatchPathOptions {
-  path: MatchPathOptionsPath
+  path?: MatchPathOptionsPath
   exact?: boolean
   strict?: boolean
   sensitive?: boolean

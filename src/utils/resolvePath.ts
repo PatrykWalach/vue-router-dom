@@ -1,10 +1,6 @@
-import { RouterLocation, RouterMemoryLocation, RouterPath } from 'history'
+import { Location, LocationDescriptor } from 'history'
 
-export type PathFunction = (
-  location: RouterLocation | RouterMemoryLocation,
-) => RouterPath | string
+export type PathFunction = (location: Location) => LocationDescriptor
 
-export const resolvePath = <T>(
-  path: T | PathFunction,
-  location: RouterLocation,
-) => (path instanceof Function ? path(location) : path)
+export const resolvePath = <T>(path: T | PathFunction, location: Location) =>
+  path instanceof Function ? path(location) : path

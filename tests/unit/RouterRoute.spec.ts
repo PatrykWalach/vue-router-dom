@@ -1,5 +1,9 @@
-import VueRouterDom, { RouterParams, RouterRoute } from '../../src'
-import { createMemoryHistory } from 'history'
+import VueRouterDom, {
+  createMemoryHistory,
+  RouterParams,
+  RouterRoute,
+} from '../../src'
+
 import { h } from 'vue'
 import { mount } from './utils'
 

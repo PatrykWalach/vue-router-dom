@@ -1,6 +1,6 @@
 import { VNode, h } from 'vue'
-import VueRouterDom, { RouterSwitch } from '../../src'
-import { createMemoryHistory } from 'history'
+import VueRouterDom, { RouterSwitch, createMemoryHistory } from '../../src'
+
 import { mount } from './utils'
 
 const testSwitch = (

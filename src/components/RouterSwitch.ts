@@ -1,10 +1,11 @@
 import { computed, defineComponent } from 'vue'
-import { RouterPath } from 'history'
+
 import { matchPath } from '../api/matchPath'
 import { useLocation } from '../hooks/useLocation'
+import { LocationDescriptorObject } from 'history'
 
 export interface RouterSwitchProps {
-  location: RouterPath | null
+  location: LocationDescriptorObject | null
 }
 
 export const RouterSwitch = defineComponent({
@@ -13,18 +14,27 @@ export const RouterSwitch = defineComponent({
   setup(props: Readonly<RouterSwitchProps>, { slots }) {
     const location = useLocation()
     const pathname = computed(() => props.location && props.location.pathname)
+    const matchPathname = computed(
+      () => pathname.value || location.value.pathname,
+    )
 
-    return () =>
-      slots.default &&
-      slots.default().find(({ props }) => {
-        const path = (props && (props.path || props.from)) || ''
-        const exact = (props && props.exact) || false
-        const strict = (props && props.strict) || false
-        return matchPath(pathname.value || location.value.pathname, {
-          exact,
-          path,
-          strict,
+    return () => {
+      const matchPathnameValue = matchPathname.value
+      const slotsDefault = slots.default
+
+      return (
+        slotsDefault &&
+        slotsDefault().find(({ props }) => {
+          const { path = '', from = '', exact = false, strict = false } =
+            props || {}
+
+          return matchPath(matchPathnameValue, {
+            exact,
+            path: path || from,
+            strict,
+          })
         })
-      })
+      )
+    }
   },
 })

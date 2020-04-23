@@ -1,6 +1,10 @@
-import { Ref, computed } from 'vue'
+import { Ref, computed, isRef } from 'vue'
 
-export type ComputedCallback<T> = Ref<T> | (() => T)
+export type ComputedCallback<T> = Ref<T> | (() => T) | T
 
-export const useComputedCallback = <T>(value: ComputedCallback<T>) =>
-  value instanceof Function ? computed(value) : value
+export const useComputedCallback = <T>(value: ComputedCallback<T>): Ref<T> =>
+  value instanceof Function
+    ? computed(value)
+    : isRef(value)
+    ? value
+    : computed(() => value)
