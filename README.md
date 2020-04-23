@@ -7,6 +7,7 @@ Feel free to suggest any missing features from [react-router](https://reacttrain
 
 ## Table of contents
 
+- [Getting Started](#Getting-Started)
 - [Install](#install)
 - [Manual Setup](#Manual-Setup)
 - [API](#api)
@@ -16,17 +17,28 @@ Feel free to suggest any missing features from [react-router](https://reacttrain
     - [NavLink 🗹](#NavLink)
     - [RouterRedirect 🗹](#RouterRedirect)
     - [RouterRoute 🗹](#RouterRoute)
-    - [RouterSwitch 🗹](#RouterSwitch)
+    - [RouterSwitch 🗷](#RouterSwitch)
   - [Hooks](#hooks)
     - [useHistory 🗹](#useHistory)
     - [useLocation 🗹](#useLocation)
     - [useParams 🗹](#useParams)
     - [useRouteMatch 🗹](#useRouteMatch)
+    - [useRoutes 🗹](#useRoutes)
+    - [useRedirect 🗹](#useRedirect)
   - [Functions](#Functions)
     - [matchPath 🗹](#matchPath)
+    - [generatePath 🗹](#generatePath)
   - [Other](#Other)
     - [history](#history)
     - [match](#match)
+
+## Getting Started
+
+1. Install the npm package.
+2. Use to provide the history and register components ([Install](#install)).
+3. Create routes with [RouterRoute](#RouterRoute) or [useRoutes](#useRoutes) hook.
+4. Add navigation with [NavLinks](#NavLink) or [useHistory](#useHistory) hook.
+5. Check out [useParams](#useParams) and [useLocation](#useLocation) to read url information.
 
 ## Install
 
@@ -35,6 +47,7 @@ npm i vue-router-dom vue@3
 ```
 
 ## Manual Setup
+
 Just provide the [`history`](#history) and you are ready to go
 
 ```typescript
@@ -129,6 +142,8 @@ Route nesting
 
 #### RouterSwitch
 
+>⚠️ Not implemented yet
+
 Displays first route which matched current url
 
 It's important to place more specific route first: `/user/user1` first, then `/user/:userId`, then `/home`, then `/:path`, then `/`
@@ -154,21 +169,58 @@ It's important to place more specific route first: `/user/user1` first, then `/u
 
 ### Hooks
 
+#### useRoutes
 
+Used as router switch alternative
+
+```html
+<!-- TheMain.vue -->
+<template>
+  <main>
+    <component :is="Route" />
+  </main>
+</template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue'
+  import ViewUser from './ViewUser.vue'
+  import ViewSettings from './ViewSettings.vue'
+  import ViewHome from './ViewHome.vue'
+  export default defineComponent({
+    setup() {
+      const Route = useRoutes({
+        '/user/:userId': ({ params: { userId } }) => h(ViewUser, { userId }),
+        '/settings': ViewSettings,
+        '/': ViewHome,
+      })
+
+      return {
+        Route,
+      }
+    },
+  })
+</script>
+```
 
 ### Functions
 
 #### matchPath
-  Useful links:
-  - [react-router](https://reacttraining.com/react-router/web/api/matchPath)
+
+Useful links:
+
+- [react-router](https://reacttraining.com/react-router/web/api/matchPath)
 
 ### Other
 
 #### history
-  Useful links:
-  - [react-router](https://reacttraining.com/react-router/web/api/history)
-  - [history](https://github.com/ReactTraining/history/)
+
+Useful links:
+
+- [react-router](https://reacttraining.com/react-router/web/api/history)
+- [history](https://github.com/ReactTraining/history/)
 
 #### match
-  Useful links:
-  - [react-router](https://reacttraining.com/react-router/web/api/match) 
+
+Useful links:
+
+- [react-router](https://reacttraining.com/react-router/web/api/match)
