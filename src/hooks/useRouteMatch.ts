@@ -15,7 +15,10 @@ export const useRouteMatch = (
   const location = useLocation()
   const match = computed(() => matchPath(location.value.pathname, path.value))
 
-  const params = computed(() => (match.value && match.value.params) || {})
+  const params = computed(() => {
+    const matchValue = match.value
+    return (matchValue && matchValue.params) || {}
+  })
 
   provide(ROUTE_PARAMS, params)
 
