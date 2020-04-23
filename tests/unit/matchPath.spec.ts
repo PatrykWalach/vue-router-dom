@@ -78,15 +78,18 @@ describe('matchPath', () => {
   })
 
   it(`returns params`, () => {
-    const USER_ID = '12'
-    const POST_ID = '14'
+    const userId = '12'
+    const postId = '14'
+
+    const POST = (userId = ':userId', postId = ':userId') =>
+      `/${userId}/${postId}`
 
     const match = matchPath<{
       userId: string
       postId: string
-    }>(`/${USER_ID}/${POST_ID}`, { exact: true, path: '/:userId/:postId' })
+    }>(POST(userId, postId), { exact: true, path: POST() })
     expect(match).not.toStrictEqual(null)
-    expect(match && match.params.userId).toStrictEqual(USER_ID)
-    expect(match && match.params.postId).toStrictEqual(POST_ID)
+    expect(match && match.params.userId).toStrictEqual(userId)
+    expect(match && match.params.postId).toStrictEqual(postId)
   })
 })

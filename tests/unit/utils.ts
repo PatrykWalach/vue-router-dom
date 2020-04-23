@@ -1,4 +1,4 @@
-import { App, Component, createApp } from 'vue'
+import { App } from 'vue'
 
 type Chunk<K extends string, T> = {
   [key in K]: T
@@ -14,8 +14,8 @@ type MakeVariations<T> = {
     : MakeVariations<T[K]>
 }
 
-export const mount = (App: App<Element>) =>
-  App.mount(document.createElement('template'))
+export const mount = (app: App<Element>) =>
+  app.mount(document.createElement('template'))
 
 const keyAndArrayToChunks = <K extends string, A>(key: K, permutations: A[]) =>
   permutations.map((value) => ({

@@ -1,12 +1,12 @@
-import { MatchPathOptions, MatchPathOptionsPath } from '../api/types'
-import { computed, provide } from 'vue'
-import { ROUTE_PARAMS } from '../api/keys'
+import { useLocation } from './useLocation'
 import {
   ComputedCallback,
   useComputedCallback,
 } from '../utils/computedCallback'
+import { MatchPathOptions, MatchPathOptionsPath } from '../api/types'
+import { computed } from 'vue'
 import { matchPath } from '../api/matchPath'
-import { useLocation } from './useLocation'
+import { useMatchToParams } from '../utils/matchToParams'
 
 export const useRouteMatch = (
   pathValue: ComputedCallback<MatchPathOptions | MatchPathOptionsPath>,
@@ -15,12 +15,7 @@ export const useRouteMatch = (
   const location = useLocation()
   const match = computed(() => matchPath(location.value.pathname, path.value))
 
-  const params = computed(() => {
-    const matchValue = match.value
-    return (matchValue && matchValue.params) || {}
-  })
-
-  provide(ROUTE_PARAMS, params)
+  useMatchToParams(match)
 
   return match
 }

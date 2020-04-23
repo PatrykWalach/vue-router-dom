@@ -1,21 +1,18 @@
 import { PathFunction, compile } from 'path-to-regexp'
 import { RouterParams } from './types'
+import { Cache } from '../utils/Cache'
 
-const cache = new Map<string, PathFunction<object>>()
-
-const cacheLimit = 10000
-let cacheCount = 0
+const cache = new Cache<PathFunction<object>>()
 
 export const generatePath = (pattern: string, params: RouterParams) => {
-  const cached = cache.get(pattern)
-  if (cached) return cached
+  const cachedResult = cache.get(pattern)
+  if (cachedResult) {
+    return cachedResult
+  }
 
   const toPath = compile(pattern, { encode: encodeURIComponent })
 
-  if (cacheCount < cacheLimit) {
-    cache.set(pattern, toPath)
-    cacheCount++
-  }
+  cache.set(pattern, toPath)
 
   return toPath(params)
 }
