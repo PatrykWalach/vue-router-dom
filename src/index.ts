@@ -6,8 +6,10 @@ export { RouterRedirect } from './components/RouterRedirect'
 
 export { useHistory } from './hooks/useHistory'
 export { useLocation } from './hooks/useLocation'
-export { useRouteMatch } from './hooks/useRouteMatch'
 export { useParams } from './hooks/useParams'
+export { useRedirect } from './hooks/useRedirect'
+export { useRouteMatch } from './hooks/useRouteMatch'
+export { useRoutes } from './hooks/useRoutes'
 
 export { matchPath } from './api/matchPath'
 export { generatePath } from './api/generatePath'
