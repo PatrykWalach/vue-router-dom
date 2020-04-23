@@ -1,13 +1,15 @@
 export { RouterLink } from './components/RouterLink'
 export { NavLink } from './components/NavLink'
 export { RouterRoute } from './components/RouterRoute'
-export { RouterSwitch } from './components/RouterSwitch'
+// export { RouterSwitch } from './components/RouterSwitch'
 export { RouterRedirect } from './components/RouterRedirect'
 
 export { useHistory } from './hooks/useHistory'
 export { useLocation } from './hooks/useLocation'
-export { useRouteMatch } from './hooks/useRouteMatch'
 export { useParams } from './hooks/useParams'
+export { useRedirect } from './hooks/useRedirect'
+export { useRouteMatch } from './hooks/useRouteMatch'
+export { useRoutes } from './hooks/useRoutes'
 
 export { matchPath } from './api/matchPath'
 export { generatePath } from './api/generatePath'
