@@ -4,7 +4,7 @@ import VueRouterDom, {
   RouterRoute,
 } from '../../src'
 
-import { h } from 'vue'
+import { h, createApp } from 'vue'
 import { mount } from './utils'
 
 const testMatch = (path: string, pathname = '/', exact = false) => {
@@ -26,7 +26,9 @@ const testMatch = (path: string, pathname = '/', exact = false) => {
       },
     )
 
-  mount(App, (app) => app.use(VueRouterDom, history))
+  const app = createApp(App).use(VueRouterDom, history)
+  mount(app)
+
   return fn
 }
 

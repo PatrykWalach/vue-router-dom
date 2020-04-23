@@ -14,10 +14,8 @@ type MakeVariations<T> = {
     : MakeVariations<T[K]>
 }
 
-export const mount = (
-  AppComponent: Component,
-  isntall: (app: App) => App = (app) => app,
-) => isntall(createApp(AppComponent)).mount(document.createElement('template'))
+export const mount = (App: App<Element>) =>
+  App.mount(document.createElement('template'))
 
 const keyAndArrayToChunks = <K extends string, A>(key: K, permutations: A[]) =>
   permutations.map((value) => ({

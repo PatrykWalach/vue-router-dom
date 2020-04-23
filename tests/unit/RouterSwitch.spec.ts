@@ -1,41 +1,39 @@
-import { VNode, h } from 'vue'
-import VueRouterDom, { RouterSwitch, createMemoryHistory } from '../../src'
+import { h, createApp } from 'vue'
+import VueRouterDom, { createMemoryHistory, MemoryHistory } from '../../src'
+import { RouterSwitch } from '../../src/components/RouterSwitch'
 
 import { mount } from './utils'
 
-const testSwitch = (
-  defaultSlot: (fn: jest.Mock<any, any>) => () => VNode[] | VNode,
-  pathname = '/',
-) => {
-  const history = createMemoryHistory()
-
-  history.push(pathname)
-
-  const fn = jest.fn()
-
-  const App = () => h(RouterSwitch, defaultSlot(fn))
-
-  mount(App, (app) => app.use(VueRouterDom, history))
-  return fn
-}
-
-const createTestRoute = (props?: any) => (fn: jest.Mock<any, any>) => () =>
-  h(() => {
-    fn()
-    return null
-  }, props)
-
 describe('RouterSwitch', () => {
+  let fn: jest.Mock<any, any>
+  let history: MemoryHistory<{}>
+
+  beforeEach(() => {
+    fn = jest.fn()
+    history = createMemoryHistory()
+  })
+
+  const App = (props?: { from?: string; path?: string }) => () =>
+    h(RouterSwitch, () =>
+      h(() => {
+        fn()
+        return null
+      }, props),
+    )
+
   it(`works with from`, () => {
-    const fn = testSwitch(createTestRoute({ from: '' }))
+    const app = createApp(App({ from: '' })).use(VueRouterDom, history)
+    mount(app)
     expect(fn).toBeCalled()
   })
   it(`works with path`, () => {
-    const fn = testSwitch(createTestRoute({ path: '' }))
+    const app = createApp(App({ path: '' })).use(VueRouterDom, history)
+    mount(app)
     expect(fn).toBeCalled()
   })
   it(`works with no props`, () => {
-    const fn = testSwitch(createTestRoute())
+    const app = createApp(App()).use(VueRouterDom, history)
+    mount(app)
     expect(fn).toBeCalled()
   })
 })
