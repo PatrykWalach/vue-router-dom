@@ -3,10 +3,10 @@ import {
   useComputedCallback,
 } from '../utils/computedCallback'
 
-import { useHistory } from './useHistory'
 import { useRouteMatch } from './useRouteMatch'
 import { watch, computed } from 'vue'
 import { LocationDescriptor } from 'history'
+import { useHistoryReplace } from '../utils/historyReplace'
 
 export const useRedirect = (
   fromValue: ComputedCallback<string>,
@@ -20,14 +20,14 @@ export const useRedirect = (
     const toValue = to.value
     return toValue instanceof Object ? toValue : { pathname: toValue }
   })
-  const history = useHistory()
   const match = useRouteMatch(from)
+  const historyGo = useHistoryReplace(() => !push.value)
 
   return watch(
     match,
     (match) => {
       if (match) {
-        ;(push.value ? history.push : history.replace)(locationTo.value)
+        historyGo.value(locationTo.value)
       }
     },
     {
