@@ -1,6 +1,6 @@
 {
   "name": "vue-router-dom",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Router for Vue 3 and up",
   "@pika/pack": {
     "pipeline": [
@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@types/history": "^4.7.5",
-    "history": "^4.11.0",
+    "history": "^4.10.1",
     "path-to-regexp": "^6.1.0"
   },
   "gitHooks": {
