@@ -1,10 +1,12 @@
 export class Cache<T> {
   cacheLimit: number
-  cacheCount = 0
-  map = new Map<string, T>()
+  cacheCount: number
+  map: Map<string, T>
 
   constructor(cacheLimit = 10000) {
     this.cacheLimit = cacheLimit
+    this.cacheCount = 0
+    this.map = new Map<string, T>()
   }
 
   get(cacheKey: string) {
