@@ -1,9 +1,10 @@
-import { defineComponent, watch } from 'vue'
-import { RouterPath } from 'history'
-import { useHistory } from '../hooks/useHistory'
+import { defineComponent } from 'vue'
+
+import { useRedirect } from '../hooks/useRedirect'
+import { LocationDescriptor } from 'history'
 
 export interface RouterRedirectProps {
-  to: RouterPath | string
+  to: LocationDescriptor
   push: boolean
   exact: boolean
   strict: boolean
@@ -15,7 +16,7 @@ export const RouterRedirect = defineComponent({
     exact: {
       default: false,
       required: false,
-      // type: Boolean
+      // type: Boolean,
     },
     from: { default: '', required: false, type: String },
     push: {
@@ -31,15 +32,10 @@ export const RouterRedirect = defineComponent({
     to: { default: '', required: true, type: [Object, String] },
   },
   setup(props: Readonly<RouterRedirectProps>) {
-    const history = useHistory()
-    watch(
+    useRedirect(
+      () => props.from,
       () => props.to,
-      (to) => {
-        ;(props.push ? history.push : history.replace)(to)
-      },
-      {
-        immediate: true,
-      },
+      () => props.push,
     )
     return () => null
   },
