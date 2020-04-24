@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { matchComponent } from '../../src/utils/matchComponent'
 import { mount } from './utils'
-describe('matchPaths()', () => {
+describe('matchComponent()', () => {
   let fn: jest.Mock<any, any>
   const USER_SETTINGS = '/user/settings'
   const POST = (postId = ':postId') => `/post/${postId}`
