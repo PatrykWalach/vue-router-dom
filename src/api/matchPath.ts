@@ -17,14 +17,15 @@ export const matchPath = <P extends RouterParams = RouterParams>(
 
   const { path, exact = false, strict = false, sensitive = false } = options
 
-  const paths = path instanceof Array ? path : [path]
+  const paths = Array.isArray(path) ? path : [path]
 
   return paths.reduce<RouterMatch<P> | null>((matched, path) => {
-    if (!path && path !== '') {
-      return null
-    }
     if (matched) {
       return matched
+    }
+
+    if (!path && path !== '') {
+      return null
     }
 
     const { regexp, keys } = compilePath(path, {

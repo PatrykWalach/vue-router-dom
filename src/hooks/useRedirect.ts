@@ -26,9 +26,7 @@ export const useRedirect = (
   return watch(
     match,
     (match) => {
-      if (match) {
-        historyGo.value(locationTo.value)
-      }
+      match && historyGo.value(locationTo.value)
     },
     {
       immediate: true,

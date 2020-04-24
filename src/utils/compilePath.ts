@@ -15,9 +15,17 @@ const cache = new Cache<CompilePathResult>()
 
 export const compilePath = (
   path: string,
-  options: CompilePathOptions,
+  {
+    end = false,
+    strict = false,
+    sensitive = false,
+  }: Partial<CompilePathOptions> = {
+    // end: false,
+    // strict: false,
+    // sensitive: false,
+  },
 ): CompilePathResult => {
-  const cacheKey = `${options.end}${options.strict}${options.sensitive}${path}`
+  const cacheKey = `${end}${strict}${sensitive}${path}`
 
   const cachedResult = cache.get(cacheKey)
   if (cachedResult) {
@@ -25,7 +33,7 @@ export const compilePath = (
   }
 
   const keys: Key[] = []
-  const regexp = pathToRegexp(path, keys, options)
+  const regexp = pathToRegexp(path, keys, { end, strict, sensitive })
   const result = { keys, regexp }
 
   cache.set(cacheKey, result)
