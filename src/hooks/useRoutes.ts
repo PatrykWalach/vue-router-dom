@@ -31,6 +31,7 @@ export const useRoutes = (
   const matchPathname = computed(
     () => optionsPathname.value || location.value.pathname,
   )
+  const paths = computed(() => Object.keys(routes.value))
   const matchOptions = computed(() => {
     const { strict, sensitive, exact } = options.value
     return { strict, sensitive, exact }
@@ -39,13 +40,13 @@ export const useRoutes = (
   const match = computed(() =>
     matchPath(matchPathname.value, {
       ...matchOptions.value,
-      path: Object.keys(routes.value),
+      path: paths.value,
     }),
   )
 
   useMatchToParams(match)
 
-  const matchedComponent = useMatchComponent(routes.value, match.value)
+  const matchedComponent = useMatchComponent(routes, match)
 
   return matchedComponent
 }
