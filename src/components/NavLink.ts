@@ -1,15 +1,15 @@
 import { PathFunction, useResolvePath } from '../utils/resolvePath'
-import { Location, LocationDescriptor } from 'history'
+import { LocationDescriptor } from 'history'
 import { computed, defineComponent, h } from 'vue'
 import { RouterLink } from './RouterLink'
-import { RouterMatch } from '../api/types'
-import { useLocation } from '../hooks/useLocation'
+import { RouterMatch, RouterRoute } from '../api/types'
 import { useRouteMatch } from '../hooks/useRouteMatch'
+import { useRoute } from '../hooks/useRoute'
 export interface NavLinkProps {
   activeClassName: string
   activeStyle: Record<string, string>
   exact: boolean
-  isActive(match: RouterMatch | null, location: Location): boolean
+  isActive(match: RouterMatch | null, route: RouterRoute): boolean
   strict: boolean
   to: LocationDescriptor | PathFunction
 }
@@ -45,9 +45,9 @@ export const NavLink = defineComponent({
     to: { default: '', required: true, type: [String, Object, Function] },
   },
   setup(props: Readonly<NavLinkProps>, { slots }) {
-    const location = useLocation()
+    const route = useRoute()
 
-    const path = useResolvePath(() => props.to, location)
+    const path = useResolvePath(() => props.to, route)
 
     const match = useRouteMatch(() => ({
       exact: props.exact,
@@ -55,7 +55,7 @@ export const NavLink = defineComponent({
       strict: props.strict,
     }))
 
-    const active = computed(() => props.isActive(match.value, location.value))
+    const active = computed(() => props.isActive(match.value, route.value))
 
     return () =>
       h(

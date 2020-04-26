@@ -55,6 +55,7 @@
     "@pika/plugin-standard-pkg": "^0.9.2",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.13.2",
+    "@types/querystringify": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
     "codecov": "^3.6.5",
@@ -70,7 +71,8 @@
   "dependencies": {
     "@types/history": "^4.7.5",
     "history": "^4.10.1",
-    "path-to-regexp": "^6.1.0"
+    "path-to-regexp": "^6.1.0",
+    "querystringify": "^2.1.1"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

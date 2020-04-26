@@ -4,15 +4,19 @@ import {
 } from '../utils/computedCallback'
 import { FunctionalComponent, computed } from 'vue'
 
-import { useLocation } from './useLocation'
-import { RouterMatch, MatchPathOptions } from '../api/types'
-import { LocationDescriptor } from 'history'
+import {
+  RouterMatch,
+  MatchPathOptions,
+  RouterRouteDescriptor,
+} from '../api/types'
+
 import { useMatchToParams } from '../utils/matchToParams'
 import { useMatchComponent } from '../utils/matchComponent'
 import { matchPath } from '../api/matchPath'
+import { useRoute } from './useRoute'
 
 interface UseRoutesOptions extends Omit<MatchPathOptions, 'path'> {
-  location: LocationDescriptor
+  route: Partial<RouterRouteDescriptor>
 }
 export const useRoutes = (
   routesValues: ComputedCallback<
@@ -22,14 +26,14 @@ export const useRoutes = (
 ) => {
   const routes = useComputedCallback(routesValues)
   const options = useComputedCallback(optionsValue)
-  const location = useLocation()
+  const route = useRoute()
   const optionsPathname = computed(() => {
-    const location = options.value.location
-    return location instanceof Object ? location.pathname : location
+    const route = options.value.route
+    return route instanceof Object ? route.path : route
   })
 
   const matchPathname = computed(
-    () => optionsPathname.value || location.value.pathname,
+    () => optionsPathname.value || route.value.path,
   )
   const paths = computed(() => Object.keys(routes.value))
   const matchOptions = computed(() => {

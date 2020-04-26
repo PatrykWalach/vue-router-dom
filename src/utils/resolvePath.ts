@@ -1,29 +1,25 @@
-import {
-  Location,
-  History,
-  LocationDescriptor,
-  LocationDescriptorObject,
-} from 'history'
+import { History, LocationDescriptor, LocationDescriptorObject } from 'history'
 import { computed } from 'vue'
 import { useComputedCallback, ComputedCallback } from './computedCallback'
+import { RouterRoute } from '../api/types'
 
 export type PathFunction<S = History.PoorMansUnknown> = (
-  location: Location,
+  route: RouterRoute,
 ) => LocationDescriptor<S>
 
 export const resolvePath = <S>(
   path: LocationDescriptor<S> | PathFunction<S>,
-  location: Location,
+  route: RouterRoute,
 ): LocationDescriptorObject<S> => {
-  const pathname = path instanceof Function ? path(location) : path
+  const pathname = path instanceof Function ? path(route) : path
   return pathname instanceof Object ? pathname : { pathname }
 }
 
 export const useResolvePath = <S>(
   pathValue: ComputedCallback<LocationDescriptor<S> | PathFunction<S>>,
-  locationValue: ComputedCallback<Location>,
+  routeValue: ComputedCallback<RouterRoute>,
 ) => {
   const path = useComputedCallback(pathValue)
-  const location = useComputedCallback(locationValue)
-  return computed(() => resolvePath(path.value, location.value))
+  const route = useComputedCallback(routeValue)
+  return computed(() => resolvePath(path.value, route.value))
 }

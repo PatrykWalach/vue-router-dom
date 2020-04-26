@@ -1,22 +1,20 @@
 import { computed, defineComponent } from 'vue'
 
 import { matchPath } from '../api/matchPath'
-import { useLocation } from '../hooks/useLocation'
-import { LocationDescriptorObject } from 'history'
+import { useRoute } from '../hooks/useRoute'
+import { RouterRouteDescriptor } from '../api/types'
 
 export interface RouterSwitchProps {
-  location: LocationDescriptorObject | null
+  route: Partial<RouterRouteDescriptor>
 }
 
 export const RouterSwitch = defineComponent({
   name: 'RouterSwitch',
-  props: { location: { default: null, required: false, type: null } },
+  props: { route: { default: () => {}, required: false, type: Object } },
   setup(props: Readonly<RouterSwitchProps>, { slots }) {
-    const location = useLocation()
-    const pathname = computed(() => props.location && props.location.pathname)
-    const matchPathname = computed(
-      () => pathname.value || location.value.pathname,
-    )
+    const route = useRoute()
+    const pathname = computed(() => props.route.path)
+    const matchPathname = computed(() => pathname.value || route.value.path)
 
     return () => {
       const matchPathnameValue = matchPathname.value

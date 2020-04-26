@@ -5,9 +5,9 @@ export { RouterRoute } from './components/RouterRoute'
 export { RouterRedirect } from './components/RouterRedirect'
 
 export { useHistory } from './hooks/useHistory'
-export { useLocation } from './hooks/useLocation'
 export { useParams } from './hooks/useParams'
 export { useRedirect } from './hooks/useRedirect'
+export { useRoute } from './hooks/useRoute'
 export { useRouteMatch } from './hooks/useRouteMatch'
 export { useRoutes } from './hooks/useRoutes'
 
