@@ -1,10 +1,10 @@
 import { defineComponent } from 'vue'
 
 import { useRedirect } from '../hooks/useRedirect'
-import { LocationDescriptor } from 'history'
+import { To } from 'history'
 
 export interface RouterRedirectProps {
-  to: LocationDescriptor
+  to: To
   push: boolean
   exact: boolean
   strict: boolean

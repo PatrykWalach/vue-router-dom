@@ -1,23 +1,20 @@
-import { History, LocationDescriptor, LocationDescriptorObject } from 'history'
+import { PartialLocation, State, Location, To } from 'history'
 import { computed } from 'vue'
 import { useComputedCallback, ComputedCallback } from './computedCallback'
-import { RouterRoute } from '../api/types'
 
-export type PathFunction<S = History.PoorMansUnknown> = (
-  route: RouterRoute,
-) => LocationDescriptor<S>
+export type PathFunction<S extends State = State> = (location: Location) => To
 
-export const resolvePath = <S>(
-  path: LocationDescriptor<S> | PathFunction<S>,
-  route: RouterRoute,
-): LocationDescriptorObject<S> => {
-  const pathname = path instanceof Function ? path(route) : path
+export const resolvePath = <S extends State = State>(
+  path: PartialLocation<S> | PathFunction<S> | string,
+  location: Location,
+): PartialLocation<S> => {
+  const pathname = path instanceof Function ? path(location) : path
   return pathname instanceof Object ? pathname : { pathname }
 }
 
-export const useResolvePath = <S>(
-  pathValue: ComputedCallback<LocationDescriptor<S> | PathFunction<S>>,
-  routeValue: ComputedCallback<RouterRoute>,
+export const useResolvePath = <S extends State = State>(
+  pathValue: ComputedCallback<PartialLocation<S> | PathFunction<S> | string>,
+  routeValue: ComputedCallback<Location>,
 ) => {
   const path = useComputedCallback(pathValue)
   const route = useComputedCallback(routeValue)

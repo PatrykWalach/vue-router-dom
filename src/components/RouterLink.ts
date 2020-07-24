@@ -1,11 +1,11 @@
 import { PathFunction, useResolvePath } from '../utils/resolvePath'
 import { defineComponent, h } from 'vue'
-import { LocationDescriptor } from 'history'
+import { To } from 'history'
 import { useHistoryReplace } from '../utils/historyReplace'
-import { useRoute } from '../hooks/useRoute'
+import { useLocation } from '../hooks/useLocation'
 
 export interface RouterLinkProps {
-  to: LocationDescriptor | PathFunction
+  to: To | PathFunction
   tag: string
   replace: boolean
 }
@@ -26,9 +26,9 @@ export const RouterLink = defineComponent({
     to: { default: '', required: true, type: [String, Object, Function] },
   },
   setup(props: Readonly<RouterLinkProps>, { slots }) {
-    const route = useRoute()
+    const location = useLocation()
 
-    const to = useResolvePath(() => props.to, route)
+    const to = useResolvePath(() => props.to, location)
     const historyGo = useHistoryReplace(() => props.replace)
 
     const onClick = (event: MouseEvent) => {

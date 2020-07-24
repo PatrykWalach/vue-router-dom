@@ -4,7 +4,7 @@ import { ROUTER_HISTORY } from './keys'
 
 import { RouterLink } from '../components/RouterLink'
 import { RouterRoute } from '../components/RouterRoute'
-// import { RouterSwitch } from '../components/RouterSwitch'
+import { RouterSwitch } from '../components/RouterSwitch'
 import { NavLink } from '../components/NavLink'
 import { RouterRedirect } from '../components/RouterRedirect'
 
@@ -15,4 +15,4 @@ export const install = (app: App, history: History | MemoryHistory) =>
     .component('RouterLink', RouterLink)
     .component('RouterRedirect', RouterRedirect)
     .component('RouterRoute', RouterRoute)
-// .component('RouterSwitch', RouterSwitch)
+    .component('RouterSwitch', RouterSwitch)

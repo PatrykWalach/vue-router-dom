@@ -1,4 +1,4 @@
-import { onBeforeUnmount, readonly, ref } from 'vue'
+import { onBeforeUnmount, readonly, ref, computed } from 'vue'
 import { useHistory } from './useHistory'
 
 export const useLocation = () => {
@@ -6,11 +6,11 @@ export const useLocation = () => {
 
   const location = ref(history.location)
 
-  const unlisten = history.listen((newLocation) => {
-    location.value = newLocation
+  const unlisten = history.listen((update) => {
+    location.value = update.location
   })
 
   onBeforeUnmount(unlisten)
 
-  return readonly(location)
+  return computed(() => location.value)
 }

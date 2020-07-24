@@ -4,9 +4,9 @@
     "module": "esnext",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "target": "esnext",
+    "target": "es2020",
     "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

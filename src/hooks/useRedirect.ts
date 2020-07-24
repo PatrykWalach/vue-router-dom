@@ -5,12 +5,12 @@ import {
 
 import { useRouteMatch } from './useRouteMatch'
 import { watch, computed } from 'vue'
-import { LocationDescriptor } from 'history'
 import { useHistoryReplace } from '../utils/historyReplace'
+import { To } from 'history'
 
 export const useRedirect = (
   fromValue: ComputedCallback<string>,
-  toValue: ComputedCallback<LocationDescriptor>,
+  toValue: ComputedCallback<To>,
   pushValue: ComputedCallback<boolean> = true,
 ) => {
   const from = useComputedCallback(fromValue)

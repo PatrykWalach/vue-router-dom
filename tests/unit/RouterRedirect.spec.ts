@@ -2,12 +2,13 @@ import VueRouterDom, {
   RouterRedirect,
   createMemoryHistory,
   MemoryHistory,
+  State,
 } from '../../src'
 import { h, createApp } from 'vue'
 import { mount } from './utils'
 
 describe('RouterRedirect()', () => {
-  let history: MemoryHistory<{}>
+  let history: MemoryHistory<State>
   beforeEach(() => {
     history = createMemoryHistory()
   })

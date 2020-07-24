@@ -1,12 +1,16 @@
 import { h, createApp } from 'vue'
-import VueRouterDom, { createMemoryHistory, MemoryHistory } from '../../src'
+import VueRouterDom, {
+  createMemoryHistory,
+  MemoryHistory,
+  State,
+} from '../../src'
 import { RouterSwitch } from '../../src/components/RouterSwitch'
 
 import { mount } from './utils'
 
 describe('RouterSwitch', () => {
   let fn: jest.Mock<any, any>
-  let history: MemoryHistory<{}>
+  let history: MemoryHistory<State>
 
   beforeEach(() => {
     fn = jest.fn()
