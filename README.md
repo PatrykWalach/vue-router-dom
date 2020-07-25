@@ -1,54 +1,33 @@
 # vue-router-dom [![CircleCI](https://circleci.com/gh/PatrykWalach/vue-router-dom.svg?style=svg)](https://circleci.com/gh/PatrykWalach/vue-router-dom) [![codecov](https://codecov.io/gh/PatrykWalach/vue-router-dom/branch/master/graph/badge.svg)](https://codecov.io/gh/PatrykWalach/vue-router-dom) ![](https://img.shields.io/npm/v/vue-router-dom)
 
-`vue-router-dom` is a library for vue 3, providing components and hooks for routing.
-It is largely a port of [react-router](https://reacttraining.com/react-router/web/guides/philosophy).
-
-Feel free to suggest any missing features from [react-router](https://reacttraining.com/react-router/web/api) API and additional ones
+`vue-router-dom` is an implementation of [react-router](https://reacttraining.com/react-router/web/guides/philosophy) for vue 3, providing components and hooks for routing.
 
 ## Table of contents
 
-- [Getting Started](#Getting-Started)
 - [Install](#install)
-- [Manual Setup](#Manual-Setup)
+- [Tree Shaking](#Tree-Shaking)
 - [API](#api)
+- [Non-standard APIs](#Non-standard-APIs)
   - [Default](#default)
   - [Components](#Components)
-    - [RouterLink 🗹](#RouterLink)
-    - [NavLink 🗹](#NavLink)
-    - [RouterRedirect 🗹](#RouterRedirect)
-    - [RouterRoute 🗹](#RouterRoute)
-    - [RouterSwitch 🗷](#RouterSwitch)
-  - [Hooks](#hooks)
-    - [useHistory 🗹](#useHistory)
-    - [useLocation 🗹](#useLocation)
-    - [useParams 🗹](#useParams)
-    - [useRouteMatch 🗹](#useRouteMatch)
-    - [useRoutes 🗹](#useRoutes)
-    - [useRedirect 🗹](#useRedirect)
-  - [Functions](#Functions)
-    - [matchPath 🗹](#matchPath)
-    - [generatePath 🗹](#generatePath)
-  - [Other](#Other)
-    - [history](#history)
-    - [match](#match)
-
-## Getting Started
-
-1. Install the npm package.
-2. Use to provide the history and register components ([Install](#install)).
-3. Create routes with [RouterRoute](#RouterRoute) or [useRoutes](#useRoutes) hook.
-4. Add navigation with [NavLinks](#NavLink) or [useHistory](#useHistory) hook.
-5. Check out [useParams](#useParams) and [useLocation](#useLocation) to read url information.
+    - [Route](#Route)
+      - [render: func](#render:-func)
+      - [children: func](#children:-func)
+    - [WithRouter](#WithRouter)
+    - [Prompt](#Prompt)
+    - [Routers](#Routers)
+  - [With](#Routers)
 
 ## Install
 
 ```sh
-npm i vue-router-dom vue@3
+npm i vue-router-dom
 ```
 
-## Manual Setup
+## Tree Shaking
 
-Just provide the [`history`](#history) and you are ready to go
+If you don't want to register components globally,
+[`history`](#history) can be provided manually without installation.
 
 ```typescript
 import { ROUTER_HISTORY, createBrowserHistory } from 'vue-router-dom'
@@ -64,16 +43,33 @@ app.mount('#app')
 
 ## API
 
-### `default`
+For API documentaiton, please visit
+[React Router API](https://reacttraining.com/react-router/web/api).
 
-This optional step registers all the components globally and provides the [`history`](#history)
+## Non-standard APIs
+
+### default
+
+The default export provides install function that registers all the components globally and by default provides a browser [`history`](#history)
 
 ```typescript
-import VueRouterDom, { createBrowserHistory } from 'vue-router-dom'
+import VueRouterDom from 'vue-router-dom'
 import { createApp } from 'vue'
 import App from './App.vue'
 
-const history = createBrowserHistory()
+const app = createApp(App).use(VueRouterDom)
+
+app.mount('#app')
+```
+
+Other types of history can be used if needed.
+
+```typescript
+import VueRouterDom, { createHashHistory } from 'vue-router-dom'
+import { createApp } from 'vue'
+import App from './App.vue'
+
+const history = createHashHistory()
 
 const app = createApp(App).use(VueRouterDom, history)
 
@@ -82,145 +78,106 @@ app.mount('#app')
 
 ### Components
 
-#### RouterLink
+#### Route
+
+##### [render: func](https://reactrouter.com/web/api/Route/render-func)
+
+There is no `render prop`.
+
+[Route props](https://reactrouter.com/web/api/Route/route-props)
+are passed through the `default slot`.
 
 ```html
-<!-- TheHeader.vue -->
+<!-- App.vue -->
 <template>
-  <header>
-    <RouterLink to="/">Home</RouterLink>
-    <RouterLink :to="`/user/${userId}`">Profile</RouterLink>
-  </header>
+  <Route path="/user/:userId" v-slot="{ match }">
+    <User :url="match.url" :userId="match.props.userId" />
+  </Route>
 </template>
 ```
 
-#### RouterRoute
-
-Displays content if path [matches](#matchPath) current url, provides [match](#match) object through v-slot
+wrapping/composing
 
 ```html
-<!-- TheFooter.vue -->
+<!-- FadingRoute.vue -->
 <template>
-  <footer>
-    <RouterRoute path="/user/:userId/settings" v-slot="{ params }">
-      <UserFooter :userId="params.userId" />
-    </RouterRoute>
+  <Route v-slot="routeProps">
+    <FadeIn>
+      <slot v-bind="routeProps" />
+    </FadeIn>
+  </Route>
+</template>
 
-    <RouterRoute path="/user/:userId" v-slot="{ params }">
-      <UserFooter :userId="params.userId" />
-    </RouterRoute>
-  </footer>
+<!-- App.vue -->
+<template>
+  <FadingRoute path="/cool" v-slot="routeProps">
+    <Something v-bind="routeProps" />
+  </FadingRoute>
 </template>
 ```
 
-In the above example, both components will render for path `/user/:userId/settings`, second will also render for `/user/:userId`, and none will render for other paths
+##### [children: func](https://reactrouter.com/web/api/Route/children-func)
 
-Route nesting
+There is no `children prop`.
 
-```html
-<!-- TheMain.vue -->
-<template>
-  <!-- ... -->
-  <RouterRoute path="/user/:userId" v-slot="{ params, url }">
-    <ViewUser :userId="params.userId" :url="url" />
-  </RouterRoute>
-  <!-- ... -->
-</template>
-```
+[Route props](https://reactrouter.com/web/api/Route/route-props)
+are passed through `children slot`.
 
 ```html
-<!-- ViewUser.vue -->
+<!-- ListItemLink.vue -->
 <template>
-  <RouterRoute :path="url + '/about'">
-    <UserViewAbout :userId="userId" />
-  </RouterRoute>
-  <RouterRoute :path="url + '/follows'">
-    <UserViewFeed :userId="userId" />
-  </RouterRoute>
-</template>
-```
-
-#### RouterSwitch
-
->⚠️ Not implemented yet
-
-Displays first route which matched current url
-
-It's important to place more specific route first: `/user/user1` first, then `/user/:userId`, then `/home`, then `/:path`, then `/`
-
-```html
-<!-- TheMain.vue -->
-<template>
-  <main>
-    <RouterSwitch>
-      <RouterRoute path="/user/:userId" v-slot="{ params }">
-        <ViewUser :userId="params.userId" />
-      </RouterRoute>
-      <RouterRoute path="/settings">
-        <ViewSettings />
-      </RouterRoute>
-      <RouterRoute path="/">
-        <ViewHome />
-      </RouterRoute>
-    </RouterSwitch>
-  </main>
-</template>
-```
-
-### Hooks
-
-#### useRoutes
-
-Used as router switch alternative
-
-```html
-<!-- TheMain.vue -->
-<template>
-  <main>
-    <component :is="Route" />
-  </main>
+  <Route :path="to" #children="{ match }">
+    <li :class="match ? 'active' : ''">
+      <link :to="to" />
+    </li>
+  </Route>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  import ViewUser from './ViewUser.vue'
-  import ViewSettings from './ViewSettings.vue'
-  import ViewHome from './ViewHome.vue'
-  export default defineComponent({
-    setup() {
-      const Route = useRoutes({
-        '/user/:userId': ({ params: { userId } }) => h(ViewUser, { userId }),
-        '/settings': ViewSettings,
-        '/': ViewHome,
-      })
-
-      return {
-        Route,
-      }
-    },
-  })
+<script>
+  export default {
+    props: ['to'],
+  }
 </script>
+
+<!-- App.vue -->
+<template>
+  <ul>
+    <ListItemLink to="/somewhere" />
+    <ListItemLink to="/somewhere-else" />
+  </ul>
+</template>
 ```
 
-### Functions
+#### WithRouter
 
-#### matchPath
+[withRouter](https://reactrouter.com/web/api/withRouter) higher-order component is replaced by `WithRouter`. `WithRouter` provides props throught `default slot`.
 
-Useful links:
+```html
+<!-- ShowTheLocation.vue -->
+<template>
+  <div>
+    You are now at {location.pathname}
+  </div>
+</template>
 
-- [react-router](https://reacttraining.com/react-router/web/api/matchPath)
+<script>
+  export default {
+    props: ['match', 'location', 'history'],
+  }
+</script>
 
-### Other
+<!-- ShowTheLocationWithRouter.vue -->
+<template>
+  <WithRouter v-slot="{ match, location, history }">
+    <ShowTheLocation :match="match" :location="location" :history="history" />
+  </WithRouter>
+</template>
+```
 
-#### history
+#### Prompt
 
-Useful links:
+is not implemented
 
-- [react-router](https://reacttraining.com/react-router/web/api/history)
-- [history](https://github.com/ReactTraining/history/)
+#### Routers
 
-#### match
-
-Useful links:
-
-- [react-router](https://reacttraining.com/react-router/web/api/match)
+`MemoryRouter`, `StaticRouter`, `HashRouter`, `BrowserRouter` are not implemented because history is provided on the install
