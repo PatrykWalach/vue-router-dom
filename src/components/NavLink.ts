@@ -1,23 +1,26 @@
 import { PathFunction, useResolvePath } from '../utils/resolvePath'
-
-import { computed, defineComponent, h } from 'vue'
-import { RouterLink } from './RouterLink'
-import { RouterMatch } from '../api/types'
+import { computed, defineComponent, toRef, h } from 'vue'
 import { useRouteMatch } from '../hooks/useRouteMatch'
-import { Location, To } from 'history'
 import { useLocation } from '../hooks/useLocation'
+
+import { Location, To, PartialLocation } from 'history'
+import { RouterMatch } from '../api/types'
+import { Link } from './Link'
 
 export interface NavLinkProps {
   activeClassName: string
   activeStyle: Record<string, string>
   exact: boolean
-  isActive(match: RouterMatch | null, location: Location): boolean
+  isActive(match: RouterMatch | null, location: PartialLocation): boolean
   strict: boolean
   to: To | PathFunction
+  location: PartialLocation
+  ariaCurrent: string
 }
 
 export const NavLink = defineComponent({
   name: 'NavLink',
+
   props: {
     activeClassName: {
       default: '',
@@ -32,24 +35,36 @@ export const NavLink = defineComponent({
     exact: {
       default: false,
       required: false,
-      //  type: Boolean
-    },
-    isActive: {
-      default: () => Boolean,
-      required: false,
-      // type: Function,
+      type: Boolean,
     },
     strict: {
       default: false,
       required: false,
-      // type: Boolean
+      type: Boolean,
+    },
+    isActive: {
+      default: () => Boolean,
+      required: false,
+      type: Function,
+    } as any,
+    location: {
+      default: null,
+      type: Object,
+      required: false,
+    },
+    ariaCurrent: {
+      default: 'page',
+      required: true,
+      type: String,
     },
     to: { default: '', required: true, type: [String, Object, Function] },
   },
-  setup(props: Readonly<NavLinkProps>, { slots }) {
-    const location = useLocation()
 
-    const path = useResolvePath(() => props.to, location)
+  setup(props: Readonly<NavLinkProps>, { slots }) {
+    const routerLocation = useLocation()
+    const location = computed(() => props.location || routerLocation.value)
+
+    const path = useResolvePath(toRef(props, 'to'), location)
 
     const match = useRouteMatch(() => ({
       exact: props.exact,
@@ -59,15 +74,20 @@ export const NavLink = defineComponent({
 
     const active = computed(() => props.isActive(match.value, location.value))
 
+    const className = computed(() => active.value && props.activeClassName)
+
+    const style = computed(() => active.value && props.activeStyle)
+
     return () =>
       h(
-        RouterLink,
+        Link,
         {
-          class: active.value && props.activeClassName,
-          style: active.value && props.activeStyle,
+          style: style.value,
+          class: className.value,
           to: props.to,
+          ariaCurrent: props.ariaCurrent,
         },
-        slots.default,
+        { default: slots.default },
       )
   },
 })

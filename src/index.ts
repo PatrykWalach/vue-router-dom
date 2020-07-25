@@ -1,8 +1,9 @@
-export { RouterLink } from './components/RouterLink'
+export { Link } from './components/Link'
 export { NavLink } from './components/NavLink'
-export { RouterRoute } from './components/RouterRoute'
-export { RouterSwitch } from './components/RouterSwitch'
-export { RouterRedirect } from './components/RouterRedirect'
+export { Route } from './components/Route'
+export { Switch } from './components/Switch'
+export { Redirect } from './components/Redirect'
+export { WithRouter } from './components/WithRouter'
 
 export { useHistory } from './hooks/useHistory'
 export { useLocation } from './hooks/useLocation'
