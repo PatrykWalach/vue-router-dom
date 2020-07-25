@@ -10,7 +10,8 @@ describe('generatePath()', () => {
 
     expect(path).toStrictEqual(USER(userId))
   })
-  it('generates path with params', () => {
+  
+  it('generates nested path with params', () => {
     const userId = '17'
     const postId = '12'
     const path = generatePath(USER() + POST(), { userId, postId })

@@ -1,4 +1,4 @@
-import { createVariations } from './utils'
+// import { createVariations } from './utils'
 import { matchPath } from '../../src'
 
 describe('matchPath', () => {
@@ -25,10 +25,7 @@ describe('matchPath', () => {
       const match = matchPath(pathname, { strict: true, path })
       expect(match).toStrictEqual(null)
     })
-
-    createVariations({
-      pathname: () => [path, path + 'one/two'],
-    }).forEach(({ pathname }) =>
+    ;[path, path + 'one/two'].forEach((pathname) =>
       it(`matches`, () => {
         const match = matchPath(pathname, { strict: true, path })
         expect(match).not.toStrictEqual(null)
@@ -44,10 +41,7 @@ describe('matchPath', () => {
       const match = matchPath(pathname, { path, strict: true, exact: true })
       expect(match).not.toStrictEqual(null)
     })
-
-    createVariations({
-      pathname: () => [pathname + '/', pathname + '/two'],
-    }).forEach(({ pathname }) =>
+    ;[pathname + '/', pathname + '/two'].forEach((pathname) =>
       it(`does not match`, () => {
         const match = matchPath(pathname, { path, strict: true, exact: true })
         expect(match).toStrictEqual(null)
