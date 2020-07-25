@@ -4,32 +4,49 @@ import {
 } from '../utils/computedCallback'
 
 import { useRouteMatch } from './useRouteMatch'
-import { watch, computed } from 'vue'
+import { watch, computed, watchEffect } from 'vue'
 import { useHistoryReplace } from '../utils/historyReplace'
 import { To } from 'history'
+import { MatchPathOptions, MatchPathOptionsPath } from '../api/types'
+import { compilePath } from '../utils/compilePath'
+import { generatePath } from '../api/generatePath'
+import { useLocationToHref } from '../utils/useLocationToHref'
 
 export const useRedirect = (
-  fromValue: ComputedCallback<string>,
+  optionsValue: ComputedCallback<MatchPathOptions | MatchPathOptionsPath>,
   toValue: ComputedCallback<To>,
-  pushValue: ComputedCallback<boolean> = true,
+  pushValue: ComputedCallback<boolean> = false,
 ) => {
-  const from = useComputedCallback(fromValue)
   const to = useComputedCallback(toValue)
   const push = useComputedCallback(pushValue)
-  const locationTo = computed(() => {
+  const options = useComputedCallback(optionsValue)
+
+  const routeMatchOptions = computed(() => {
+    const optionsValue = options.value
+
+    return optionsValue instanceof Object
+      ? optionsValue
+      : { path: optionsValue }
+  })
+
+  const toLocation = computed(() => {
     const toValue = to.value
     return toValue instanceof Object ? toValue : { pathname: toValue }
   })
-  const match = useRouteMatch(from)
+
+  const toPath = useLocationToHref(toLocation)
+
+  const match = useRouteMatch(routeMatchOptions)
+
   const historyGo = useHistoryReplace(() => !push.value)
 
-  return watch(
-    match,
-    (match) => {
-      match && historyGo.value(locationTo.value)
-    },
-    {
-      immediate: true,
-    },
-  )
+  watchEffect(() => {
+    const matchValue = match.value
+    if (!matchValue) {
+      return
+    }
+    const nextPath = generatePath(toPath.value, matchValue.params)
+
+    historyGo.value(nextPath)
+  })
 }

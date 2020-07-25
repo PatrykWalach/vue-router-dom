@@ -1,7 +1,6 @@
 import { RouterMatch } from '../api/types'
 import { useComputedCallback, ComputedCallback } from './computedCallback'
-import { computed, provide } from 'vue'
-import { ROUTE_PARAMS } from '../api/keys'
+import { computed } from 'vue'
 
 export const useMatchToParams = (
   matchValue: ComputedCallback<RouterMatch | null>,
@@ -13,7 +12,5 @@ export const useMatchToParams = (
     return (matchValue && matchValue.params) || {}
   })
 
-  provide(ROUTE_PARAMS, params)
-
-  return params
+  return params.value
 }

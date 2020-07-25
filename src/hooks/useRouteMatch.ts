@@ -4,18 +4,23 @@ import {
   useComputedCallback,
 } from '../utils/computedCallback'
 import { MatchPathOptions, MatchPathOptionsPath } from '../api/types'
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 import { matchPath } from '../api/matchPath'
-import { useMatchToParams } from '../utils/matchToParams'
+import { CLOSEST_MATCH } from '../api/keys'
+import { PartialLocation } from 'history'
+import { useLocationPath } from '../utils/useLocationPath'
 
 export const useRouteMatch = (
   pathValue: ComputedCallback<MatchPathOptions | MatchPathOptionsPath>,
+  locationValue: ComputedCallback<PartialLocation> = {},
 ) => {
   const path = useComputedCallback(pathValue)
-  const location = useLocation()
-  const match = computed(() => matchPath(location.value.pathname, path.value))
+  const location = useComputedCallback(locationValue)
+  const pathname = useLocationPath(location)
+  
+  const match = computed(() => matchPath(pathname.value, path.value))
 
-  useMatchToParams(match)
+  provide(CLOSEST_MATCH, match)
 
   return match
 }

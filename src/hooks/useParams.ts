@@ -1,10 +1,9 @@
-import { Ref, computed } from 'vue'
-import { ROUTE_PARAMS } from '../api/keys'
 import { RouterParams } from '../api/types'
-import { inject } from 'vue'
+import { useMatch } from './useMatch'
+import { useMatchToParams } from '../utils/useMatchToParams'
 
-export const useParams = <T extends RouterParams>() =>
-  inject(
-    ROUTE_PARAMS,
-    computed(() => ({})),
-  ) as Ref<T>
+export const useParams = <P extends RouterParams>() => {
+  const match = useMatch<P>()
+
+  return useMatchToParams(match)
+}

@@ -1,10 +1,11 @@
-import { onBeforeUnmount, readonly, ref, computed } from 'vue'
+import { onBeforeUnmount, computed, shallowRef } from 'vue'
 import { useHistory } from './useHistory'
+import { State, BrowserHistory } from 'history'
 
-export const useLocation = () => {
-  const history = useHistory()
+export const useLocation = <S extends State = State>() => {
+  const history = useHistory<BrowserHistory<S>>()
 
-  const location = ref(history.location)
+  const location = shallowRef(history.location)
 
   const unlisten = history.listen((update) => {
     location.value = update.location

@@ -1,9 +1,9 @@
 import { InjectionKey, Ref } from 'vue'
 import { HashHistory, MemoryHistory, BrowserHistory } from 'history'
-import { RouterParams } from './types'
+import { RouterMatch } from './types'
 
-export const ROUTE_PARAMS: InjectionKey<Readonly<Ref<RouterParams>>> = Symbol(
-  'ROUTER_HISTORY',
+export const CLOSEST_MATCH: InjectionKey<Ref<RouterMatch | null>> = Symbol(
+  'CLOSEST_MATCH',
 )
 
 export const ROUTER_HISTORY: InjectionKey<

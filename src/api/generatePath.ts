@@ -4,8 +4,9 @@ import { Cache } from '../utils/Cache'
 
 const cache = new Cache<PathFunction<object>>()
 
-export const generatePath = (pattern: string, params: RouterParams) => {
+const getToPath = (pattern: string) => {
   const cachedResult = cache.get(pattern)
+
   if (cachedResult) {
     return cachedResult
   }
@@ -13,6 +14,12 @@ export const generatePath = (pattern: string, params: RouterParams) => {
   const toPath = compile(pattern, { encode: encodeURIComponent })
 
   cache.set(pattern, toPath)
+
+  return toPath
+}
+
+export const generatePath = (pattern: string, params: RouterParams) => {
+  const toPath = getToPath(pattern)
 
   return toPath(params)
 }
