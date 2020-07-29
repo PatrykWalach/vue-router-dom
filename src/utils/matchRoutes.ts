@@ -1,6 +1,6 @@
 import { PartialLocation, parsePath } from 'history'
-import { RouteObject } from '../hooks/useRoutes'
-import { RouterMatch, RouterParams } from '../api/types'
+
+import {  RouterParams, RouteObject } from '../api/types'
 import { joinPaths } from './resolvePath'
 import { matchPath } from '../api/matchPath'
 

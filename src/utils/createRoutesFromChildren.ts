@@ -1,14 +1,11 @@
-import { RouteObject } from '../hooks/useRoutes'
 import {
-  VNode,
   isVNode,
   VNodeNormalizedChildren,
-  withCtx,
-  h,
   renderSlot,
   Slots,
   Fragment,
 } from 'vue'
+import { RouteObject } from '../api/types'
 
 export const createRoutesFromChildren = (
   normalizedChildren: VNodeNormalizedChildren,
@@ -56,8 +53,6 @@ export const createRoutesFromChildren = (
 
     routes.push(route)
   }
-
-  // routes[0]&& console.log(routes[0].children)
 
   return routes
 }
