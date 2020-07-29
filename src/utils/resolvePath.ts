@@ -1,22 +1,36 @@
-import { PartialLocation, State, Location, To } from 'history'
-import { computed } from 'vue'
-import { useComputedCallback, ComputedCallback } from './computedCallback'
+import { To, parsePath, Path } from 'history'
 
-export type PathFunction = (location: PartialLocation) => To
+const trimTrailingSlashes = (path: string) => path.replace(/\/+$/, '')
+const normalizeSlashes = (path: string) => path.replace(/\/\/+/g, '/')
+export const joinPaths = (paths: string[]) => normalizeSlashes(paths.join('/'))
+const splitPath = (path: string) => normalizeSlashes(path).split('/')
 
-export const resolvePath = <S extends State = State>(
-  path: PartialLocation<S> | PathFunction | string,
-  location: PartialLocation,
-): PartialLocation<S> => {
-  const pathname = path instanceof Function ? path(location) : path
-  return pathname instanceof Object ? pathname : { pathname }
+const resolvePathname = (toPathname: string, fromPathname: string): string => {
+  const segments = splitPath(trimTrailingSlashes(fromPathname))
+  const relativeSegments = splitPath(toPathname)
+
+  relativeSegments.forEach((segment) => {
+    if (segment === '..') {
+      // Keep the root "" segment so the pathname starts at /
+      if (segments.length > 1) segments.pop()
+    } else if (segment !== '.') {
+      segments.push(segment)
+    }
+  })
+
+  return segments.length > 1 ? joinPaths(segments) : '/'
 }
 
-export const useResolvePath = <S extends State = State>(
-  pathValue: ComputedCallback<PartialLocation<S> | PathFunction | string>,
-  routeValue: ComputedCallback<PartialLocation>,
-) => {
-  const path = useComputedCallback(pathValue)
-  const route = useComputedCallback(routeValue)
-  return computed(() => resolvePath(path.value, route.value))
+export const resolvePath = (to: To, fromPathname = '/'): Path => {
+  const { pathname: toPathname, search = '', hash = '' } =
+    typeof to === 'string' ? parsePath(to) : to
+
+  const pathname = toPathname
+    ? resolvePathname(
+        toPathname,
+        toPathname.startsWith('/') ? '/' : fromPathname,
+      )
+    : fromPathname
+
+  return { pathname, search, hash }
 }

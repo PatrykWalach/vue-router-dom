@@ -1,56 +1,66 @@
+import { mount } from '@vue/test-utils'
+import { h, markRaw } from 'vue'
 import {
-  createMemoryHistory,
+  Routes,
   Route,
-  MemoryHistory,
   ROUTER_HISTORY,
+  createMemoryHistory,
+  MemoryHistory,
+  State,
 } from '../../src'
 
-import { mount } from '@vue/test-utils'
-
-describe('Route', () => {
-  let history: MemoryHistory
+describe('A <Route>', () => {
+  let history: MemoryHistory<State>
 
   beforeEach(() => {
     history = createMemoryHistory()
   })
 
-  it('does not render for no match', () => {
-    history.push('/settings')
-
-    const slotText = 'Home'
-
-    const wrapper = mount(Route, {
-      props: { path: '/home' },
-      slots: {
-        default: slotText,
-      },
-      global: {
-        provide: {
-          [ROUTER_HISTORY as symbol]: history,
-        },
-      },
-    })
-
-    expect(wrapper.html()).not.toContain(slotText)
-  })
-
-  it('renders for a match', () => {
+  it('renders its `element` prop', () => {
     history.push('/home')
 
-    const slotText = 'Home'
+    const Home = () => h('h1', 'Home')
 
-    const wrapper = mount(Route, {
-      props: { path: '/home' },
-      slots: {
-        default: slotText,
+    const wrapper = mount(
+      {
+        render: () =>
+          h(Routes, () => h(Route, { path: '/home', element: h(Home) })),
       },
-      global: {
-        provide: {
-          [ROUTER_HISTORY as symbol]: history,
+      {
+        global: {
+          provide: {
+            [ROUTER_HISTORY as symbol]: history,
+          },
         },
       },
-    })
+    )
 
-    expect(wrapper.html()).toContain(slotText)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
+  })
+
+  it('renders its child routes when no `element` prop is given', () => {
+    history.push('/app/home')
+
+    const Home = () => h('h1', 'Home')
+
+    const wrapper = mount(
+      {
+        render: () =>
+          h(Routes, () =>
+            h(Route, { path: 'app' }, () =>
+              [h(Route, { path: 'home', element: h(Home) })],
+            ),
+          ),
+      },
+      {
+        global: {
+          provide: {
+            [ROUTER_HISTORY as symbol]: history,
+          },
+        },
+      },
+    )
+
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
   })
 })

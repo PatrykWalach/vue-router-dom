@@ -1,9 +1,9 @@
 import { RouterParams } from '../api/types'
-import { useMatch } from './useMatch'
-import { useMatchToParams } from '../utils/useMatchToParams'
+import { useRouteContext } from '../hooks/useOutlet'
+import { computed } from 'vue'
 
 export const useParams = <P extends RouterParams>() => {
-  const match = useMatch<P>()
+  const context = useRouteContext()
 
-  return useMatchToParams(match)
+  return computed(() => context.value.params)
 }

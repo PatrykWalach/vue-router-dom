@@ -1,25 +1,17 @@
-import { PathFunction, compile } from 'path-to-regexp'
+
 import { RouterParams } from './types'
-import { Cache } from '../utils/Cache'
+import { assert } from '../utils/assert'
 
-const cache = new Cache<PathFunction<object>>()
-
-const getToPath = (pattern: string) => {
-  const cachedResult = cache.get(pattern)
-
-  if (cachedResult) {
-    return cachedResult
-  }
-
-  const toPath = compile(pattern, { encode: encodeURIComponent })
-
-  cache.set(pattern, toPath)
-
-  return toPath
-}
-
-export const generatePath = (pattern: string, params: RouterParams) => {
-  const toPath = getToPath(pattern)
-
-  return toPath(params)
+export const generatePath = (
+  path: string,
+  params: RouterParams = {},
+): string => {
+  return path
+    .replace(/:(\w+)/g, (_, key) => {
+      assert(params[key] != null, `Missing ":${key}" param`)
+      return params[key]
+    })
+    .replace(/\/*\*$/, (_) =>
+      params['*'] == null ? '' : params['*'].replace(/^\/*/, '/'),
+    )
 }

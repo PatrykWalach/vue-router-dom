@@ -68,9 +68,7 @@
   },
   "dependencies": {
     "@types/history": "^4.7.5",
-    "history": "^5.0.0",
-    "path-to-regexp": "^6.1.0",
-    "querystringify": "^2.1.1"
+    "history": "^5.0.0"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

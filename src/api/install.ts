@@ -1,18 +1,39 @@
+import { Outlet } from '../components/Outlet'
+import { Route } from '../components/Route'
+import { Routes } from '../components/Routes'
+import { Link } from '../components/Link'
+import { NavLink } from '../components/NavLink'
+// import { Redirect } from '../components/Redirect'
+// import { WithRouter } from '../components/WithRouter'
+
+import { ROUTER_HISTORY } from './keys'
+import {
+  createBrowserHistory,
+  createHashHistory,
+  createMemoryHistory,
+} from 'history'
+
 import {
   MemoryHistory,
-  createBrowserHistory,
   BrowserHistory,
   HashHistory,
+  BrowserHistoryOptions,
+  HashHistoryOptions,
+  MemoryHistoryOptions,
 } from 'history'
 import { App } from 'vue'
-import { ROUTER_HISTORY } from './keys'
 
-import { Link } from '../components/Link'
-import { Route } from '../components/Route'
-import { Switch } from '../components/Switch'
-import { NavLink } from '../components/NavLink'
-import { Redirect } from '../components/Redirect'
-import { WithRouter } from '../components/WithRouter'
+export const createBrowserRouter = (options?: BrowserHistoryOptions) => ({
+  install: (app: App) => install(app, createBrowserHistory(options)),
+})
+
+export const createMemoryRouter = (options?: MemoryHistoryOptions) => ({
+  install: (app: App) => install(app, createMemoryHistory(options)),
+})
+
+export const createHashRouter = (options?: HashHistoryOptions) => ({
+  install: (app: App) => install(app, createHashHistory(options)),
+})
 
 export const install = (
   app: App,
@@ -23,9 +44,10 @@ export const install = (
 ) =>
   app
     .provide(ROUTER_HISTORY, history)
-    .component('NavLink', NavLink)
     .component('Link', Link)
-    .component('Redirect', Redirect)
+    .component('NavLink', NavLink)
+    .component('Outlet', Outlet)
     .component('Route', Route)
-    .component('Switch', Switch)
-    .component('WithRouter', WithRouter)
+    .component('Routes', Routes)
+// .component('Redirect', Redirect)
+// .component('WithRouter', WithRouter)

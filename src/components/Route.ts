@@ -1,78 +1,68 @@
-import { defineComponent, h, Slot, Component } from 'vue'
-import { useRouteMatch } from '../hooks/useRouteMatch'
-import { WithRouter } from './WithRouter'
-import { PartialLocation } from 'history'
+import {
+  defineComponent,
+  h,
+  // Slot,
+  // Component,
+  // provide,
+  // inject,
+  // computed,
+  VNode,
+  renderSlot,
+  Slots,
+  FunctionalComponent,
+} from 'vue'
+// import { useRouteMatch } from '../hooks/useRouteMatch'
+// import { WithRouter } from './WithRouter'
+// import { PartialLocation } from 'history'
+// import { OUTLET_ROUTES } from '../api/keys'
+// import { useMatch } from '../hooks/useMatch'
+import { Outlet } from './Outlet'
 
 export interface RouteProps {
-  exact: boolean
-  strict: boolean
-  path: string | string[]
-  component: Component
-  sensitive: boolean
-  location: PartialLocation
+  caseSensitive: boolean
+  element: VNode
+  path: string
 }
-
-const renderWithProps = (slot: Slot) => h(WithRouter, {}, { default: slot })
 
 export const Route = defineComponent({
   name: 'Route',
 
   props: {
-    exact: {
-      default: false,
-      required: false,
-      type: Boolean,
-    },
     path: {
       default: '',
       required: false,
-      type: [String, Array],
-    } as any,
-    strict: {
+      type: String,
+    },
+    caseSensitive: {
       default: false,
       required: false,
       type: Boolean,
     },
-    sensitive: {
-      default: false,
+    element: {
+      default: () => h(Outlet),
       required: false,
-      type: Boolean,
-    },
-    location: {
-      default: () => ({}),
-      required: false,
-      type: Object,
-    },
-    component: {
-      default: null,
-      required: false,
-      type: [Object, Function],
-    },
+      type: null,
+    } ,
   },
 
   setup(props: Readonly<RouteProps>, { slots }) {
-    const match = useRouteMatch(
-      () => props,
-      () => props.location,
-    )
+    // const prevMatch = useMatch()
 
-    return () => {
-      const { children, default: standard } = slots
+    // const nestedPath = computed(() => {
+    //   const { path = '' } = prevMatch.value || {}
 
-      const matchValue = match.value
+    //   return path + props.path
+    // })
 
-      if (children) {
-        return renderWithProps(children)
-      }
+    // const match = useRouteMatch(() => ({
+    //   path: nestedPath.value,
+    //   sensitive: props.caseSensitive,
+    //   exact: true,
+    // }))
 
-      if (props.component) {
-        return (
-          matchValue &&
-          renderWithProps((routerProps) => [h(props.component, routerProps)])
-        )
-      }
+    // // provide(OUTLET_ROUTES, slots.outlet)
 
-      return matchValue && standard && renderWithProps(standard)
-    }
+    return () => props.element //|| h(Outlet)
+    return () => renderSlot(slots, 'element', undefined, () => [h(Outlet)])
   },
 })

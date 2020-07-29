@@ -4,7 +4,7 @@ import { useLocation } from '../hooks/useLocation'
 import { computed } from 'vue'
 
 export const useLocationPath = (
-  locationValue: ComputedCallback<PartialLocation>,
+  locationValue: ComputedCallback<PartialLocation> = {},
 ) => {
   const location = useComputedCallback(locationValue)
   const routerLocation = useLocation()

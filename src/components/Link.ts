@@ -1,16 +1,16 @@
-import { PathFunction, useResolvePath } from '../utils/resolvePath'
-import { defineComponent, h, toRefs, Component } from 'vue'
-import { useHistoryReplace } from '../utils/historyReplace'
+import { defineComponent, h, toRefs } from 'vue'
 import { useLocation } from '../hooks/useLocation'
-import { useLocationToHref } from '../utils/useLocationToHref'
+import { useNavigate } from '../hooks/useNavigate'
 
-import { To } from 'history'
+import { To, State, createPath } from 'history'
+import { useResolvedPath } from '../utils/useResolvedPath'
+import { useHref } from '../utils/useHref'
 
 export interface LinkProps {
-  to: To | PathFunction
-  tag: string
+  state: State
   replace: boolean
-  component: Component
+  to: To
+  tag: string
 }
 
 export const Link = defineComponent({
@@ -27,27 +27,40 @@ export const Link = defineComponent({
       required: false,
       type: String,
     },
-    to: { default: '', required: true, type: [String, Object, Function] },
-    component: { default: null, required: false, type: [Object, Function] },
+    to: { default: '', required: true, type: [String, Object] },
+    state: { default: undefined, required: false, type: Object },
   },
 
-  setup(props: Readonly<LinkProps>, { slots }) {
-    const location = useLocation()
-    const { to, replace } = toRefs(props)
-    const nextLocation = useResolvePath(to, location)
-    const historyGo = useHistoryReplace(replace)
+  emits: { click: null },
 
-    const href = useLocationToHref(nextLocation)
+  setup(props: Readonly<LinkProps>, { slots, emit }) {
+    const { to, replace } = toRefs(props)
+    const href = useHref(to)
+    const location = useLocation()
+    const path = useResolvedPath(to)
+
+    const navigate = useNavigate()
 
     const handleClick = (event: MouseEvent) => {
+      emit('click', event)
       event.stopPropagation()
       event.preventDefault()
-      historyGo.value(nextLocation.value)
+
+      const pathValue = path.value
+
+      // If the URL hasn't changed, replace instead of push.
+      const replaceValue =
+        !!replace.value || createPath(location.value) === createPath(pathValue)
+
+      navigate(pathValue, {
+        replace: replaceValue,
+        state: props.state,
+      })
     }
 
     return () =>
       h(
-        props.component || props.tag,
+        props.tag,
         {
           href: href.value,
           onClick: handleClick,
