@@ -17,8 +17,8 @@ export const useNavigate = () => {
       replace = false,
     }: {
       state?: State
-      replace: boolean
-    },
+      replace?: boolean
+    } = {},
   ) => {
     if (typeof to === 'number') {
       return history.go(to)
