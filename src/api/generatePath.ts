@@ -1,4 +1,3 @@
-
 import { RouterParams } from './types'
 import { assert } from '../utils/assert'
 

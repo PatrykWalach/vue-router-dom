@@ -1,5 +1,7 @@
+import { Routes, Route } from '../../src'
+
 import { defineComponent, h } from 'vue'
-import { useOutlet, Routes, Route } from '../../src'
+import { useOutlet } from '../../src'
 import { mount } from '@vue/test-utils'
 import { createMemoryRouter } from '../../src/api/install'
 

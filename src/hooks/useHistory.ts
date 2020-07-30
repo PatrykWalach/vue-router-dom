@@ -1,7 +1,8 @@
-import { MemoryHistory, History, BrowserHistory, HashHistory } from 'history'
 import { ROUTER_HISTORY } from '../api/keys'
 import { assert } from '../utils/assert'
 import { inject } from 'vue'
+
+import type { MemoryHistory, BrowserHistory, HashHistory } from 'history'
 
 export const useHistory = <
   T extends BrowserHistory | HashHistory | MemoryHistory = BrowserHistory

@@ -1,11 +1,7 @@
-import {
-  isVNode,
-  VNodeNormalizedChildren,
-  renderSlot,
-  Slots,
-  Fragment,
-} from 'vue'
-import { RouteObject } from '../api/types'
+import { isVNode, Fragment, renderSlot } from 'vue'
+
+import type { VNodeNormalizedChildren, Slots } from 'vue'
+import type { RouteObject } from '../api/types'
 
 export const createRoutesFromChildren = (
   normalizedChildren: VNodeNormalizedChildren,

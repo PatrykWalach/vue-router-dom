@@ -1,8 +1,9 @@
-import { State, To } from 'history'
 import { useHistory } from './useHistory'
 import { resolvePath } from '../utils/resolvePath'
 import { useRouteContext } from '../hooks/useOutlet'
 import { computed } from 'vue'
+
+import type { State, To } from 'history'
 
 export const useNavigate = () => {
   const history = useHistory()

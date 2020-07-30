@@ -1,13 +1,10 @@
+import { Routes, Route } from '../../src'
+
 import { mount } from '@vue/test-utils'
-import { h, markRaw } from 'vue'
-import {
-  Routes,
-  Route,
-  ROUTER_HISTORY,
-  createMemoryHistory,
-  MemoryHistory,
-  State,
-} from '../../src'
+import { h } from 'vue'
+import { ROUTER_HISTORY, createMemoryHistory } from '../../src'
+
+import { MemoryHistory, State } from '../../src'
 
 describe('A <Route>', () => {
   let history: MemoryHistory<State>
@@ -47,9 +44,9 @@ describe('A <Route>', () => {
       {
         render: () =>
           h(Routes, () =>
-            h(Route, { path: 'app' }, () =>
-              [h(Route, { path: 'home', element: h(Home) })],
-            ),
+            h(Route, { path: 'app' }, () => [
+              h(Route, { path: 'home', element: h(Home) }),
+            ]),
           ),
       },
       {

@@ -1,18 +1,6 @@
-// import { compilePath } from '../utils/compilePath'
-import {
-  RouterParams,
-} from './types'
 import { assert } from '../utils/assert'
 
-type PathPattern =
-  | string
-  | { path: string; caseSensitive?: boolean; end?: boolean }
-
-export interface PathMatch<P extends RouterParams = RouterParams> {
-  path: string
-  pathname: string
-  params: P
-}
+import type { RouterParams, PathPattern, PathMatch } from './types'
 
 const compilePath = (
   path: string,

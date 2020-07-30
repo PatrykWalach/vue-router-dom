@@ -1,11 +1,11 @@
 import { defineComponent, h, toRefs } from 'vue'
 import { useLocation } from '../hooks/useLocation'
 import { useNavigate } from '../hooks/useNavigate'
-
-import { To, State, createPath } from 'history'
+import { createPath } from 'history'
 import { useResolvedPath } from '../utils/useResolvedPath'
 import { useHref } from '../utils/useHref'
 
+import type{ To, State } from 'history'
 export interface LinkProps {
   state: State
   replace: boolean

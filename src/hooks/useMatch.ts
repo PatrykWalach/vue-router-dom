@@ -1,10 +1,11 @@
-import {
-  ComputedCallback,
-  useComputedCallback,
-} from '../utils/computedCallback'
-import { computed, ComputedRef } from 'vue'
-import { matchPath, PathMatch } from '../api/matchPath'
+import { useComputedCallback } from '../utils/computedCallback'
+import { computed } from 'vue'
+import { matchPath } from '../api/matchPath'
 import { useRouteContext } from '../hooks/useOutlet'
+
+import type { ComputedRef } from 'vue'
+import type { ComputedCallback } from '../utils/computedCallback'
+import type { PathMatch } from '../api/types'
 
 export const useMatch = (
   patternValue: ComputedCallback<string>,

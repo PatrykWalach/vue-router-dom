@@ -1,23 +1,8 @@
-import {
-  defineComponent,
-  h,
-  // Slot,
-  // Component,
-  // provide,
-  // inject,
-  // computed,
-  VNode,
-  renderSlot,
-  Slots,
-  FunctionalComponent,
-} from 'vue'
-// import { useRouteMatch } from '../hooks/useRouteMatch'
-// import { WithRouter } from './WithRouter'
-// import { PartialLocation } from 'history'
-// import { OUTLET_ROUTES } from '../api/keys'
-// import { useMatch } from '../hooks/useMatch'
 import { Outlet } from './Outlet'
 
+import { defineComponent, h } from 'vue'
+
+import type{ VNode } from 'vue'
 export interface RouteProps {
   caseSensitive: boolean
   element: VNode
@@ -42,27 +27,10 @@ export const Route = defineComponent({
       default: () => h(Outlet),
       required: false,
       type: null,
-    } ,
+    },
   },
 
-  setup(props: Readonly<RouteProps>, { slots }) {
-    // const prevMatch = useMatch()
-
-    // const nestedPath = computed(() => {
-    //   const { path = '' } = prevMatch.value || {}
-
-    //   return path + props.path
-    // })
-
-    // const match = useRouteMatch(() => ({
-    //   path: nestedPath.value,
-    //   sensitive: props.caseSensitive,
-    //   exact: true,
-    // }))
-
-    // // provide(OUTLET_ROUTES, slots.outlet)
-
-    return () => props.element //|| h(Outlet)
-    return () => renderSlot(slots, 'element', undefined, () => [h(Outlet)])
+  setup(props: Readonly<RouteProps>) {
+    return () => props.element
   },
 })

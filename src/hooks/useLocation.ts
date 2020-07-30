@@ -1,6 +1,7 @@
 import { onBeforeUnmount, computed, shallowRef } from 'vue'
 import { useHistory } from './useHistory'
-import { State, BrowserHistory } from 'history'
+
+import type { State, BrowserHistory } from 'history'
 
 export const useLocation = <S extends State = State>() => {
   const history = useHistory<BrowserHistory<S>>()

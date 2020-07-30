@@ -1,22 +1,15 @@
-import {
-  computed,
-  watchEffect,
-  provide,
-  defineComponent,
-  VNode,
-  h,
-} from 'vue'
+import { computed, watchEffect, provide, defineComponent, h } from 'vue'
 import { joinPaths } from '../utils/resolvePath'
 import { ROUTE_CONTEXT } from '../api/keys'
 import { useRouteContext } from '../hooks/useOutlet'
 import { useLocation } from './useLocation'
 import { assert } from '../utils/assert'
 import { matchRoutes } from '../utils/matchRoutes'
-import {
-  ComputedCallback,
-  useComputedCallback,
-} from '../utils/computedCallback'
-import { RouteObject } from '../api/types'
+import { useComputedCallback } from '../utils/computedCallback'
+
+import type { VNode } from 'vue'
+import type { ComputedCallback } from '../utils/computedCallback'
+import type { RouteObject } from '../api/types'
 
 const Provide = defineComponent({
   props: {
@@ -31,6 +24,11 @@ const Provide = defineComponent({
     return () => slots.default && slots.default()
   },
 })
+
+const useJoinPaths = (pathsValue: ComputedCallback<string[]>) => {
+  const paths = useComputedCallback(pathsValue)
+  return computed(() => joinPaths(paths.value))
+}
 
 export const useRoutes = (
   routesValue: ComputedCallback<RouteObject[]>,
@@ -63,14 +61,14 @@ export const useRoutes = (
     )
   })
 
-  const basename = computed(() => {
-    const basename = defaultBasename.value
-    const parentPathnameValue = parentPathname.value
+  const joinedPaths = useJoinPaths(() => [
+    parentPathname.value,
+    defaultBasename.value,
+  ])
 
-    return basename
-      ? joinPaths([parentPathnameValue, basename])
-      : parentPathnameValue
-  })
+  const basename = computed(() =>
+    defaultBasename.value ? joinedPaths.value : parentPathname.value,
+  )
 
   const matches = computed(() =>
     matchRoutes(routes.value, location.value, basename.value),

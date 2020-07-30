@@ -1,4 +1,6 @@
-import { To, parsePath, Path } from 'history'
+import { parsePath } from 'history'
+
+import type { To, Path } from 'history'
 
 const trimTrailingSlashes = (path: string) => path.replace(/\/+$/, '')
 const normalizeSlashes = (path: string) => path.replace(/\/\/+/g, '/')

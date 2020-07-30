@@ -3,14 +3,12 @@ import {
   useComputedCallback,
 } from '../utils/computedCallback'
 
-// import { useRouteMatch } from './useRouteMatch'
-import { computed, watchEffect } from 'vue'
-import { generatePath } from '../api/generatePath'
-import { useLocationToHref } from '../utils/useLocationToHref'
+import { computed } from 'vue'
 
 import { To } from 'history'
 import { MatchPathOptions, MatchPathOptionsPath } from '../api/types'
 import { useNavigate } from './useNavigate'
+import { useHref } from '../utils/useHref'
 
 export const useRedirect = (
   optionsValue: ComputedCallback<MatchPathOptions | MatchPathOptionsPath>,
@@ -34,7 +32,7 @@ export const useRedirect = (
     return toValue instanceof Object ? toValue : { pathname: toValue }
   })
 
-  const toPath = useLocationToHref(toLocation)
+  const toPath = useHref(toLocation)
 
   // const match = useRouteMatch(routeMatchOptions)
 

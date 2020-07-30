@@ -1,12 +1,8 @@
+import { Routes, Route, Outlet } from '../../src'
+
 import { mount } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
-import {
-  Routes,
-  Route,
-  Outlet,
-  useParams,
-  createMemoryRouter,
-} from '../../src'
+import { useParams, createMemoryRouter } from '../../src'
 
 describe('A <Routes>', () => {
   it('renders the first route that matches the URL', () => {
@@ -48,19 +44,21 @@ describe('A <Routes>', () => {
   it('renders with non-element children', () => {
     const Home = () => h('h1', 'Home')
 
-    const wrapper = mount({
-      render: () =>
-        h(Routes, () => [
-          h(Route, { path: '/', element: h(Home) }),
-          false,
-          undefined,
-        ]),
-    },
-    {
-      global: {
-        plugins: [createMemoryRouter()],
+    const wrapper = mount(
+      {
+        render: () =>
+          h(Routes, () => [
+            h(Route, { path: '/', element: h(Home) }),
+            false,
+            undefined,
+          ]),
       },
-    },)
+      {
+        global: {
+          plugins: [createMemoryRouter()],
+        },
+      },
+    )
 
     expect(wrapper.html()).toMatchSnapshot()
   })

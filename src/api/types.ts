@@ -1,4 +1,4 @@
-import { VNode } from "vue"
+import type { VNode } from 'vue'
 
 export interface RouterMatch<Params extends RouterParams = RouterParams> {
   isExact: boolean
@@ -29,4 +29,14 @@ export interface RouteContextObject<P extends RouterParams = RouterParams> {
   params: P
   pathname: string
   route: RouteObject | null
+}
+
+export type PathPattern =
+  | string
+  | { path: string; caseSensitive?: boolean; end?: boolean }
+
+export interface PathMatch<P extends RouterParams = RouterParams> {
+  path: string
+  pathname: string
+  params: P
 }

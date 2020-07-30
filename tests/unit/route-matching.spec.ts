@@ -1,15 +1,16 @@
-import { h, defineComponent, markRaw, Component } from 'vue'
+import { Routes, Route, Outlet } from '../../src'
+
+import { h, defineComponent, markRaw } from 'vue'
 import {
   useRoutes,
-  RouteObject,
-  Routes,
-  Route,
   createMemoryHistory,
   ROUTER_HISTORY,
   useParams,
-  Outlet,
 } from '../../src'
 import { mount } from '@vue/test-utils'
+
+import { Component } from 'vue'
+import { RouteObject } from '../../src'
 
 describe('route matching', () => {
   const renderRoutes = (component: Component, entry: string) => {
@@ -182,7 +183,7 @@ describe('route matching', () => {
   })
 
   function describeRouteMatching(component: Component) {
-    let testPaths = [
+    const testPaths = [
       '/courses',
       '/courses/routing',
       '/courses/routing/grades',

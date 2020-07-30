@@ -1,7 +1,7 @@
 import { defineComponent, toRefs } from 'vue'
 import { useRedirect } from '../hooks/useRedirect'
 
-import { To } from 'history'
+import type{ To } from 'history'
 
 export interface RedirectProps {
   to: To

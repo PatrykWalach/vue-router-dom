@@ -1,8 +1,9 @@
-import { PartialLocation, parsePath } from 'history'
-
-import {  RouterParams, RouteObject } from '../api/types'
+import { parsePath } from 'history'
 import { joinPaths } from './resolvePath'
 import { matchPath } from '../api/matchPath'
+
+import type { PartialLocation } from 'history'
+import type { RouterParams, RouteObject } from '../api/types'
 
 export const matchRoutes = (
   routes: RouteObject[],

@@ -13,7 +13,7 @@ import {
   createMemoryHistory,
 } from 'history'
 
-import {
+import type {
   MemoryHistory,
   BrowserHistory,
   HashHistory,
@@ -21,7 +21,7 @@ import {
   HashHistoryOptions,
   MemoryHistoryOptions,
 } from 'history'
-import { App } from 'vue'
+import type { App } from 'vue'
 
 export const createBrowserRouter = (options?: BrowserHistoryOptions) => ({
   install: (app: App) => install(app, createBrowserHistory(options)),

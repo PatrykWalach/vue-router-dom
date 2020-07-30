@@ -1,5 +1,7 @@
+import { Routes, Route } from '../../src'
+
+import { createMemoryHistory, install } from '../../src'
 import { onMounted, h, defineComponent } from 'vue'
-import { Routes, Route, createMemoryHistory, install } from '../../src'
 import { mount } from '@vue/test-utils'
 
 describe('when the same component is mounted by two different routes', () => {
