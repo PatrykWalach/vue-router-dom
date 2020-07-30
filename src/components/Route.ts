@@ -1,8 +1,8 @@
 import { Outlet } from './Outlet'
 
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, renderSlot } from 'vue'
 
-import type{ VNode } from 'vue'
+import type { VNode } from 'vue'
 export interface RouteProps {
   caseSensitive: boolean
   element: VNode
@@ -30,7 +30,7 @@ export const Route = defineComponent({
     },
   },
 
-  setup(props: Readonly<RouteProps>) {
-    return () => props.element
+  setup(props: Readonly<RouteProps>, { slots }) {
+    return () => renderSlot(slots, 'element', undefined, () => [props.element])
   },
 })

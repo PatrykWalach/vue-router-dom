@@ -1,21 +1,31 @@
 import { Routes, Route } from '../../src'
 
+import { createMemoryRouter } from '../../src'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { ROUTER_HISTORY, createMemoryHistory } from '../../src'
-
-import { MemoryHistory, State } from '../../src'
 
 describe('A <Route>', () => {
-  let history: MemoryHistory<State>
+  it('renders its `element` slot', () => {
+    const Home = () => h('h1', 'Home')
 
-  beforeEach(() => {
-    history = createMemoryHistory()
+    const wrapper = mount(
+      {
+        render: () =>
+          h(Routes, () =>
+            h(Route, { path: '/home' }, { element: () => [h(Home)] }),
+          ),
+      },
+      {
+        global: {
+          plugins: [createMemoryRouter({ initialEntries: ['/home'] })],
+        },
+      },
+    )
+
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
   })
 
   it('renders its `element` prop', () => {
-    history.push('/home')
-
     const Home = () => h('h1', 'Home')
 
     const wrapper = mount(
@@ -25,9 +35,7 @@ describe('A <Route>', () => {
       },
       {
         global: {
-          provide: {
-            [ROUTER_HISTORY as symbol]: history,
-          },
+          plugins: [createMemoryRouter({ initialEntries: ['/home'] })],
         },
       },
     )
@@ -36,8 +44,6 @@ describe('A <Route>', () => {
   })
 
   it('renders its child routes when no `element` prop is given', () => {
-    history.push('/app/home')
-
     const Home = () => h('h1', 'Home')
 
     const wrapper = mount(
@@ -51,9 +57,7 @@ describe('A <Route>', () => {
       },
       {
         global: {
-          provide: {
-            [ROUTER_HISTORY as symbol]: history,
-          },
+          plugins: [createMemoryRouter({ initialEntries: ['/app/home'] })],
         },
       },
     )
