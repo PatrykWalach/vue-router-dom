@@ -1,5 +1,5 @@
 import { useHistory } from './useHistory'
-import { resolvePath } from '../utils/resolvePath'
+import { resolvePath } from '../api/resolvePath'
 import { useRouteContext } from '../hooks/useOutlet'
 import { computed } from 'vue'
 

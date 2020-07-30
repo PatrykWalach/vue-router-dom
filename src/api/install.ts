@@ -3,8 +3,6 @@ import { Route } from '../components/Route'
 import { Routes } from '../components/Routes'
 import { Link } from '../components/Link'
 import { NavLink } from '../components/NavLink'
-// import { Redirect } from '../components/Redirect'
-// import { WithRouter } from '../components/WithRouter'
 
 import { ROUTER_HISTORY } from './keys'
 import {
@@ -49,5 +47,3 @@ export const install = (
     .component('Outlet', Outlet)
     .component('Route', Route)
     .component('Routes', Routes)
-// .component('Redirect', Redirect)
-// .component('WithRouter', WithRouter)

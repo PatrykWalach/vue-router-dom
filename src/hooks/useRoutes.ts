@@ -1,15 +1,16 @@
 import { computed, watchEffect, provide, defineComponent, h } from 'vue'
-import { joinPaths } from '../utils/resolvePath'
+import { joinPaths } from '../api/resolvePath'
 import { ROUTE_CONTEXT } from '../api/keys'
 import { useRouteContext } from '../hooks/useOutlet'
 import { useLocation } from './useLocation'
 import { assert } from '../utils/assert'
-import { matchRoutes } from '../utils/matchRoutes'
+import { matchRoutes } from '../api/matchRoutes'
 import { useComputedCallback } from '../utils/computedCallback'
 
 import type { VNode } from 'vue'
 import type { ComputedCallback } from '../utils/computedCallback'
-import type { RouteObject } from '../api/types'
+import type { RouteObject, PartialRouteObject } from '../api/types'
+import { createRoutesFromArray } from '../api/createRoutesFromArray'
 
 const Provide = defineComponent({
   props: {
@@ -30,7 +31,7 @@ const useJoinPaths = (pathsValue: ComputedCallback<string[]>) => {
   return computed(() => joinPaths(paths.value))
 }
 
-export const useRoutes = (
+export const useRoutes_ = (
   routesValue: ComputedCallback<RouteObject[]>,
   basenameValue: ComputedCallback<string> = '',
 ) => {
@@ -97,4 +98,14 @@ export const useRoutes = (
         null,
       ),
   )
+}
+
+export const useRoutes = (
+  partialRoutesValue: ComputedCallback<PartialRouteObject[]>,
+  basename: ComputedCallback<string> = '',
+) => {
+  const partialRoutes = useComputedCallback(partialRoutesValue)
+  const routes = computed(() => createRoutesFromArray(partialRoutes.value))
+
+  return useRoutes_(routes, basename)
 }

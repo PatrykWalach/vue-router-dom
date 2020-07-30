@@ -1,9 +1,9 @@
 import { computed } from 'vue'
-import { resolvePath } from './resolvePath'
+import { resolvePath } from '../api/resolvePath'
 import { useRouteContext } from '../hooks/useOutlet'
-import { useComputedCallback } from './computedCallback'
+import { useComputedCallback } from '../utils/computedCallback'
 
-import type { ComputedCallback } from './computedCallback'
+import type { ComputedCallback } from '../utils/computedCallback'
 import type { To } from 'history'
 
 export const useResolvedPath = (toValue: ComputedCallback<To>) => {

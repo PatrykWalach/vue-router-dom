@@ -24,6 +24,14 @@ export interface RouteObject {
   path: string
 }
 
+export interface PartialRouteObject {
+  caseSensitive?: boolean
+  children?: PartialRouteObject[]
+  element: VNode | null
+  path: string
+}
+
+
 export interface RouteContextObject<P extends RouterParams = RouterParams> {
   outlet: VNode | null
   params: P

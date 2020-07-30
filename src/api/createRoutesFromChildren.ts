@@ -8,33 +8,26 @@ export const createRoutesFromChildren = (
 ) => {
   const routes: RouteObject[] = []
 
-  // console.log(normalizedChildren)
-
   const children = Array.isArray(normalizedChildren)
     ? normalizedChildren
     : normalizedChildren instanceof Object
     ? [renderSlot(normalizedChildren as Slots, 'default')]
     : []
 
-  // Array.isArray(normalizedChildren) ||
-  //   console.log(normalizedChildren, '-->', children)
-
   for (const element of children) {
     if (!isVNode(element)) {
       continue
     }
-    // console.log(element)
-    // console.log(element.children)
+
     if (element.type === 'template' || element.type === Fragment) {
-      // console.log('fragment')
       routes.push(...createRoutesFromChildren(element.children))
       continue
     }
 
-    const { path, from, caseSensitive } = element.props || {}
+    const { path, caseSensitive } = element.props || {}
 
     const route: RouteObject = {
-      path: from || path || '/',
+      path: path || '/',
       caseSensitive: caseSensitive === true,
       element,
     }

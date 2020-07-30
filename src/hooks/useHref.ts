@@ -1,9 +1,9 @@
 import { useResolvedPath } from './useResolvedPath'
 import { useHistory } from '../hooks/useHistory'
 import { computed } from 'vue'
-import { useComputedCallback } from './computedCallback'
+import { useComputedCallback } from '../utils/computedCallback'
 
-import type { ComputedCallback } from './computedCallback'
+import type { ComputedCallback } from '../utils/computedCallback'
 import type { To } from 'history'
 
 export const useHref = (toValue: ComputedCallback<To>) => {

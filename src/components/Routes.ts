@@ -1,6 +1,6 @@
 import { defineComponent, computed, renderSlot } from 'vue'
-import { useRoutes } from '../hooks/useRoutes'
-import { createRoutesFromChildren } from '../utils/createRoutesFromChildren'
+import { useRoutes_ } from '../hooks/useRoutes'
+import { createRoutesFromChildren } from '../api/createRoutesFromChildren'
 
 export interface RoutesProps {
   basename: string
@@ -16,7 +16,7 @@ export const Routes = defineComponent({
       createRoutesFromChildren([renderSlot(slots, 'default')]),
     )
 
-    const vnode = useRoutes(routes, () => props.basename)
+    const vnode = useRoutes_(routes, () => props.basename)
 
     return () => vnode.value
   },

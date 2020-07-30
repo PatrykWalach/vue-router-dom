@@ -2,7 +2,7 @@ import { Link } from './Link'
 
 import { computed, defineComponent, h, toRefs } from 'vue'
 import { useLocation } from '../hooks/useLocation'
-import { useResolvedPath } from '../utils/useResolvedPath'
+import { useResolvedPath } from '../hooks/useResolvedPath'
 import { useComputedCallback } from '../utils/computedCallback'
 
 import type{ LinkProps } from './Link'
