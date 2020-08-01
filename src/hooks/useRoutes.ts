@@ -1,4 +1,11 @@
-import { computed, watchEffect, provide, defineComponent, h } from 'vue'
+import {
+  computed,
+  watchEffect,
+  provide,
+  defineComponent,
+  h,
+  renderSlot,
+} from 'vue'
 import { joinPaths } from '../api/resolvePath'
 import { ROUTE_CONTEXT } from '../api/keys'
 import { useRouteContext } from '../hooks/useOutlet'
@@ -22,7 +29,7 @@ const Provide = defineComponent({
       props.injectionKey,
       computed(() => props.value),
     )
-    return () => slots.default && slots.default()
+    return () => renderSlot(slots, 'default')
   },
 })
 
