@@ -1,21 +1,31 @@
-import { PathFunction, useResolvePath } from '../utils/resolvePath'
-import { computed, defineComponent, toRef, h } from 'vue'
-import { useRouteMatch } from '../hooks/useRouteMatch'
-import { useLocation } from '../hooks/useLocation'
-
-import { Location, To, PartialLocation } from 'history'
-import { RouterMatch } from '../api/types'
 import { Link } from './Link'
 
-export interface NavLinkProps {
+import { computed, defineComponent, h, toRefs } from 'vue'
+import { useLocation } from '../hooks/useLocation'
+import { useResolvedPath } from '../hooks/useResolvedPath'
+import { useComputedCallback } from '../utils/useComputedCallback'
+
+import type{ LinkProps } from './Link'
+import type{ ComputedCallback } from '../utils/useComputedCallback'
+export interface NavLinkProps extends LinkProps {
   activeClassName: string
   activeStyle: Record<string, string>
-  exact: boolean
-  isActive(match: RouterMatch | null, location: PartialLocation): boolean
-  strict: boolean
-  to: To | PathFunction
-  location: PartialLocation
+  caseSensitive: boolean
+  end: boolean
   ariaCurrent: string
+}
+
+const useCaseSensitive = (
+  caseSensitiveValue: ComputedCallback<boolean>,
+  stringValue: ComputedCallback<string>,
+) => {
+  const caseSensitive = useComputedCallback(caseSensitiveValue)
+  const string = useComputedCallback(stringValue)
+
+  return computed(() => {
+    const stringValue = string.value
+    return caseSensitive.value ? stringValue : stringValue.toLowerCase()
+  })
 }
 
 export const NavLink = defineComponent({
@@ -32,51 +42,60 @@ export const NavLink = defineComponent({
       required: false,
       type: Object,
     },
-    exact: {
+    caseSensitive: {
       default: false,
       required: false,
       type: Boolean,
     },
-    strict: {
+    end: {
       default: false,
       required: false,
       type: Boolean,
     },
-    isActive: {
-      default: () => Boolean,
+    replace: {
+      default: false,
       required: false,
-      type: Function,
-    } as any,
-    location: {
-      default: null,
-      type: Object,
-      required: false,
+      type: Boolean,
     },
-    ariaCurrent: {
-      default: 'page',
-      required: true,
+    tag: {
+      default: 'a',
+      required: false,
       type: String,
     },
-    to: { default: '', required: true, type: [String, Object, Function] },
+    to: { default: '', required: true, type: [String, Object] },
+    state: { default: undefined, required: false, type: Object },
+    ariaCurrent: { default: 'page', type: String, required: false },
   },
 
   setup(props: Readonly<NavLinkProps>, { slots }) {
-    const routerLocation = useLocation()
-    const location = computed(() => props.location || routerLocation.value)
+    const location = useLocation()
+    const { to, caseSensitive } = toRefs(props)
+    const path = useResolvedPath(to)
 
-    const path = useResolvePath(toRef(props, 'to'), location)
+    const locationPathname = computed(() => location.value.pathname)
+    const toPathname = computed(() => path.value.pathname)
 
-    const match = useRouteMatch(() => ({
-      exact: props.exact,
-      path: path.value.pathname,
-      strict: props.strict,
-    }))
+    const caseSensitiveLocationPathname = useCaseSensitive(
+      caseSensitive,
+      locationPathname,
+    )
+    const caseSensitiveToPathname = useCaseSensitive(caseSensitive, toPathname)
 
-    const active = computed(() => props.isActive(match.value, location.value))
+    const isActive = computed(() => {
+      const locationPathname = caseSensitiveLocationPathname.value
+      const toPathname = caseSensitiveToPathname.value
+      return props.end
+        ? locationPathname === toPathname
+        : locationPathname.startsWith(toPathname)
+    })
 
-    const className = computed(() => active.value && props.activeClassName)
+    const ariaCurrent = computed(() =>
+      isActive.value ? props.ariaCurrent : undefined,
+    )
 
-    const style = computed(() => active.value && props.activeStyle)
+    const className = computed(() => isActive.value && props.activeClassName)
+
+    const style = computed(() => isActive.value && props.activeStyle)
 
     return () =>
       h(
@@ -85,7 +104,7 @@ export const NavLink = defineComponent({
           style: style.value,
           class: className.value,
           to: props.to,
-          ariaCurrent: props.ariaCurrent,
+          ariaCurrent: ariaCurrent.value,
         },
         { default: slots.default },
       )

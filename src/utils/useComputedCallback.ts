@@ -1,4 +1,6 @@
-import { Ref, computed, isRef } from 'vue'
+import { computed, isRef } from 'vue'
+
+import type { Ref } from 'vue'
 
 export type ComputedCallback<T> = Ref<T> | (() => T) | T
 

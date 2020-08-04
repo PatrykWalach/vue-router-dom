@@ -1,21 +1,45 @@
 import { generatePath } from '../../src'
 
-describe('generatePath()', () => {
-  const USER = (userId = ':userId') => `/user/${userId}`
-  const POST = (postId = ':postId') => `/post/${postId}`
-
-  it('generates path with param', () => {
-    const userId = '17'
-    const path = generatePath(USER(), { userId })
-
-    expect(path).toStrictEqual(USER(userId))
+describe('generatePath', () => {
+  describe('with no params', () => {
+    it('returns the unmodified path', () => {
+      expect(generatePath('/')).toBe('/')
+      expect(generatePath('/courses')).toBe('/courses')
+    })
   })
-  
-  it('generates nested path with params', () => {
-    const userId = '17'
-    const postId = '12'
-    const path = generatePath(USER() + POST(), { userId, postId })
 
-    expect(path).toStrictEqual(USER(userId) + POST(postId))
+  describe('with params', () => {
+    it('returns the path without those params interpolated', () => {
+      expect(generatePath('/courses/:id', { id: 'routing' })).toBe(
+        '/courses/routing',
+      )
+      expect(generatePath('/courses/*', { '*': 'routing/grades' })).toBe(
+        '/courses/routing/grades',
+      )
+      expect(generatePath('*', { '*': 'routing/grades' })).toBe(
+        '/routing/grades',
+      )
+    })
+  })
+
+  describe('with extraneous params', () => {
+    it('ignores them', () => {
+      expect(generatePath('/', { course: 'routing' })).toBe('/')
+      expect(generatePath('/courses', { course: 'routing' })).toBe('/courses')
+    })
+  })
+
+  describe('with missing params', () => {
+    it('throws an error', () => {
+      expect(() => {
+        generatePath('/:lang/login', {})
+      }).toThrow(/Missing ":lang" param/)
+    })
+  })
+
+  describe('with a missing splat', () => {
+    it('omits the splat and trims the trailing slash', () => {
+      expect(generatePath('/courses/*', {})).toBe('/courses')
+    })
   })
 })

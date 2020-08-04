@@ -1,9 +1,20 @@
-import { inject, InjectionKey, Ref, computed } from 'vue'
-import { RouterMatch, RouterParams } from '../api/types'
-import { CLOSEST_MATCH } from '../api/keys'
+import { useComputedCallback } from '../utils/useComputedCallback'
+import { computed } from 'vue'
+import { matchPath } from '../api/matchPath'
+import { useRouteContext } from '../hooks/useOutlet'
 
-export const useMatch = <Params extends RouterParams = RouterParams>() =>
-  inject<Ref<RouterMatch<Params> | null>>(
-    CLOSEST_MATCH,
-    computed(() => null),
-  )
+import type { ComputedRef } from 'vue'
+import type { ComputedCallback } from '../utils/useComputedCallback'
+import type { PathMatch } from '../api/types'
+
+export const useMatch = (
+  patternValue: ComputedCallback<string>,
+): ComputedRef<PathMatch<Record<string, string>> | null> => {
+  const pattern = useComputedCallback(patternValue)
+  const context = useRouteContext()
+  const pathname = computed(() => context.value.pathname)
+
+  const match = computed(() => matchPath(pattern.value, pathname.value))
+
+  return match
+}

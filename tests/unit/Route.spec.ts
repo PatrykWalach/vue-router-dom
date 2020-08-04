@@ -1,56 +1,50 @@
-import {
-  createMemoryHistory,
-  Route,
-  MemoryHistory,
-  ROUTER_HISTORY,
-} from '../../src'
-
+import { Routes, Route, MemoryRouter } from '../../src'
 import { mount } from '@vue/test-utils'
+import { h } from 'vue'
 
-describe('Route', () => {
-  let history: MemoryHistory
+describe('A <Route>', () => {
+  it('renders its `element` slot', () => {
+    const Home = () => h('h1', 'Home')
 
-  beforeEach(() => {
-    history = createMemoryHistory()
-  })
-
-  it('does not render for no match', () => {
-    history.push('/settings')
-
-    const slotText = 'Home'
-
-    const wrapper = mount(Route, {
-      props: { path: '/home' },
-      slots: {
-        default: slotText,
-      },
-      global: {
-        provide: {
-          [ROUTER_HISTORY as symbol]: history,
-        },
-      },
+    const wrapper = mount({
+      render: () =>
+        h(MemoryRouter, { initialEntries: ['/home'] }, () =>
+          h(Routes, () =>
+            h(Route, { path: '/home' }, { element: () => [h(Home)] }),
+          ),
+        ),
     })
 
-    expect(wrapper.html()).not.toContain(slotText)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
   })
 
-  it('renders for a match', () => {
-    history.push('/home')
+  it('renders its `element` prop', () => {
+    const Home = () => h('h1', 'Home')
 
-    const slotText = 'Home'
-
-    const wrapper = mount(Route, {
-      props: { path: '/home' },
-      slots: {
-        default: slotText,
-      },
-      global: {
-        provide: {
-          [ROUTER_HISTORY as symbol]: history,
-        },
-      },
+    const wrapper = mount({
+      render: () =>
+        h(MemoryRouter, { initialEntries: ['/home'] }, () =>
+          h(Routes, () => h(Route, { path: '/home', element: h(Home) })),
+        ),
     })
 
-    expect(wrapper.html()).toContain(slotText)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
+  })
+
+  it('renders its child routes when no `element` prop is given', () => {
+    const Home = () => h('h1', 'Home')
+
+    const wrapper = mount({
+      render: () =>
+        h(MemoryRouter, { initialEntries: ['/app/home'] }, () =>
+          h(Routes, () =>
+            h(Route, { path: 'app' }, () => [
+              h(Route, { path: 'home', element: h(Home) }),
+            ]),
+          ),
+        ),
+    })
+
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
   })
 })

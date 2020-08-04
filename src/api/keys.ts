@@ -1,11 +1,10 @@
-import { InjectionKey, Ref } from 'vue'
-import { HashHistory, MemoryHistory, BrowserHistory } from 'history'
-import { RouterMatch } from './types'
+import type { InjectionKey, Ref } from 'vue'
+import type { RouteContextObject, LocationContextObject } from './types'
 
-export const CLOSEST_MATCH: InjectionKey<Ref<RouterMatch | null>> = Symbol(
-  'CLOSEST_MATCH',
+export const ROUTE_CONTEXT: InjectionKey<Ref<RouteContextObject>> = Symbol(
+  'ROUTE_CONTEXT',
 )
 
-export const ROUTER_HISTORY: InjectionKey<
-  HashHistory | MemoryHistory | BrowserHistory
-> = Symbol('ROUTER_HISTORY')
+export const LOCATION_CONTEXT: InjectionKey<LocationContextObject> = Symbol(
+  'LOCATION_CONTEXT',
+)
