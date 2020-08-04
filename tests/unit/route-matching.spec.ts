@@ -1,12 +1,7 @@
-import { Routes, Route, Outlet } from '../../src'
+import { Routes, Route, Outlet, MemoryRouter } from '../../src'
 
 import { h, defineComponent, markRaw } from 'vue'
-import {
-  useRoutes,
-  createMemoryHistory,
-  ROUTER_HISTORY,
-  useParams,
-} from '../../src'
+import { useRoutes, useParams } from '../../src'
 import { mount } from '@vue/test-utils'
 
 import { Component } from 'vue'
@@ -14,14 +9,9 @@ import { RouteObject } from '../../src'
 
 describe('route matching', () => {
   const renderRoutes = (component: Component, entry: string) => {
-    const history = createMemoryHistory({ initialEntries: [entry] })
-
-    const wrapper = mount(component, {
-      global: {
-        provide: {
-          [ROUTER_HISTORY as symbol]: history,
-        },
-      },
+    const wrapper = mount({
+      render: () =>
+        h(MemoryRouter, { initialEntries: [entry] }, () => [h(component)]),
     })
 
     return wrapper.html()

@@ -1,7 +1,7 @@
-import { useComputedCallback } from '../utils/computedCallback'
+import { useComputedCallback } from '../utils/useComputedCallback'
 import { useBlocker } from './useBlocker'
 
-import type { ComputedCallback } from '../utils/computedCallback'
+import type { ComputedCallback } from '../utils/useComputedCallback'
 
 export const usePrompt = (
   messageValue: ComputedCallback<string>,

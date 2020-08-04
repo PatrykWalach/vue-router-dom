@@ -12,10 +12,10 @@ import { useRouteContext } from '../hooks/useOutlet'
 import { useLocation } from './useLocation'
 import { assert } from '../utils/assert'
 import { matchRoutes } from '../api/matchRoutes'
-import { useComputedCallback } from '../utils/computedCallback'
+import { useComputedCallback } from '../utils/useComputedCallback'
 
 import type { VNode } from 'vue'
-import type { ComputedCallback } from '../utils/computedCallback'
+import type { ComputedCallback } from '../utils/useComputedCallback'
 import type { RouteObject, PartialRouteObject } from '../api/types'
 import { createRoutesFromArray } from '../api/createRoutesFromArray'
 
@@ -58,15 +58,16 @@ export const useRoutes_ = (
   watchEffect(() => {
     const parentRouteValue = parentRoute.value
 
-    assert(
-      !parentRouteValue || parentRouteValue.path.endsWith('*'),
-      `You rendered descendant <Routes> (or called \`useRoutes\`) at "${parentPathname.value}"` +
-        ` (under <Route path="${parentPath.value}">) but the parent route path has no trailing "*".` +
-        ` This means if you navigate deeper, the parent won't match anymore and therefore` +
-        ` the child routes will never render.` +
-        `\n\n` +
-        `Please change the parent <Route path="${parentPath.value}"> to <Route path="${parentPath.value}/*">.`,
-    )
+    if (parentRouteValue && !parentRouteValue.path.endsWith('*')) {
+      console.warn(
+        `You rendered descendant <Routes> (or called \`useRoutes\`) at "${parentPathname.value}"` +
+          ` (under <Route path="${parentPath.value}">) but the parent route path has no trailing "*".` +
+          ` This means if you navigate deeper, the parent won't match anymore and therefore` +
+          ` the child routes will never render.` +
+          `\n\n` +
+          `Please change the parent <Route path="${parentPath.value}"> to <Route path="${parentPath.value}/*">.`,
+      )
+    }
   })
 
   const joinedPaths = useJoinPaths(() => [

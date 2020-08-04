@@ -1,11 +1,11 @@
-import { Routes, Route } from '../../src'
+import { Routes, Route, MemoryRouter, Link } from '../../src'
 
 import { createMemoryHistory, install } from '../../src'
 import { onMounted, h, defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
 describe('when the same component is mounted by two different routes', () => {
-  it('mounts only once', () => {
+  it('mounts only once', async () => {
     let mountCount = 0
 
     const Home = defineComponent({
@@ -17,29 +17,23 @@ describe('when the same component is mounted by two different routes', () => {
       },
     })
 
-    const history = createMemoryHistory({ initialEntries: ['/home'] })
-
-    const wrapper = mount(
-      {
-        render: () =>
+    const wrapper = mount({
+      render: () =>
+        h(MemoryRouter, { initialEntries: ['/home'] }, () => [
+          h(Link, { to: '/another-home' }),
           h(Routes, () => [
             h(Route, { path: 'home', element: h(Home) }),
             h(Route, { path: 'another-home', element: h(Home) }),
           ]),
-      },
-      {
-        global: {
-          plugins: [(app) => install(app, history)],
-        },
-      },
-    )
+        ]),
+    })
 
-    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<a href=\\"/another-home\\"></a><h1>Home</h1>"`)
     expect(mountCount).toBe(1)
 
-    history.push('/another-home')
+    await wrapper.find('a').trigger('click')
 
-    expect(wrapper.html()).toMatchInlineSnapshot(`"<h1>Home</h1>"`)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<a href=\\"/another-home\\"></a><h1>Home</h1>"`)
     expect(mountCount).toBe(1)
   })
 })

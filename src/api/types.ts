@@ -1,4 +1,5 @@
 import type { VNode } from 'vue'
+import { Action, Location, History } from 'history'
 
 export interface RouterMatch<Params extends RouterParams = RouterParams> {
   isExact: boolean
@@ -31,12 +32,22 @@ export interface PartialRouteObject {
   path: string
 }
 
-
 export interface RouteContextObject<P extends RouterParams = RouterParams> {
   outlet: VNode | null
   params: P
   pathname: string
   route: RouteObject | null
+}
+
+export type Navigator = Omit<
+  History,
+  'action' | 'location' | 'back' | 'forward' | 'listen'
+>;
+export interface LocationContextObject {
+  action: Action
+  location: Location
+  navigator: Navigator
+  static: boolean
 }
 
 export type PathPattern =

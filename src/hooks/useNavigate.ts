@@ -1,12 +1,21 @@
-import { useHistory } from './useHistory'
 import { resolvePath } from '../api/resolvePath'
 import { useRouteContext } from '../hooks/useOutlet'
-import { computed } from 'vue'
+import { computed, inject, toRef } from 'vue'
 
 import type { State, To } from 'history'
+import { LOCATION_CONTEXT } from '../api/keys'
+import { assert } from '../utils/assert'
 
 export const useNavigate = () => {
-  const history = useHistory()
+  const locationContext = inject(LOCATION_CONTEXT,null)
+
+  assert(
+    locationContext,
+    `useNavigate() may be used only in the context of a <Router> component.`,
+  )
+
+  const navigator = toRef(locationContext, 'navigator')
+
   const context = useRouteContext()
   const pathname = computed(() => context.value.pathname)
 
@@ -20,12 +29,14 @@ export const useNavigate = () => {
       replace?: boolean
     } = {},
   ) => {
+    const navigatorValue = navigator.value
+
     if (typeof to === 'number') {
-      return history.go(to)
+      return navigatorValue.go(to)
     }
 
     const path = resolvePath(to, pathname.value)
-    ;(replace ? history.replace : history.push)(path, state)
+    ;(replace ? navigatorValue.replace : navigatorValue.push)(path, state)
   }
 
   return navigate

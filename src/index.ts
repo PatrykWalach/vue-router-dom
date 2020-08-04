@@ -1,8 +1,4 @@
-export { Link } from './components/Link'
-export { NavLink } from './components/NavLink'
-export { Outlet } from './components/Outlet'
-export { Route } from './components/Route'
-export { Routes } from './components/Routes'
+export * from './components/index'
 
 export { useBlocker } from './hooks/useBlocker'
 export { useHref } from './hooks/useHref'

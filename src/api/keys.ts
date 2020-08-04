@@ -1,11 +1,10 @@
 import type { InjectionKey, Ref } from 'vue'
-import type { HashHistory, MemoryHistory, BrowserHistory } from 'history'
-import type { RouteContextObject } from './types'
-
-export const ROUTER_HISTORY: InjectionKey<
-  HashHistory | MemoryHistory | BrowserHistory
-> = Symbol('ROUTER_HISTORY')
+import type { RouteContextObject, LocationContextObject } from './types'
 
 export const ROUTE_CONTEXT: InjectionKey<Ref<RouteContextObject>> = Symbol(
   'ROUTE_CONTEXT',
+)
+
+export const LOCATION_CONTEXT: InjectionKey<LocationContextObject> = Symbol(
+  'LOCATION_CONTEXT',
 )

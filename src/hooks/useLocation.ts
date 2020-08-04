@@ -1,18 +1,15 @@
-import { onBeforeUnmount, computed, shallowRef } from 'vue'
-import { useHistory } from './useHistory'
-
-import type { State, BrowserHistory } from 'history'
+import { computed, inject, toRef, Ref } from 'vue'
+import type { State, Location } from 'history'
+import { LOCATION_CONTEXT } from '../api/keys'
+import { assert } from '../utils/assert'
 
 export const useLocation = <S extends State = State>() => {
-  const history = useHistory<BrowserHistory<S>>()
+  const locationContext = inject(LOCATION_CONTEXT,null)
 
-  const location = shallowRef(history.location)
+  assert(
+    locationContext,
+    `useLocation() may be used only in the context of a <Router> component.`,
+  )
 
-  const unlisten = history.listen((update) => {
-    location.value = update.location
-  })
-
-  onBeforeUnmount(unlisten)
-
-  return computed(() => location.value)
+  return toRef(locationContext, 'location') as Ref<Location<S>>
 }

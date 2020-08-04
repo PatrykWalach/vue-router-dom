@@ -1,9 +1,8 @@
-import { Routes, Route } from '../../src'
+import { Routes, Route, MemoryRouter } from '../../src'
 
 import { defineComponent, h } from 'vue'
 import { useOutlet } from '../../src'
 import { mount } from '@vue/test-utils'
-import { createMemoryRouter } from '../../src/api/install'
 
 describe('useOutlet', () => {
   describe('when there is no child route', () => {
@@ -15,17 +14,12 @@ describe('useOutlet', () => {
         },
       })
 
-      const wrapper = mount(
-        {
-          render: () =>
+      const wrapper = mount({
+        render: () =>
+          h(MemoryRouter, { initialEntries: ['/home'] }, () =>
             h(Routes, () => h(Route, { path: '/home', element: h(Home) })),
-        },
-        {
-          global: {
-            plugins: [createMemoryRouter({ initialEntries: ['/home'] })],
-          },
-        },
-      )
+          ),
+      })
 
       expect(wrapper.html()).toMatchInlineSnapshot(`"<!---->"`)
     })
@@ -42,23 +36,16 @@ describe('useOutlet', () => {
 
       const Profile = () => h('p', 'Profile')
 
-      const wrapper = mount(
-        {
-          render: () =>
+      const wrapper = mount({
+        render: () =>
+          h(MemoryRouter, { initialEntries: ['/users/profile'] }, () =>
             h(Routes, () =>
               h(Route, { path: 'users', element: h(Users) }, () => [
                 h(Route, { path: 'profile', element: h(Profile) }),
               ]),
             ),
-        },
-        {
-          global: {
-            plugins: [
-              createMemoryRouter({ initialEntries: ['/users/profile'] }),
-            ],
-          },
-        },
-      )
+          ),
+      })
 
       expect(wrapper.html()).toMatchSnapshot()
     })

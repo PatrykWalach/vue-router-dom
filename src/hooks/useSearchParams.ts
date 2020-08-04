@@ -1,9 +1,9 @@
 import { computed } from 'vue'
-import { useComputedCallback } from '../utils/computedCallback'
+import { useComputedCallback } from '../utils/useComputedCallback'
 import { useNavigate } from './useNavigate'
 import { useLocation } from './useLocation'
 
-import type { ComputedCallback } from '../utils/computedCallback'
+import type { ComputedCallback } from '../utils/useComputedCallback'
 import type { State } from 'history'
 
 /**

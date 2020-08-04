@@ -3,10 +3,10 @@ import { Link } from './Link'
 import { computed, defineComponent, h, toRefs } from 'vue'
 import { useLocation } from '../hooks/useLocation'
 import { useResolvedPath } from '../hooks/useResolvedPath'
-import { useComputedCallback } from '../utils/computedCallback'
+import { useComputedCallback } from '../utils/useComputedCallback'
 
 import type{ LinkProps } from './Link'
-import type{ ComputedCallback } from '../utils/computedCallback'
+import type{ ComputedCallback } from '../utils/useComputedCallback'
 export interface NavLinkProps extends LinkProps {
   activeClassName: string
   activeStyle: Record<string, string>
