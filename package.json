@@ -1,6 +1,6 @@
 {
   "name": "vue-router-dom",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "Router for Vue 3 and up",
   "@pika/pack": {
     "pipeline": [
