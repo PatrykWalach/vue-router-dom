@@ -29,20 +29,19 @@ import type { State } from 'history'
  */
 export const createSearchParams = (
   init: URLSearchParamsInit = '',
-): URLSearchParams => {
-  return new URLSearchParams(
+): URLSearchParams =>
+  new URLSearchParams(
     typeof init === 'string' ||
     Array.isArray(init) ||
     init instanceof URLSearchParams
       ? init
-      : Object.keys(init).reduce((memo, key) => {
+      : Object.keys(init).reduce<ParamKeyValuePair[]>((memo, key) => {
           const value = init[key]
           return memo.concat(
             Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]],
           )
-        }, [] as ParamKeyValuePair[]),
+        }, []),
   )
-}
 
 const useSetSearchParams = () => {
   const navigate = useNavigate()
@@ -51,7 +50,7 @@ const useSetSearchParams = () => {
     nextInit: URLSearchParamsInit,
     navigateOptions?: { replace?: boolean; state?: State },
   ) => {
-    navigate('?' + createSearchParams(nextInit), navigateOptions)
+    navigate(`?${createSearchParams(nextInit)}`, navigateOptions)
   }
 }
 
@@ -67,7 +66,7 @@ const useGetSearchParams = (
 
   return computed(() => {
     const defaultSearchParamsValue = defaultSearchParams.value
-    const searchParamsValue = searchParams.value
+    const searchParamsValue = createSearchParams(searchParams.value)
 
     for (const key of defaultSearchParamsValue.keys()) {
       if (!searchParamsValue.has(key)) {
@@ -77,7 +76,7 @@ const useGetSearchParams = (
       }
     }
 
-    return searchParams
+    return searchParamsValue
   })
 }
 
