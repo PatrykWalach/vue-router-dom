@@ -10,7 +10,7 @@ export const useBlocker = (
   blocker: Blocker,
   whenValue: ComputedCallback<boolean> = true,
 ) => {
-  const locationContext = inject(LOCATION_CONTEXT,null)
+  const locationContext = inject(LOCATION_CONTEXT, null)
 
   assert(
     locationContext,

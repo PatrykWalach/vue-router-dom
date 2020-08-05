@@ -1,4 +1,4 @@
-import { defineComponent, h, toRefs } from 'vue'
+import { defineComponent, h, toRefs, PropType } from 'vue'
 import { useLocation } from '../hooks/useLocation'
 import { useNavigate } from '../hooks/useNavigate'
 import { createPath } from 'history'
@@ -6,34 +6,34 @@ import { useResolvedPath } from '../hooks/useResolvedPath'
 import { useHref } from '../hooks/useHref'
 
 import type { To, State } from 'history'
-export interface LinkProps {
-  state: State
-  replace: boolean
-  to: To
-  tag: string
+
+export const linkProps = {
+  replace: {
+    default: false,
+    required: false,
+    type: Boolean,
+  },
+  tag: {
+    default: 'a',
+    required: false,
+    type: String,
+  },
+  to: { default: '', required: true, type: [String, Object] as PropType<To> },
+  state: {
+    default: undefined,
+    required: false,
+    type: Object as PropType<State>,
+  },
 }
 
 export const Link = defineComponent({
   name: 'Link',
 
-  props: {
-    replace: {
-      default: false,
-      required: false,
-      type: Boolean,
-    },
-    tag: {
-      default: 'a',
-      required: false,
-      type: String,
-    },
-    to: { default: '', required: true, type: [String, Object] },
-    state: { default: undefined, required: false, type: Object },
-  },
+  props: linkProps,
 
   emits: { click: null },
 
-  setup(props: Readonly<LinkProps>, { slots, emit }) {
+  setup(props, { slots, emit }) {
     const { to, replace } = toRefs(props)
     const href = useHref(to)
     const location = useLocation()

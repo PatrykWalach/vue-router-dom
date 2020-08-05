@@ -10,7 +10,7 @@ export const generatePath = (
       assert(params[key] != null, `Missing ":${key}" param`)
       return params[key]
     })
-    .replace(/\/*\*$/, (_) =>
+    .replace(/\/*\*$/, () =>
       params['*'] == null ? '' : params['*'].replace(/^\/*/, '/'),
     )
 }

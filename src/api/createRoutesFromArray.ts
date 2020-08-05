@@ -8,7 +8,7 @@ export const createRoutesFromArray = (
   partialRouteObjects: PartialRouteObject[],
 ): RouteObject[] => {
   return partialRouteObjects.map((partialRoute) => {
-    let route: RouteObject = {
+    const route: RouteObject = {
       path: partialRoute.path || '/',
       caseSensitive: partialRoute.caseSensitive === true,
       element: partialRoute.element || h(Outlet),

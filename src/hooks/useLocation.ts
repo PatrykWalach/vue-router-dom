@@ -1,10 +1,10 @@
-import { computed, inject, toRef, Ref } from 'vue'
+import { inject, toRef, Ref } from 'vue'
 import type { State, Location } from 'history'
 import { LOCATION_CONTEXT } from '../api/keys'
 import { assert } from '../utils/assert'
 
 export const useLocation = <S extends State = State>() => {
-  const locationContext = inject(LOCATION_CONTEXT,null)
+  const locationContext = inject(LOCATION_CONTEXT, null)
 
   assert(
     locationContext,

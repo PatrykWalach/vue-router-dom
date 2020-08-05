@@ -10,7 +10,7 @@ import { joinPaths } from '../api/resolvePath'
 import { ROUTE_CONTEXT } from '../api/keys'
 import { useRouteContext } from '../hooks/useOutlet'
 import { useLocation } from './useLocation'
-import { assert } from '../utils/assert'
+
 import { matchRoutes } from '../api/matchRoutes'
 import { useComputedCallback } from '../utils/useComputedCallback'
 

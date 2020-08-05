@@ -1,35 +1,24 @@
-import {
-  defineComponent,
-  renderSlot,
-  provide,
-  inject,
-  computed,
-  watchEffect,
-} from 'vue'
+import { defineComponent, renderSlot, provide, PropType } from 'vue'
 import { LOCATION_CONTEXT } from '../api/keys'
-import { assert } from '../utils/assert'
 
 import { Location, Action } from 'history'
 import { Navigator } from '../api/types'
-
-interface RouterProps {
-  location: Location
-  navigator: Navigator
-  action: Action
-  static: boolean
-}
 
 export const Router = defineComponent({
   name: 'Router',
 
   props: {
-    location: { required: true, type: Object } as any,
-    navigator: { required: true, type: Object } as any,
-    action: { required: false, type: String, default: Action.Pop } as any,
+    location: { required: true, type: Object as PropType<Location> },
+    navigator: { required: true, type: Object as PropType<Navigator> },
+    action: {
+      required: false,
+      type: String as PropType<Action>,
+      default: Action.Pop,
+    },
     static: { required: false, type: Boolean, default: false },
   },
 
-  setup(props: Readonly<RouterProps>, { slots }) {
+  setup(props, { slots }) {
     provide(LOCATION_CONTEXT, props)
 
     return () => renderSlot(slots, 'default')

@@ -9,9 +9,10 @@ describe('A <Routes>', () => {
     const Home = () => h('h1', 'Home')
 
     const wrapper = mount({
-      render: ()=>h(MemoryRouter, () =>
-        h(Routes, () => h(Route, { path: '/', element: h(Home) })),
-      ),
+      render: () =>
+        h(MemoryRouter, () =>
+          h(Routes, () => h(Route, { path: '/', element: h(Home) })),
+        ),
     })
 
     expect(wrapper.html()).toMatchSnapshot()

@@ -7,7 +7,7 @@ import { LOCATION_CONTEXT } from '../api/keys'
 import { assert } from '../utils/assert'
 
 export const useNavigate = () => {
-  const locationContext = inject(LOCATION_CONTEXT,null)
+  const locationContext = inject(LOCATION_CONTEXT, null)
 
   assert(
     locationContext,

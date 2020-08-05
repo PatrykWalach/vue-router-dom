@@ -36,7 +36,7 @@ export const createSearchParams = (
     init instanceof URLSearchParams
       ? init
       : Object.keys(init).reduce((memo, key) => {
-          let value = init[key]
+          const value = init[key]
           return memo.concat(
             Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]],
           )

@@ -1,6 +1,6 @@
-import { reactive, readonly } from "vue"
+import { reactive, readonly } from 'vue'
 
-export const useReducer = <S extends object, A extends any[]>(
+export const useReducer = <S extends object, A extends unknown[]>(
   reducer: (state: S, ...args: A) => void,
   initialState: S,
 ) => {

@@ -1,22 +1,20 @@
-import { defineComponent, readonly, reactive, computed, watch, h } from 'vue'
+import { defineComponent, computed, watch, h, PropType } from 'vue'
 import { createMemoryHistory, Update, InitialEntry } from 'history'
 import { Router } from './Router'
 import { useReducer } from '../utils/useReducer'
-
-interface MemoryRouterProps {
-  initialEntries?: InitialEntry[]
-  initialIndex?: number
-}
 
 export const MemoryRouter = defineComponent({
   name: 'MemoryRouter',
 
   props: {
-    initialEntries: { required: false, type: Array } as any,
+    initialEntries: {
+      required: false,
+      type: Array as PropType<InitialEntry[]>,
+    },
     initialIndex: { required: false, type: Number },
   },
 
-  setup(props: Readonly<MemoryRouterProps>, { slots }) {
+  setup(props, { slots }) {
     const history = computed(() =>
       createMemoryHistory({
         initialEntries: props.initialEntries,

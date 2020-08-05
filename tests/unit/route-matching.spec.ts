@@ -16,7 +16,25 @@ describe('route matching', () => {
 
     return wrapper.html()
   }
+  function describeRouteMatching(component: Component) {
+    const testPaths = [
+      '/courses',
+      '/courses/routing',
+      '/courses/routing/grades',
+      '/courses/new',
+      '/courses/not/found',
+      '/courses/vue-fundamentals',
+      '/courses/advanced-vue',
+      '/',
+      '/not-found',
+    ]
 
+    testPaths.forEach((path) => {
+      it(`renders the right elements at ${path}`, () => {
+        expect(renderRoutes(component, path)).toMatchSnapshot()
+      })
+    })
+  }
   const Courses = defineComponent({
     setup() {
       return () => h('div', [h('h1', `Courses`), h(Outlet)])
@@ -171,24 +189,4 @@ describe('route matching', () => {
 
     describeRouteMatching(routes)
   })
-
-  function describeRouteMatching(component: Component) {
-    const testPaths = [
-      '/courses',
-      '/courses/routing',
-      '/courses/routing/grades',
-      '/courses/new',
-      '/courses/not/found',
-      '/courses/vue-fundamentals',
-      '/courses/advanced-vue',
-      '/',
-      '/not-found',
-    ]
-
-    testPaths.forEach((path) => {
-      it(`renders the right elements at ${path}`, () => {
-        expect(renderRoutes(component, path)).toMatchSnapshot()
-      })
-    })
-  }
 })

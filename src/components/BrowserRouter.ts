@@ -1,18 +1,19 @@
-import { defineComponent, h, computed, watch } from 'vue'
+import { defineComponent, h, computed, watch, PropType } from 'vue'
 import { Router } from './Router'
 import { useReducer } from '../utils/useReducer'
 import { Update, createBrowserHistory } from 'history'
 
-export interface BrowserRouterProps {
-  window?: Window
-}
-
 export const BrowserRouter = defineComponent({
   name: 'BrowserRouter',
 
-  props: { window: { required: false, type: Object } as any },
+  props: {
+    window: {
+      required: false,
+      type: Object as PropType<Window>,
+    },
+  },
 
-  setup(props: Readonly<BrowserRouterProps>, { slots }) {
+  setup(props, { slots }) {
     const history = computed(() =>
       createBrowserHistory({
         window: props.window,

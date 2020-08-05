@@ -42,7 +42,7 @@ export interface RouteContextObject<P extends RouterParams = RouterParams> {
 export type Navigator = Omit<
   History,
   'action' | 'location' | 'back' | 'forward' | 'listen'
->;
+>
 export interface LocationContextObject {
   action: Action
   location: Location

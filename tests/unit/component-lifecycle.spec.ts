@@ -1,6 +1,5 @@
 import { Routes, Route, MemoryRouter, Link } from '../../src'
 
-import { createMemoryHistory, install } from '../../src'
 import { onMounted, h, defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 
@@ -28,12 +27,16 @@ describe('when the same component is mounted by two different routes', () => {
         ]),
     })
 
-    expect(wrapper.html()).toMatchInlineSnapshot(`"<a href=\\"/another-home\\"></a><h1>Home</h1>"`)
+    expect(wrapper.html()).toMatchInlineSnapshot(
+      `"<a href=\\"/another-home\\"></a><h1>Home</h1>"`,
+    )
     expect(mountCount).toBe(1)
 
     await wrapper.find('a').trigger('click')
 
-    expect(wrapper.html()).toMatchInlineSnapshot(`"<a href=\\"/another-home\\"></a><h1>Home</h1>"`)
+    expect(wrapper.html()).toMatchInlineSnapshot(
+      `"<a href=\\"/another-home\\"></a><h1>Home</h1>"`,
+    )
     expect(mountCount).toBe(1)
   })
 })

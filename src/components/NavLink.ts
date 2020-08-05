@@ -1,19 +1,11 @@
-import { Link } from './Link'
+import { Link, linkProps } from './Link'
 
-import { computed, defineComponent, h, toRefs } from 'vue'
+import { computed, defineComponent, h, toRefs, PropType } from 'vue'
 import { useLocation } from '../hooks/useLocation'
 import { useResolvedPath } from '../hooks/useResolvedPath'
 import { useComputedCallback } from '../utils/useComputedCallback'
 
-import type{ LinkProps } from './Link'
-import type{ ComputedCallback } from '../utils/useComputedCallback'
-export interface NavLinkProps extends LinkProps {
-  activeClassName: string
-  activeStyle: Record<string, string>
-  caseSensitive: boolean
-  end: boolean
-  ariaCurrent: string
-}
+import type { ComputedCallback } from '../utils/useComputedCallback'
 
 const useCaseSensitive = (
   caseSensitiveValue: ComputedCallback<boolean>,
@@ -40,7 +32,7 @@ export const NavLink = defineComponent({
     activeStyle: {
       default: () => ({}),
       required: false,
-      type: Object,
+      type: Object as PropType<Record<string, string>>,
     },
     caseSensitive: {
       default: false,
@@ -52,22 +44,11 @@ export const NavLink = defineComponent({
       required: false,
       type: Boolean,
     },
-    replace: {
-      default: false,
-      required: false,
-      type: Boolean,
-    },
-    tag: {
-      default: 'a',
-      required: false,
-      type: String,
-    },
-    to: { default: '', required: true, type: [String, Object] },
-    state: { default: undefined, required: false, type: Object },
     ariaCurrent: { default: 'page', type: String, required: false },
+    ...linkProps,
   },
 
-  setup(props: Readonly<NavLinkProps>, { slots }) {
+  setup(props, { slots }) {
     const location = useLocation()
     const { to, caseSensitive } = toRefs(props)
     const path = useResolvedPath(to)
