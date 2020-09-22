@@ -1,7 +1,7 @@
-import { defineComponent, h, computed, watch, PropType } from 'vue'
+import { defineComponent, h, computed, PropType } from 'vue'
 import { Router } from './Router'
-import { useReducer } from '../utils/useReducer'
-import { Update, createBrowserHistory } from 'history'
+import { createBrowserHistory } from 'history'
+import { useRouter } from '../utils/useRouter'
 
 export const BrowserRouter = defineComponent({
   name: 'BrowserRouter',
@@ -14,34 +14,15 @@ export const BrowserRouter = defineComponent({
   },
 
   setup(props, { slots }) {
-    const history = computed(() =>
-      createBrowserHistory({
-        window: props.window,
-      }),
-    )
+    const history = computed(() => createBrowserHistory(props))
 
-    const [state, dispatch] = useReducer(
-      (state, { action, location }: Update) => {
-        state.action = action
-        state.location = location
-      },
-      {
-        action: history.value.action,
-        location: history.value.location,
-      },
-    )
-
-    watch(history, (history) => history.listen(dispatch), {
-      flush: 'sync',
-      immediate: true,
-    })
+    const state = useRouter(history)
 
     return () =>
       h(
         Router,
         {
-          location: state.location,
-          action: state.action,
+          ...state,
           navigator: history.value,
         },
         { default: slots.default },

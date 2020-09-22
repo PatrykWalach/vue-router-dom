@@ -1,7 +1,7 @@
-import { defineComponent, computed, watch, h, PropType } from 'vue'
-import { createMemoryHistory, Update, InitialEntry } from 'history'
+import { defineComponent, computed, h, PropType } from 'vue'
+import { createMemoryHistory, InitialEntry } from 'history'
 import { Router } from './Router'
-import { useReducer } from '../utils/useReducer'
+import { useRouter } from '../utils/useRouter'
 
 export const MemoryRouter = defineComponent({
   name: 'MemoryRouter',
@@ -15,35 +15,15 @@ export const MemoryRouter = defineComponent({
   },
 
   setup(props, { slots }) {
-    const history = computed(() =>
-      createMemoryHistory({
-        initialEntries: props.initialEntries,
-        initialIndex: props.initialIndex,
-      }),
-    )
+    const history = computed(() => createMemoryHistory(props))
 
-    const [state, dispatch] = useReducer(
-      (state, { action, location }: Update) => {
-        state.action = action
-        state.location = location
-      },
-      {
-        action: history.value.action,
-        location: history.value.location,
-      },
-    )
-
-    watch(history, (history) => history.listen(dispatch), {
-      flush: 'sync',
-      immediate: true,
-    })
+    const state = useRouter(history)
 
     return () =>
       h(
         Router,
         {
-          location: state.location,
-          action: state.action,
+          ...state,
           navigator: history.value,
         },
         { default: slots.default },
