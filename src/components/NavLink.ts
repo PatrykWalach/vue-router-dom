@@ -4,6 +4,7 @@ import { computed, defineComponent, h, toRefs, PropType } from 'vue'
 import { useLocation } from '../hooks/useLocation'
 import { useResolvedPath } from '../hooks/useResolvedPath'
 import { useComputedCallback } from '../utils/useComputedCallback'
+import { pick } from '../utils/pick'
 
 import type { ComputedCallback } from '../utils/useComputedCallback'
 
@@ -24,6 +25,7 @@ export const NavLink = defineComponent({
   name: 'NavLink',
 
   props: {
+    ...linkProps(),
     activeClassName: {
       default: '',
       required: false,
@@ -45,10 +47,9 @@ export const NavLink = defineComponent({
       type: Boolean,
     },
     ariaCurrent: { default: 'page', type: String, required: false },
-    ...linkProps,
   },
 
-  setup(props, { slots }) {
+  setup(props, { slots, attrs }) {
     const location = useLocation()
     const { to, caseSensitive } = toRefs(props)
     const path = useResolvedPath(to)
@@ -70,24 +71,29 @@ export const NavLink = defineComponent({
         : locationPathname.startsWith(toPathname)
     })
 
-    const ariaCurrent = computed(() =>
-      isActive.value ? props.ariaCurrent : undefined,
+    const activeClasses = computed(() => {
+      if (!isActive.value) {
+        return {}
+      }
+
+      return pick(props, {
+        style: 'activeStyle',
+        class: 'activeClassName',
+        ariaCurrent: 'ariaCurrent',
+      })
+    })
+
+    const linkClasses = computed(() =>
+      pick(props, ['replace', 'tag', 'state', 'to']),
     )
-
-    const className = computed(() => isActive.value && props.activeClassName)
-
-    const style = computed(() => isActive.value && props.activeStyle)
 
     return () =>
       h(
         Link,
+        { ...attrs, ...activeClasses.value, ...linkClasses.value },
         {
-          style: style.value,
-          class: className.value,
-          to: props.to,
-          ariaCurrent: ariaCurrent.value,
+          default: slots.default,
         },
-        { default: slots.default },
       )
   },
 })

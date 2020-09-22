@@ -7,33 +7,51 @@ import { useHref } from '../hooks/useHref'
 
 import type { To, State } from 'history'
 
-export const linkProps = {
+interface LinkPropsDefaults {
+  replace: boolean
+  tag: string
+  to: To
+  state: State
+}
+
+export const linkProps = (
+  defaults: LinkPropsDefaults = {
+    replace: false,
+    tag: 'a',
+    to: '',
+    state: null,
+  },
+) => ({
   replace: {
-    default: false,
+    default: defaults.replace,
     required: false,
     type: Boolean,
   },
   tag: {
-    default: 'a',
+    default: defaults.tag,
     required: false,
     type: String,
   },
-  to: { default: '', required: true, type: [String, Object] as PropType<To> },
+  to: {
+    default: defaults.to,
+    required: true,
+    type: [String, Object] as PropType<To>,
+  },
   state: {
-    default: undefined,
+    default: defaults.state,
     required: false,
     type: Object as PropType<State>,
   },
-}
+})
 
 export const Link = defineComponent({
   name: 'Link',
 
-  props: linkProps,
+  props: linkProps(),
 
   emits: { click: null },
 
-  setup(props, { slots, emit }) {
+  setup(props, { slots, emit, attrs }) {
     const { to, replace } = toRefs(props)
     const href = useHref(to)
     const location = useLocation()
@@ -62,6 +80,7 @@ export const Link = defineComponent({
       h(
         props.tag,
         {
+          ...attrs,
           href: href.value,
           onClick: handleClick,
         },
