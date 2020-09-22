@@ -71,19 +71,12 @@
     "@types/history": "^4.7.8",
     "history": "^5.0.0"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,jsx,vue,ts,tsx}": [
-      "npm lint",
-      "git add",
-      "eslint --cache --fix"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": "eslint --cache --fix"
   }
 }
