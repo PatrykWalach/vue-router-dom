@@ -25,16 +25,12 @@ export const pick: Picker = <
       [K in keyof M]: O[M[K]]
     }
 > => {
-  const map = Object.fromEntries(
-    Array.isArray(keysOrMap)
-      ? keysOrMap.map((key) => [key, key])
-      : Object.entries(keysOrMap).map(([key, value]) => [value, key]),
-  )
+  const mapEntries = Array.isArray(keysOrMap)
+    ? keysOrMap.map((key) => [key, key]) as [string, keyof O][]
+    : Object.entries(keysOrMap)
 
   return Object.fromEntries(
-    Object.entries(obj)
-      .filter(([key]) => key in map)
-      .map(([key, value]) => [map[key], value]),
+    mapEntries.map(([key, value]) => [key, obj[value]]),
   ) as Mutable<
     | Pick<O, K>
     | {
