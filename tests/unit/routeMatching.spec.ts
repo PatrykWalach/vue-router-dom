@@ -251,13 +251,9 @@ describe('route matching', () => {
       template: `
       <Routes>
         <Route path="courses">
-          <template>
             <Courses />
-          </template>
           <Route path=":id">
-            <template>
               <Course />
-            </template>
             <Route path="grades">
               <CourseGrades />
             </Route>
@@ -273,9 +269,7 @@ describe('route matching', () => {
           </Route>
         </Route>
         <Route path="courses">
-          <template>
             <Landing />
-          </template>
           <Route path="vue-fundamentals">
             <VueFundamentals />
           </Route>

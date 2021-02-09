@@ -32,7 +32,6 @@ describe('useParams.spec', () => {
 
     await new Promise<void>(nextTick)
 
-
     expect(wrapper.find('div').text()).toStrictEqual('2')
   })
 })
