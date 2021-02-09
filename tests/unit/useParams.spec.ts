@@ -30,7 +30,8 @@ describe('useParams.spec', () => {
 
     await wrapper.find('a').trigger('click')
 
-    await new Promise(nextTick)
+    await new Promise<void>(nextTick)
+
 
     expect(wrapper.find('div').text()).toStrictEqual('2')
   })

@@ -17,23 +17,23 @@ describe('route matching', () => {
     return wrapper.html()
   }
   function describeRouteMatching(component: Component) {
-    const testPaths = [
-      '/courses',
-      '/courses/routing',
-      '/courses/routing/grades',
-      '/courses/new',
-      '/courses/not/found',
-      '/courses/vue-fundamentals',
-      '/courses/advanced-vue',
-      '/',
-      '/not-found',
-    ]
+    const testPaths: Record<string, string> = {
+      '/courses': `<div><h1>Courses</h1><p>All Courses</p></div>`,
+      '/courses/routing': `<div><h1>Courses</h1><div><h2>Course routing</h2></div></div>`,
+      '/courses/routing/grades': `<div><h1>Courses</h1><div><h2>Course routing</h2><p>Course Grades</p></div></div>`,
+      '/courses/new': `<div><h1>Courses</h1><p>New Course</p></div>`,
+      '/courses/not/found': `<div><h1>Courses</h1><p>Course not found</p></div>`,
+      '/courses/vue-fundamentals': `<div><h1>Welcome to Vue Training</h1><p>Vue Fundamentals</p></div>`,
+      '/courses/advanced-vue': `<div><h1>Welcome to Vue Training</h1><p>Advanced Vue</p></div>`,
+      '/': `<p>Home</p>`,
+      '/not-found': `<p>Not Found</p>`,
+    }
 
-    testPaths.forEach((path) => {
+    for (const path in testPaths) {
       it(`renders the right elements at ${path}`, () => {
-        expect(renderRoutes(component, path)).toMatchSnapshot()
+        expect(renderRoutes(component, path)).toMatch(testPaths[path])
       })
-    })
+    }
   }
   const Courses = defineComponent({
     setup() {
@@ -149,26 +149,81 @@ describe('route matching', () => {
     describeRouteMatching(routes)
   })
 
+  const components = {
+    Routes,
+    AdvancedVue,
+    Route,
+    Courses,
+    Course,
+    CourseGrades,
+    NewCourse,
+    CoursesIndex,
+    CoursesNotFound,
+    Landing,
+    VueFundamentals,
+    NeverRender,
+    Home,
+    NotFound,
+  }
+
+  describe('using <Routes> with <Route> slots', () => {
+    const routes = defineComponent({
+      components,
+      template: `
+      <Routes>
+        <Route path="courses">
+          <template #element>
+            <Courses />
+          </template>
+          <Route path=":id">
+            <template #element>
+              <Course />
+            </template>
+            <Route path="grades">
+              <CourseGrades />
+            </Route>
+          </Route>
+          <Route path="new">
+            <NewCourse />
+          </Route>
+          <Route path="/">
+            <CoursesIndex />
+          </Route>
+          <Route path="*" #element>
+            <CoursesNotFound />
+          </Route>
+        </Route>
+        <Route path="courses">
+          <template #element>
+            <Landing />
+          </template>
+          <Route path="vue-fundamentals">
+            <VueFundamentals />
+          </Route>
+          <Route path="advanced-vue">
+            <AdvancedVue />
+          </Route>
+          <Route path="*">
+            <NeverRender />
+          </Route>
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+        <Route path="*" #element>
+          <NotFound />
+        </Route>
+      </Routes>`,
+    })
+
+    describeRouteMatching(routes)
+  })
+
   describe('using <Routes> and the *secret menu*', () => {
     const routes = defineComponent({
-      components: {
-        Routes,
-        AdvancedVue,
-        Route,
-        Courses,
-        Course,
-        CourseGrades,
-        NewCourse,
-        CoursesIndex,
-        CoursesNotFound,
-        Landing,
-        VueFundamentals,
-        NeverRender,
-        Home,
-        NotFound,
-      },
+      components,
       template: `
-        <Routes>
+      <Routes>
         <Courses path="courses">
           <Course path=":id">
             <CourseGrades path="grades" />
@@ -184,6 +239,59 @@ describe('route matching', () => {
         </Landing>
         <Home path="/" />
         <NotFound path="*" />
+      </Routes>`,
+    })
+
+    describeRouteMatching(routes)
+  })
+
+  describe('using <Routes> with <Route> slots no #element', () => {
+    const routes = defineComponent({
+      components,
+      template: `
+      <Routes>
+        <Route path="courses">
+          <template>
+            <Courses />
+          </template>
+          <Route path=":id">
+            <template>
+              <Course />
+            </template>
+            <Route path="grades">
+              <CourseGrades />
+            </Route>
+          </Route>
+          <Route path="new">
+            <NewCourse />
+          </Route>
+          <Route path="/">
+            <CoursesIndex />
+          </Route>
+          <Route path="*">
+            <CoursesNotFound />
+          </Route>
+        </Route>
+        <Route path="courses">
+          <template>
+            <Landing />
+          </template>
+          <Route path="vue-fundamentals">
+            <VueFundamentals />
+          </Route>
+          <Route path="advanced-vue">
+            <AdvancedVue />
+          </Route>
+          <Route path="*">
+            <NeverRender />
+          </Route>
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+        <Route path="*">
+          <NotFound />
+        </Route>
       </Routes>`,
     })
 
