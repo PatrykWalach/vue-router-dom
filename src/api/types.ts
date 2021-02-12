@@ -1,4 +1,4 @@
-import type { VNode } from 'vue'
+import type { Component } from 'vue'
 import { Action, Location, History } from 'history'
 
 export interface RouterMatch<Params extends RouterParams = RouterParams> {
@@ -21,19 +21,19 @@ export type RouterParams = Record<string, string>
 export interface RouteObject {
   caseSensitive?: boolean
   children?: RouteObject[]
-  element: VNode | null
+  element: Component
   path: string
 }
 
 export interface PartialRouteObject {
   caseSensitive?: boolean
   children?: PartialRouteObject[]
-  element: VNode | null
+  element: Component
   path: string
 }
 
 export interface RouteContextObject<P extends RouterParams = RouterParams> {
-  outlet: VNode | null
+  outlet: Component
   params: P
   pathname: string
   route: RouteObject | null

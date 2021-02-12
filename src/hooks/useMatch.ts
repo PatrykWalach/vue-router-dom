@@ -1,5 +1,5 @@
 import { useComputedCallback } from '../utils/useComputedCallback'
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import { matchPath } from '../api/matchPath'
 import { useRouteContext } from '../hooks/useOutlet'
 
@@ -12,9 +12,8 @@ export const useMatch = (
 ): ComputedRef<PathMatch<Record<string, string>> | null> => {
   const pattern = useComputedCallback(patternValue)
   const context = useRouteContext()
-  const pathname = computed(() => context.value.pathname)
 
-  const match = computed(() => matchPath(pattern.value, pathname.value))
+  const match = computed(() => matchPath(pattern.value, context.pathname))
 
   return match
 }

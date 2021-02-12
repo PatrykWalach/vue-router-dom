@@ -1,17 +1,29 @@
-import { isVNode, Fragment, renderSlot } from 'vue'
+import {
+  isVNode,
+  Fragment,
+  renderSlot,
+  h,
+  Component,
+  VNodeArrayChildren,
+} from 'vue'
 
 import type { VNodeNormalizedChildren, Slots } from 'vue'
 import type { RouteObject } from '../api/types'
+import { Route } from '../components'
 
 export const createRoutesFromChildren = (
   normalizedChildren: VNodeNormalizedChildren,
 ) => {
   const routes: RouteObject[] = []
 
-  const children = Array.isArray(normalizedChildren)
+  const children: VNodeArrayChildren = Array.isArray(normalizedChildren)
     ? normalizedChildren
     : normalizedChildren instanceof Object
-    ? [renderSlot(normalizedChildren as Slots, 'default')]
+    ? //normalizedChildren && normalizedChildren.default instanceof Function
+      //   ? [normalizedChildren.default()]
+      //   : []
+      // :
+      [renderSlot(normalizedChildren as Slots, 'default')]
     : []
 
   for (const element of children) {
@@ -23,13 +35,18 @@ export const createRoutesFromChildren = (
       routes.push(...createRoutesFromChildren(element.children))
       continue
     }
+    
+    // if (element.type !== Route) {
+    //   continue
+    // }
+
 
     const { path, caseSensitive } = element.props || {}
 
     const route: RouteObject = {
       path: path || '/',
       caseSensitive: caseSensitive === true,
-      element,
+      element: () => element,
     }
 
     if (element.children) {

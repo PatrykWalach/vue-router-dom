@@ -10,7 +10,7 @@ describe('useOutlet', () => {
       const Home = defineComponent({
         setup() {
           const outlet = useOutlet()
-          return () => outlet.value
+          return () => h(outlet.value)
         },
       })
 
@@ -30,7 +30,7 @@ describe('useOutlet', () => {
       const Users = defineComponent({
         setup() {
           const outlet = useOutlet()
-          return () => outlet.value
+          return () => h(outlet.value)
         },
       })
 

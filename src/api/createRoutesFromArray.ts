@@ -11,7 +11,7 @@ export const createRoutesFromArray = (
     const route: RouteObject = {
       path: partialRoute.path || '/',
       caseSensitive: partialRoute.caseSensitive === true,
-      element: partialRoute.element || h(Outlet),
+      element: partialRoute.element || Outlet,
     }
 
     if (partialRoute.children) {

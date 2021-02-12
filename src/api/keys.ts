@@ -1,7 +1,7 @@
 import type { InjectionKey, Ref } from 'vue'
 import type { RouteContextObject, LocationContextObject } from './types'
 
-export const ROUTE_CONTEXT: InjectionKey<Ref<RouteContextObject>> = Symbol(
+export const ROUTE_CONTEXT: InjectionKey<RouteContextObject> = Symbol(
   'ROUTE_CONTEXT',
 )
 

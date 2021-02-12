@@ -1,6 +1,6 @@
 # vue-router-dom [![CircleCI](https://circleci.com/gh/PatrykWalach/vue-router-dom.svg?style=svg)](https://circleci.com/gh/PatrykWalach/vue-router-dom) [![codecov](https://codecov.io/gh/PatrykWalach/vue-router-dom/branch/master/graph/badge.svg)](https://codecov.io/gh/PatrykWalach/vue-router-dom) ![](https://img.shields.io/npm/v/vue-router-dom)
 
-`vue-router-dom` is an implementation of [react-router](https://reacttraining.com/react-router/web/guides/philosophy) for vue 3, providing components and hooks for routing.
+`vue-router-dom` is an implementation of [react-router](https://reacttraining.com/react-router/web/guides/philosophy) for Vue 3, providing components and hooks for routing.
 
 ## Table of contents
 
@@ -24,7 +24,7 @@ npm i vue-router-dom
 
 ## API
 
-For API documentaiton, please visit
+For API documentation, please visit
 [React Router API](https://github.com/ReactTraining/react-router/blob/dev/docs/api-reference.md).
 
 ## Non-standard APIs
@@ -65,17 +65,15 @@ If both are present `element slot` will overwrite `element prop`.
           <template #element>
             <Users />
           </template>
-          <template #default>
-            <Route path="/">
-              <UsersIndex />
-            </Route>
-            <Route path=":id">
-              <UserProfile />
-            </Route>
-            <Route path="me">
-              <OwnUserProfile />
-            </Route>
-          </template>
+          <Route path="/">
+            <UsersIndex />
+          </Route>
+          <Route path=":id">
+            <UserProfile />
+          </Route>
+          <Route path="me">
+            <OwnUserProfile />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

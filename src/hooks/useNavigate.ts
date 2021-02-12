@@ -17,7 +17,6 @@ export const useNavigate = () => {
   const navigator = toRef(locationContext, 'navigator')
 
   const context = useRouteContext()
-  const pathname = computed(() => context.value.pathname)
 
   const navigate = (
     to: To | number,
@@ -35,7 +34,7 @@ export const useNavigate = () => {
       return navigatorValue.go(to)
     }
 
-    const path = resolvePath(to, pathname.value)
+    const path = resolvePath(to, context.pathname)
     ;(replace ? navigatorValue.replace : navigatorValue.push)(path, state)
   }
 

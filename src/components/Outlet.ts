@@ -1,12 +1,12 @@
-import { defineComponent } from 'vue'
+import { defineComponent, h } from 'vue'
 import { useOutlet } from '../hooks/useOutlet'
 
 export const Outlet = defineComponent({
   name: 'Outlet',
 
   setup() {
-    const outletElement = useOutlet()
+    const outletComponent = useOutlet()
 
-    return () => outletElement.value
+    return () => h(outletComponent.value)
   },
 })

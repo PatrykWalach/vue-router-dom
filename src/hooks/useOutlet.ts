@@ -1,4 +1,4 @@
-import { inject, computed, ComputedRef } from 'vue'
+import { inject, computed, reactive, toRef } from 'vue'
 import { ROUTE_CONTEXT } from '../api/keys'
 
 import type { RouterParams, RouteContextObject } from '../api/types'
@@ -6,15 +6,14 @@ import type { RouterParams, RouteContextObject } from '../api/types'
 export const useRouteContext = <P extends RouterParams = RouterParams>() =>
   inject(
     ROUTE_CONTEXT,
-    computed(() => ({
+    reactive({
       pathname: '',
-      outlet: null,
+      outlet: () => null,
       params: {},
       route: null,
-    })),
-  ) as ComputedRef<RouteContextObject<P>>
+    }),
+  ) as RouteContextObject<P>
 
 export const useOutlet = () => {
-  const context = useRouteContext()
-  return computed(() => context.value.outlet)
+  return toRef(useRouteContext(), 'outlet')
 }

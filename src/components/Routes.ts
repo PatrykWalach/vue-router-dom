@@ -1,4 +1,4 @@
-import { defineComponent, computed, renderSlot } from 'vue'
+import { defineComponent, computed, renderSlot, h } from 'vue'
 import { useRoutes_ } from '../hooks/useRoutes'
 import { createRoutesFromChildren } from '../api/createRoutesFromChildren'
 
@@ -12,8 +12,8 @@ export const Routes = defineComponent({
       createRoutesFromChildren([renderSlot(slots, 'default')]),
     )
 
-    const vnode = useRoutes_(routes, () => props.basename)
+    const component = useRoutes_(routes, () => props.basename)
 
-    return () => vnode.value
+    return () => h(component.value)
   },
 })

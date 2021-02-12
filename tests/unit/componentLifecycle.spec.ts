@@ -21,8 +21,8 @@ describe('when the same component is mounted by two different routes', () => {
         h(MemoryRouter, { initialEntries: ['/home'] }, () => [
           h(Link, { to: '/another-home' }),
           h(Routes, () => [
-            h(Route, { path: 'home', element: h(Home) }),
-            h(Route, { path: 'another-home', element: h(Home) }),
+            h(Route, { path: 'home', element: Home }),
+            h(Route, { path: 'another-home', element: Home }),
           ]),
         ]),
     })

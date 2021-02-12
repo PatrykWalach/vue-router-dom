@@ -1,6 +1,6 @@
 import { Outlet } from './Outlet'
 
-import { defineComponent, h, renderSlot, PropType } from 'vue'
+import { defineComponent, h, renderSlot, Component, PropType } from 'vue'
 
 import type { VNode } from 'vue'
 
@@ -19,13 +19,14 @@ export const Route = defineComponent({
       type: Boolean,
     },
     element: {
-      default: () => h(Outlet),
+      default: () => Outlet,
       required: false,
-      type: Object as PropType<VNode>,
+      type: [Object,Function] as PropType<Component>,
     },
   },
 
   setup(props, { slots }) {
-    return () => renderSlot(slots, 'element', undefined, () => [props.element])
+    return () =>
+      renderSlot(slots, 'element', undefined, () => [h(props.element)])
   },
 })
