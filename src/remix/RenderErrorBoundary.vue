@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import * as vue from 'vue'
-import { RouteErrorContext } from './keys'
+import { RouteErrorKey } from './keys'
+import { Location } from '@remix-run/router'
 
 interface Props {
   location: Location
   error: Error | null
-  component: vue.Component
 }
 
 const props = defineProps<Props>()
 
 let captured = vue.shallowRef<Error>()
-let error = vue.computed(() => props.error || captured.value)
+let error = vue.computed(() => props.error ?? captured.value ?? null)
 
 vue.onErrorCaptured((error) => {
   captured.value = error
 })
 
-vue.provide(RouteErrorContext, error)
+vue.provide(RouteErrorKey, error)
 </script>
 
 <template>

@@ -1,4 +1,5 @@
-<script lang="ts" setup>import { useRouteError } from './keys';
+<script lang="ts" setup>
+import { useRouteError } from './keys'
 
 let error = useRouteError()
 </script>
@@ -6,13 +7,13 @@ let error = useRouteError()
 <template>
   <h2>Unhandled Thrown Error!</h2>
   <p :style="{ fontStyle: 'italic' }">{{ error?.message || error }}</p>
-  <pre v-if="error?.stack" style="{preStyles}">{{ error.stack }}</pre>
+  <pre v-if="error?.stack">{{ error.stack }}</pre>
   <p>💿 Hey developer 👋</p>
   <p>
     You can provide a way better UX than this when your app throws errors by
     providing your own&nbsp;
-    <code style="{codeStyles}">errorElement</code> props on&nbsp;
-    <code style="{codeStyles}">&lt;Route&gt;</code>
+    <code>errorElement</code> props on&nbsp;
+    <code>&lt;Route&gt;</code>
   </p>
 </template>
 

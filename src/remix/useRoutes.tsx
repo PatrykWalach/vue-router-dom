@@ -1,37 +1,35 @@
+import type { Location, Router as DataRouter } from '@remix-run/router'
+import * as router from '@remix-run/router'
+import * as vue from 'vue'
 import {
   Component,
   computed,
   defineComponent,
+  DefineComponent,
   h,
+  markRaw,
   Ref,
   watchEffect,
 } from 'vue'
-import * as vue from 'vue'
-import { createRoutesFromArray } from '../api/createRoutesFromArray'
-import { RouteContext, useRoute, useRouterState } from './keys'
-
-import { joinPaths } from '../api/resolvePath'
-import type { VueRouteObject } from './types'
-import { useRouteContext } from '../hooks/useOutlet'
 import { ComputedCallback, unwrap } from '../utils/useComputedCallback'
-import { useComputedCallback } from '../utils/useComputedCallback'
-import { useLocation } from './keys'
-import * as router from '@remix-run/router'
+// import DefaultFallback from './DefaultFallback.vue'
+import DefaultFallback from './DefaultFallback.vue'
+import { RouteKey, useLocation, useRoute, useRouterState } from './keys'
+import Provider from './Provider.vue'
+import RenderErrorBoundary from './RenderErrorBoundary.vue'
+import type { VueRouteObject } from './types'
 
 const __DEV__ = process.env.NODE_ENV !== 'production'
 
 export const useRoutes = (
   routes: ComputedCallback<VueRouteObject[]>,
   locationArg?: ComputedCallback<Partial<Location> | string | undefined>,
-): vue.Component | null => {
+): Ref<vue.DefineComponent | null> => {
   const dataRouterStateContext = useRouterState()
   const route = useRoute()
-  if (!dataRouterStateContext) {
-    throw new Error()
-  }
 
   const routeMatch = computed(
-    () => route.matches.value[route.matches.value.length - 1],
+    () => route.value.matches[route.value.matches.length - 1],
   )
 
   const parentParams = computed(() => routeMatch.value?.params ?? {})
@@ -137,23 +135,24 @@ export const useRoutes = (
             ...parentParams.value,
             ...match.params,
           },
-          pathname: joinPaths([parentPathnameBase.value, match.pathname]),
+          pathname: router.joinPaths([
+            parentPathnameBase.value,
+            match.pathname,
+          ]),
           pathnameBase:
             match.pathnameBase === '/'
               ? parentPathnameBase.value
-              : joinPaths([parentPathnameBase.value, match.pathnameBase]),
+              : router.joinPaths([
+                  parentPathnameBase.value,
+                  match.pathnameBase,
+                ]),
         }),
       ) ?? null,
-      route.matches.value,
-      dataRouterStateContext?.value,
+      route.value.matches,
+      dataRouterStateContext.value,
     ),
   )
 }
-
-import type { Location, Router as DataRouter } from '@remix-run/router'
-import DefaultFallback from './DefaultFallback.vue'
-import Provider from './Provider.vue'
-import RenderErrorBoundary from './RenderErrorBoundary.vue'
 
 export function _renderMatches(
   matches: router.RouteMatch<string, VueRouteObject>[] | null,
@@ -184,43 +183,51 @@ export function _renderMatches(
     (outlet, match, index) => {
       const error = match.route.id ? errors?.[match.route.id] : null
       // Only data routers handle errors
-      const Fallback: Component | null = dataRouterState
+      const Fallback = dataRouterState
         ? match.route.fallback || DefaultFallback
         : null
 
-      const Children = defineComponent(() => () => (
-        <Provider
-          key={RouteContext}
-          value={{
-            outlet,
-            matches: parentMatches.concat(renderedMatches.slice(0, index + 1)),
-          }}
-        >
-          {error ? (
-            Fallback && <Fallback />
-          ) : match.route.element !== undefined ? (
-            <match.route.element />
-          ) : (
-            <outlet />
-          )}
-        </Provider>
-      ))
+      function Children() {
+        return (
+          <Provider
+            injectionKey={RouteKey}
+            value={{
+              outlet: outlet,
+              matches: parentMatches.concat(
+                renderedMatches.slice(0, index + 1),
+              ),
+            }}
+          >
+            {error ? (
+              Fallback && <Fallback />
+            ) : match.route.element !== undefined ? (
+              <match.route.element />
+            ) : (
+              <outlet />
+            )}
+          </Provider>
+        )
+      }
 
       // Only wrap in an error boundary within data router usages when we have an
       // errorElement on this route.  Otherwise let it bubble up to an ancestor
       // errorElement
-      return dataRouterState && (match.route.fallback || index === 0)
-        ? defineComponent(() => () => (
-            <RenderErrorBoundary
-              v-slots={{
-                fallback: () => Fallback && <Fallback />,
-                default: () => <Children />,
-              }}
-              location={dataRouterState.location}
-              error={error}
-            />
-          ))
-        : Children
+      if (!(dataRouterState && (match.route.fallback || index === 0))) {
+        return Children
+      }
+
+      return function ErrorBoundary() {
+        return (
+          <RenderErrorBoundary
+            v-slots={{
+              fallback: () => Fallback && <Fallback />,
+              default: () => <Children />,
+            }}
+            location={dataRouterState.location}
+            error={error}
+          />
+        )
+      }
     },
     null,
   )

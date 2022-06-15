@@ -1,10 +1,17 @@
 <script lang="ts" setup>
+import { computed, InjectionKey, provide, Ref } from 'vue'
 
-import { computed, InjectionKey,provide } from 'vue'
+const props = defineProps<{
+  injectionKey: InjectionKey<Readonly<Ref<unknown>>>
+  value: unknown
+}>()
 
-const { key, value } = defineProps<{ key: InjectionKey<unknown>; value: unknown }>()
-
-provide(key, value)
+provide(
+  props.injectionKey,
+  computed(() => props.value),
+)
 </script>
 
-<template><slot /></template>
+<template>
+  <slot />
+</template>

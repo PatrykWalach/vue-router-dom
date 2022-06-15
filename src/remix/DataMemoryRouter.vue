@@ -1,49 +1,46 @@
+<script lang="ts"></script>
+
 <script lang="ts" setup>
-/** slots: ['fallback'] */
 import {
   createMemoryRouter,
   HydrationState,
-  RouteObject, Router,
-  InitialEntry
+  RouteObject,
+  Router,
+  InitialEntry,
 } from '@remix-run/router'
-import { provide, shallowRef, toRefs, } from 'vue'
-import { DataRouterContext, DataRouterStateContext } from './keys'
+import { provide, shallowRef, toRefs, defineComponent } from 'vue'
+import { DataRouterKey, DataRouterStateKey } from './keys'
 import { VueRouteObject, Navigator } from './types'
 import DataRouter from './DataRouter.vue'
-
 interface DataBrowserRouterProps {
-
   routes: VueRouteObject[]
 
-
-  initialEntries?: InitialEntry[];
-  initialIndex?: number;
-  hydrationData?: HydrationState;
-
-
+  initialEntries?: InitialEntry[]
+  initialIndex?: number
+  hydrationData?: HydrationState
 }
+defineProps<DataBrowserRouterProps>()
 
-
-const props = defineProps<DataBrowserRouterProps>()
-
-const { routes, initialEntries,
-  initialIndex,
-  hydrationData, } = toRefs(props)
+/** slots: ['fallback'] */
 </script>
 
 <template>
-  <DataRouter :createRouter="(routes) => createMemoryRouter({
-    initialEntries,
-    initialIndex,
-    routes,
-    hydrationData,
-  })" :routes="routes">
-
+  <DataRouter
+    :createRouter="
+      (routes) =>
+        createMemoryRouter({
+          initialEntries,
+          initialIndex,
+          routes,
+          hydrationData,
+        })
+    "
+    :routes="routes"
+  >
     <template #fallback>
       <slot name="fallback" />
     </template>
 
     <slot />
-
   </DataRouter>
 </template>

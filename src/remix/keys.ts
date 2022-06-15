@@ -10,37 +10,43 @@ import { inject } from 'vue'
 import { assert } from '../utils/assert'
 import type { VueRouteObject } from './types'
 
-export const DataRouterStateContext: vue.InjectionKey<Readonly<
-  vue.Ref<Router['state']>
-> | null> = Symbol('DataRouterStateContext')
+export const DataRouterStateKey: vue.InjectionKey<
+  Readonly<vue.Ref<Router['state']>>
+> = Symbol('DataRouterStateKey')
 
-export const useRouterState = () => vue.inject(DataRouterStateContext, null)
-
-export const DataRouterContext: vue.InjectionKey<Router | null> =
-  Symbol('DataRouterContext')
-
-export const useDateRouter = () => vue.inject(DataRouterContext, null)
-
-interface RouteContextObject {
-  outlet: vue.Ref<vue.Component | null>
-  matches: vue.Ref<RouteMatch<string, VueRouteObject>[]>
+export const useRouterState = () => {
+  const state = vue.inject(DataRouterStateKey, null)
+  assert(state, 'state is null')
+  return state
 }
 
-export const RouteContext: vue.InjectionKey<RouteContextObject> =
-  Symbol('RouteContext')
+export const DataRouterKey: vue.InjectionKey<Router> = Symbol('DataRouterKey')
+
+export const useDataRouter = () => vue.inject(DataRouterKey, null)
+
+type RouteKeyObject = Readonly<
+  vue.Ref<{
+    outlet: vue.DefineComponent | null
+    matches: RouteMatch<string, VueRouteObject>[]
+  }>
+>
+
+export const RouteKey: vue.InjectionKey<RouteKeyObject> = Symbol('RouteKey')
 
 export const useRoute = () =>
-  vue.inject(RouteContext, {
-    matches: vue.shallowRef([]),
-    outlet: vue.shallowRef(null),
-  })
+  vue.inject(
+    RouteKey,
+    vue.shallowRef({
+      matches: [],
+      outlet: null,
+    }),
+  )
 
-export const RouteErrorContext: vue.InjectionKey<
-  Readonly<vue.Ref<Error | null>>
-> = Symbol('RouteErrorContext')
+export const RouteErrorKey: vue.InjectionKey<Readonly<vue.Ref<Error | null>>> =
+  Symbol('RouteErrorKey')
 
-export const OutletContext: vue.InjectionKey<Readonly<vue.Ref<Error | null>>> =
-  Symbol('OutletContext')
+export const OutletKey: vue.InjectionKey<Readonly<vue.Ref<Error | null>>> =
+  Symbol('OutletKey')
 
 /**
  * Returns the element for the child route at this level of the route
@@ -48,23 +54,23 @@ export const OutletContext: vue.InjectionKey<Readonly<vue.Ref<Error | null>>> =
  *
  * @see https://reactrouter.com/docs/en/v6/hooks/use-outlet
  */
-export const useOutlet = (context: unknown) => {
+export const useOutlet = (value: unknown) => {
   const route = useRoute()
 
-  vue.provide(OutletContext, context)
-  return vue.computed(() => route.outlet)
+  vue.provide(OutletKey, value)
+  return computed(() => route.value.outlet)
 }
 
-interface LocationContextObject {
+interface LocationKeyObject {
   location: Readonly<vue.Ref<Location | null>>
   navigationType: Readonly<vue.Ref<NavigationType>>
 }
 
-export const LocationContext: vue.InjectionKey<LocationContextObject> =
-  Symbol('LocationContext')
+export const LocationKey: vue.InjectionKey<LocationKeyObject> =
+  Symbol('LocationKey')
 
 export const useLocation = () => {
-  const ctx = vue.inject(LocationContext)
+  const ctx = vue.inject(LocationKey)
   assert(
     ctx?.location,
     'useLocation() may be used only in the context of a <Router> component.',
@@ -75,13 +81,13 @@ export const useLocation = () => {
 
 export type Navigator = Pick<History, 'go' | 'push' | 'replace' | 'createHref'>
 
-interface NavigationContextObject {
+interface NavigationKeyObject {
   basename: Readonly<vue.Ref<string>>
   navigator: Readonly<vue.Ref<Navigator>>
   static: Readonly<vue.Ref<boolean>>
 }
-export const NavigationContext: vue.InjectionKey<NavigationContextObject> =
-  Symbol('NavigationContext')
+export const NavigationKey: vue.InjectionKey<NavigationKeyObject> =
+  Symbol('NavigationKey')
 
 /**
  * Returns the nearest ancestor Route error, which could be a loader/action
@@ -89,11 +95,13 @@ export const NavigationContext: vue.InjectionKey<NavigationContextObject> =
  * errorElement to display a proper error message.
  */
 export function useRouteError() {
-  let error = inject(RouteErrorContext)
-  let state = inject(DataRouterStateContext)
-  invariant(state, `useRouteError must be used within a DataRouter`)
-  let route = inject(RouteContext)
-  let thisRoute = route?.matches.value[route.matches.value.length - 1]
+  let error = inject(RouteErrorKey, null)
+  let state = inject(DataRouterStateKey, null)
+  let route = inject(RouteKey, null)
+  let thisRoute = computed(() => {
+    invariant(route, `useRouteError must be used inside a RouteContext`)
+    return route.value.matches[route.value.matches.length - 1]
+  })
 
   // If this was a render error, we put it in a RouteError context inside
   // of RenderErrorBoundary
@@ -101,14 +109,63 @@ export function useRouteError() {
     return error
   }
 
-  invariant(route, `useRouteError must be used inside a RouteContext`)
-
   // Otherwise look for errors from our data router state
   return computed(() => {
+    invariant(state, `useRouteError must be used within a DataRouter`)
     invariant(
-      thisRoute?.route.id,
+      thisRoute.value?.route.id,
       `useRouteError can only be used on routes that contain a unique "id"`,
     )
-    return state?.value.errors?.[thisRoute.route.id]
+    return state.value.errors?.[thisRoute.value.route.id]
+  })
+}
+
+/**
+ * Returns the loader data for the nearest ancestor Route loader
+ */
+export function useLoaderData() {
+  let state = inject(DataRouterStateKey)
+
+  let route = inject(RouteKey)
+
+  let thisRoute = computed(() => {
+    invariant(route, `useLoaderData must be used inside a RouteContext`)
+    return route.value.matches[route.value.matches.length - 1]
+  })
+
+  return computed(() => {
+    invariant(state, `useLoaderData must be used within a DataRouter`)
+    invariant(
+      thisRoute.value?.route.id,
+      `${useLoaderData} can only be used on routes that contain a unique "id"`,
+    )
+    return state.value.loaderData[thisRoute.value.route.id]
+  })
+}
+
+/**
+ * Returns the action data for the nearest ancestor Route action
+ */
+export function useActionData() {
+  let state = inject(DataRouterStateKey)
+
+  let route = inject(RouteKey)
+  invariant(route, `useRouteError must be used inside a RouteContext`)
+
+  return computed(() => {
+    invariant(state, `useActionData must be used within a DataRouter`)
+    return Object.values(state.value.actionData || {})[0]
+  })
+}
+
+/**
+ * Returns the current navigation, defaulting to an "idle" navigation when
+ * no navigation is in progress
+ */
+export function useNavigation() {
+  let state = inject(DataRouterStateKey)
+  return computed(() => {
+    invariant(state, `useNavigation must be used within a DataRouter`)
+    return state.value.navigation
   })
 }
