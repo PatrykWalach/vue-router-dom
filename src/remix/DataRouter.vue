@@ -1,5 +1,3 @@
-<script lang="ts"></script>
-
 <script lang="ts" setup>
 import {
   createBrowserRouter,
@@ -19,13 +17,13 @@ import { DataRouterKey, DataRouterStateKey } from './keys'
 import { VueRouteObject, Navigator } from './types'
 import Router from './Router.vue'
 import Routes from './Routes.vue'
+import { createRoutesFromChildren } from './createRoutesFromChildren'
 interface DataBrowserRouterProps {
-  routes: VueRouteObject[]
+  routes?: VueRouteObject[]
   createRouter: (routes: VueRouteObject[]) => DataRouter
 }
 
 const props = defineProps<DataBrowserRouterProps>()
-
 const router = props.createRouter(props.routes).initialize()
 
 const state = shallowRef(router.state)
@@ -57,7 +55,7 @@ provide(DataRouterStateKey, state)
     :navigationType="state.historyAction"
     :navigator="navigator"
   >
-    <Routes :routes="routes">
+    <Routes :routes="routes" v-if="routes">
       <slot />
     </Routes>
   </Router>
