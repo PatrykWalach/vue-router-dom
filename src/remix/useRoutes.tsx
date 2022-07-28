@@ -13,10 +13,10 @@ import {
 } from 'vue'
 import { ComputedCallback, unwrap } from '../utils/useComputedCallback'
 // import DefaultFallback from './DefaultFallback.vue'
-import DefaultFallback from './DefaultFallback.vue'
+import DefaultFallback from '../components/DefaultFallback.vue'
 import { RouteKey, useLocation, useRoute, useRouterState } from './keys'
-import Provider from './Provider.vue'
-import RenderErrorBoundary from './RenderErrorBoundary.vue'
+import Provider from '../components/Provider.vue'
+import RenderErrorBoundary from '../components/RenderErrorBoundary.vue'
 import type { VueRouteObject } from './types'
 
 const __DEV__ = process.env.NODE_ENV !== 'production'
@@ -24,7 +24,7 @@ const __DEV__ = process.env.NODE_ENV !== 'production'
 export const useRoutes = (
   routes: ComputedCallback<VueRouteObject[]>,
   locationArg?: ComputedCallback<Partial<Location> | string | undefined>,
-): Ref<vue.DefineComponent | null> => {
+): Ref<vue.Component | null> => {
   const dataRouterStateContext = useRouterState()
   const route = useRoute()
 
@@ -180,7 +180,7 @@ export function _renderMatches(
   }
 
   return renderedMatches.reduceRight<Component | null>(
-    (outlet, match, index) => {
+    (outlet, match, index): Component | null => {
       const error = match.route.id ? errors?.[match.route.id] : null
       // Only data routers handle errors
       const Fallback = dataRouterState

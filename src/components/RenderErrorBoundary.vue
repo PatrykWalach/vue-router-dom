@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import * as vue from 'vue'
-import { RouteErrorKey } from './keys'
+import { RouteErrorKey } from '../remix/keys'
 import { Location } from '@remix-run/router'
 
 interface Props {

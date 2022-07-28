@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useOutlet } from './keys'
+import { useOutlet } from '../remix/keys'
 import { computed } from 'vue'
 
 const props = defineProps<{ context?: unknown }>()

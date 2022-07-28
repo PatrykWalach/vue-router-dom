@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useRouteError } from './keys'
+import { useRouteError } from '../remix/keys'
 
 let error = useRouteError()
 </script>

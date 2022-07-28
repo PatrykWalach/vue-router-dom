@@ -102,10 +102,9 @@ describe('<DataMemoryRouter>', () => {
           },
           routes: markRaw([
             {
-              id: '0',
               path: '/',
               element: Comp,
-              children: [{ id: '0-0', path: 'child', element: Comp }],
+              children: [{ path: 'child', element: Comp }],
             },
           ]),
         },
@@ -154,18 +153,15 @@ describe('<DataMemoryRouter>', () => {
 
       const routes: VueRouteObject[] = [
         {
-          id: '0',
           path: '/',
           element: Outlet,
           children: [
             {
-              id: '0-0',
               path: 'foo',
               loader: () => defer({ message: 'From Foo Loader' }),
               element: Foo,
             },
             {
-              id: '0-1',
               path: 'bar',
               element: Bar,
             },
@@ -200,18 +196,15 @@ describe('<DataMemoryRouter>', () => {
 
     const routes: VueRouteObject[] = [
       {
-        id: '0',
         path: '/',
         element: Outlet,
         children: [
           {
-            id: '0-0',
             path: 'foo',
             loader: () => defer({ message: 'From Foo Loader' }),
             element: Foo,
           },
           {
-            id: '0-1',
             path: 'bar',
             element: Bar,
           },
@@ -236,7 +229,7 @@ describe('<DataMemoryRouter>', () => {
     name: 'MemoryNavigate',
     props: ['to'],
     setup(props) {
-      const router = useDataRouter()
+      const { router } = useDataRouter()
 
       return () => (
         <a
@@ -270,12 +263,11 @@ describe('<DataMemoryRouter>', () => {
 
     const routes = [
       {
-        id: '0',
         path: '/',
         element: Layout,
         children: [
-          { id: '0-0', path: 'foo', element: Foo },
-          { id: '0-1', path: 'bar', element: Bar },
+          { path: 'foo', element: Foo },
+          { path: 'bar', element: Bar },
         ],
       },
     ]
@@ -322,17 +314,14 @@ describe('<DataMemoryRouter>', () => {
 
     const routes = [
       {
-        id: '0',
         path: '/',
         element: Layout,
         children: [
           {
-            id: '0-0',
             path: 'foo',
             element: Foo,
           },
           {
-            id: '0-1',
             path: 'bar',
             element: Bar,
             loader: () => defer({ message: 'Bar Loader' }),

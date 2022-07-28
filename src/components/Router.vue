@@ -8,7 +8,7 @@ import {
   Location,
 } from '@remix-run/router'
 import { computed, provide, toRef, watchEffect, defineComponent } from 'vue'
-import { LocationKey, NavigationKey, Navigator } from './keys'
+import { LocationKey, NavigationKey, Navigator } from '../remix/keys'
 interface RouterProps {
   basename?: string
   location: Partial<Location> | string
@@ -16,20 +16,15 @@ interface RouterProps {
   navigator: Navigator
   static?: boolean
 }
-const props = defineProps<RouterProps>()
+const props = withDefaults(defineProps<RouterProps>(), {
+  basename: '/',
+  navigationType: NavigationType.Pop,
+  static: false,
+})
 
 // const props = defineProps<RouterProps>();
 
-const basenameProp = computed(() => props.basename ?? '/')
-
-const navigationType = computed(
-  () => props.navigationType ?? NavigationType.Pop,
-)
-const navigator = toRef(props, 'navigator')
-
-const staticProp = computed(() => props.static ?? false)
-
-let basename = computed(() => normalizePathname(basenameProp.value))
+const basename = computed(() => props.basename.replace(/^\/*/, '/'))
 
 const locationProp = computed(() =>
   typeof props.location === 'string'
@@ -68,8 +63,15 @@ watchEffect(() => {
   )
 })
 
-provide(NavigationKey, { basename, navigator, static: staticProp })
-provide(LocationKey, { location, navigationType })
+provide(NavigationKey, {
+  basename,
+  navigator: props.navigator,
+  static: computed(() => props.static),
+})
+provide(LocationKey, {
+  location,
+  navigationType: computed(() => props.navigationType),
+})
 </script>
 
 <template>
