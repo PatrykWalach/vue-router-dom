@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import { useLocation, MemoryRouter, Link } from '../../src'
 import { mount } from '@vue/test-utils'
-
+import { describe, it, expect } from 'vitest'
 describe('useLocation', () => {
   it('is reactive', async () => {
     const wrapper = mount({

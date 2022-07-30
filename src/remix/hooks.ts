@@ -1,10 +1,23 @@
-import { invariant, joinPaths, warning } from '@remix-run/router'
+import { shallowEqual } from '@babel/types'
+import { invariant, joinPaths, Params, warning } from '@remix-run/router'
 import { Path, resolveTo, RouteMatch, To } from '@remix-run/router'
-import { computed, inject, onBeforeMount, Ref, ref, toRefs } from 'vue'
+import { watch } from 'vue'
+import { URLSearchParams } from 'url'
+import {
+  computed,
+  inject,
+  onBeforeMount,
+  reactive,
+  Ref,
+  ref,
+  shallowRef,
+  toRefs,
+} from 'vue'
 import { ComputedCallback, unwrap } from '../utils/useComputedCallback'
 import {
   NavigateOptions,
   NavigationKey,
+  RouteKey,
   useLocation,
   useNavigation,
   useRoute,
@@ -58,7 +71,7 @@ export function useResolvedPath(to: ComputedCallback<To>): Ref<Path> {
     resolveTo(
       unwrap(to),
       JSON.parse(routePathnamesJson),
-      location.value!.pathname,
+      location.value.pathname,
     ),
   )
 }
@@ -117,7 +130,7 @@ export function useNavigate(): NavigateFunction {
     let path = resolveTo(
       to,
       JSON.parse(routePathnamesJson.value),
-      location.value!.pathname,
+      location.value.pathname,
     )
 
     // If we're operating within a basename, prepend it to the pathname prior
@@ -179,4 +192,165 @@ export function useHref(to: ComputedCallback<To>): Ref<string> {
       hash,
     })
   })
+}
+
+/**
+ * Returns an object of key/value pairs of the dynamic params from the current
+ * URL that were matched by the route path.
+ *
+ * @see https://reactrouter.com/docs/en/v6/hooks/use-params
+ */
+export function useParams<
+  ParamsOrKey extends string | Record<string, string | undefined> = string,
+>(): Readonly<
+  Ref<
+    [ParamsOrKey] extends [string] ? Params<ParamsOrKey> : Partial<ParamsOrKey>
+  >
+> {
+  let route = useRoute()
+  let routeMatch = computed(
+    () => route.value.matches[route.value.matches.length - 1],
+  )
+
+  return computed(() => (routeMatch.value?.params as any) ?? {})
+}
+
+export type ParamKeyValuePair = [string, string]
+
+export type URLSearchParamsInit =
+  | string
+  | ParamKeyValuePair[]
+  | Record<string, string | string[]>
+  | URLSearchParams
+
+/**
+ * Creates a URLSearchParams object using the given initializer.
+ *
+ * This is identical to `new URLSearchParams(init)` except it also
+ * supports arrays as values in the object form of the initializer
+ * instead of just strings. This is convenient when you need multiple
+ * values for a given key, but don't want to use an array initializer.
+ *
+ * For example, instead of:
+ *
+ *   let searchParams = new URLSearchParams([
+ *     ['sort', 'name'],
+ *     ['sort', 'price']
+ *   ]);
+ *
+ * you can do:
+ *
+ *   let searchParams = createSearchParams({
+ *     sort: ['name', 'price']
+ *   });
+ */
+export function createSearchParams(
+  init: URLSearchParamsInit = '',
+): URLSearchParams {
+  return new URLSearchParams(
+    typeof init === 'string' ||
+    Array.isArray(init) ||
+    init instanceof URLSearchParams
+      ? init
+      : Object.keys(init).reduce((memo, key) => {
+          let value = init[key]
+          return memo.concat(
+            Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]],
+          )
+        }, [] as ParamKeyValuePair[]),
+  )
+}
+
+export function getSearchParamsForLocation(
+  locationSearch: string,
+  defaultSearchParams: URLSearchParams,
+) {
+  let searchParams = createSearchParams(locationSearch)
+
+  for (let key of defaultSearchParams.keys()) {
+    if (!searchParams.has(key)) {
+      defaultSearchParams.getAll(key).forEach((value) => {
+        searchParams.append(key, value)
+      })
+    }
+  }
+
+  return searchParams
+}
+
+/**
+ * A convenient wrapper for reading and writing search parameters via the
+ * URLSearchParams interface.
+ */
+export function useSearchParams() {
+  warning(
+    typeof URLSearchParams !== 'undefined',
+    `You cannot use the \`useSearchParams\` hook in a browser that does not ` +
+      `support the URLSearchParams API. If you need to support Internet ` +
+      `Explorer 11, we recommend you load a polyfill such as ` +
+      `https://github.com/ungap/url-search-params\n\n` +
+      `If you're unsure how to load polyfills, we recommend you check out ` +
+      `https://polyfill.io/v3/ which provides some recommendations about how ` +
+      `to load polyfills only for users that need them, instead of for every ` +
+      `user.`,
+  )
+
+  let location = useLocation()
+
+  const params = computed(() =>
+    getSearchParamsForLocation(location.value.search, new URLSearchParams()),
+  )
+
+  let navigate = useNavigate()
+
+  return {
+    [Symbol.iterator]() {
+      return params.value[Symbol.iterator]()
+    },
+    set(name: string, value: string, options?: NavigateOptions) {
+      const nextParams = new URLSearchParams(params.value.toString())
+      nextParams.set(name, value)
+      navigate('?' + nextParams, options)
+    },
+    sort(options?: NavigateOptions) {
+      const nextParams = new URLSearchParams(params.value.toString())
+      nextParams.sort()
+      navigate('?' + nextParams, options)
+    },
+    append(name: string, value: string, options?: NavigateOptions) {
+      const nextParams = new URLSearchParams(params.value.toString())
+      nextParams.append(name, value)
+      navigate('?' + nextParams, options)
+    },
+    delete(name: string, options?: NavigateOptions) {
+      const nextParams = new URLSearchParams(params.value.toString())
+      nextParams.delete(name)
+      navigate('?' + nextParams, options)
+    },
+    entries() {
+      return params.value.entries()
+    },
+    forEach(...args: Parameters<URLSearchParams['forEach']>) {
+      return params.value.forEach(...args)
+    },
+    get(...args: Parameters<URLSearchParams['get']>) {
+      return params.value.get(...args)
+    },
+    getAll(...args: Parameters<URLSearchParams['getAll']>) {
+      return params.value.getAll(...args)
+    },
+    has(...args: Parameters<URLSearchParams['has']>) {
+      return params.value.has(...args)
+    },
+    keys() {
+      return params.value.keys()
+    },
+
+    toString() {
+      return params.value.toString()
+    },
+    values() {
+      return params.value.values()
+    },
+  }
 }

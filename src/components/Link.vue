@@ -51,7 +51,7 @@ export function useLinkClickHandler<E extends Element = HTMLAnchorElement>(
                 // If the URL hasn't changed, a regular <a> will do a replace instead of
                 // a push, so do the same here.
                 let replace =
-                    !!replaceProp || createPath(location.value!) === createPath(path.value);
+                    !!replaceProp || createPath(location.value) === createPath(path.value);
 
                 let newState = unwrap(state);
                 if (unwrap(resetScroll) === false) {

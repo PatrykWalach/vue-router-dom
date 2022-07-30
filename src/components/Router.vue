@@ -69,7 +69,7 @@ provide(NavigationKey, {
   static: computed(() => props.static),
 })
 provide(LocationKey, {
-  location,
+  location: computed(() => location.value!),
   navigationType: computed(() => props.navigationType),
 })
 </script>

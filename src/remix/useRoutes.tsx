@@ -99,7 +99,7 @@ export const useRoutes = (
     return locationFromContext.value
   })
 
-  const pathname = computed(() => location.value?.pathname || '/')
+  const pathname = computed(() => location.value.pathname || '/')
   const remainingPathname = computed(() =>
     parentPathnameBase.value === '/'
       ? pathname.value
@@ -114,13 +114,13 @@ export const useRoutes = (
     watchEffect(() => {
       router.warning(
         parentRoute.value || matches.value != null,
-        `No routes matched location "${location.value?.pathname}${location.value?.search}${location.value?.hash}" `,
+        `No routes matched location "${location.value.pathname}${location.value.search}${location.value.hash}" `,
       )
 
       router.warning(
         matches.value == null ||
           matches.value[matches.value.length - 1]?.route.element !== undefined,
-        `Matched leaf route at location "${location.value?.pathname}${location.value?.search}${location.value?.hash}" does not have an element. ` +
+        `Matched leaf route at location "${location.value.pathname}${location.value.search}${location.value.hash}" does not have an element. ` +
           `This means it will render an <Outlet /> with a null value by default resulting in an "empty" page.`,
       )
     })
@@ -149,7 +149,7 @@ export const useRoutes = (
         }),
       ) ?? null,
       route.value.matches,
-      dataRouterStateContext.value,
+      dataRouterStateContext?.value,
     ),
   )
 }

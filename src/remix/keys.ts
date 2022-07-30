@@ -17,7 +17,6 @@ export const DataRouterStateKey: vue.InjectionKey<
 
 export const useRouterState = () => {
   const state = vue.inject(DataRouterStateKey, null)
-  assert(state, 'state is null')
   return state
 }
 
@@ -68,7 +67,7 @@ export const useOutlet = (value: unknown) => {
 }
 
 interface LocationKeyObject {
-  location: Readonly<vue.Ref<Location | null>>
+  location: Readonly<vue.Ref<Location>>
   navigationType: Readonly<vue.Ref<NavigationType>>
 }
 
