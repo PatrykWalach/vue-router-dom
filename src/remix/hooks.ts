@@ -252,12 +252,11 @@ export function createSearchParams(
     Array.isArray(init) ||
     init instanceof URLSearchParams
       ? init
-      : Object.keys(init).reduce((memo, key) => {
-          let value = init[key]
-          return memo.concat(
-            Array.isArray(value) ? value.map((v) => [key, v]) : [[key, value]],
-          )
-        }, [] as ParamKeyValuePair[]),
+      : Object.entries(init).flatMap(([key, value]): ParamKeyValuePair[] => {
+          return Array.isArray(value)
+            ? value.map((v) => [key, v])
+            : [[key, value]]
+        }),
   )
 }
 

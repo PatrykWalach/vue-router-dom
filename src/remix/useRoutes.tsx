@@ -199,9 +199,9 @@ export function _renderMatches(
             }}
           >
             {error ? (
-              Fallback && <Fallback />
+              Fallback && h(Fallback)
             ) : match.route.element !== undefined ? (
-              <match.route.element />
+              h(match.route.element)
             ) : (
               <outlet />
             )}
@@ -220,7 +220,7 @@ export function _renderMatches(
         return (
           <RenderErrorBoundary
             v-slots={{
-              fallback: () => Fallback && <Fallback />,
+              fallback: () => Fallback && h(Fallback),
               default: () => <Children />,
             }}
             location={dataRouterState.location}
