@@ -1,8 +1,8 @@
-import { Routes, Route, Outlet, MemoryRouter } from '../../src'
+import { Routes, Route, Outlet, MemoryRouter } from '~'
 
 import { mount } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
-import { useParams } from '../../src'
+import { useParams } from '~'
 import { describe, it, expect } from 'vitest'
 
 describe('A <Routes>', () => {

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { h, defineComponent, nextTick, isRef } from 'vue'
-import { useParams, Routes, Route, MemoryRouter, Link } from '../../src'
+import { useParams, Routes, Route, MemoryRouter, Link } from '~'
 import { describe, it, expect, vi as jest } from 'vitest'
 describe('useParams.spec', () => {
   it('is reactive', async () => {

@@ -22,14 +22,13 @@ const props = withDefaults(defineProps<RouterProps>(), {
   static: false,
 })
 
-// const props = defineProps<RouterProps>();
-
 const basename = computed(() => props.basename.replace(/^\/*/, '/'))
 
-const locationProp = computed(() =>
-  typeof props.location === 'string'
-    ? parsePath(props.location)
-    : props.location,
+const locationProp = computed(
+  (): Partial<Location> =>
+    typeof props.location === 'string'
+      ? parsePath(props.location)
+      : props.location,
 )
 
 const pathname = computed(() => locationProp.value.pathname ?? '/')

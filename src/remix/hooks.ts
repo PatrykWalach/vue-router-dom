@@ -2,7 +2,6 @@ import { shallowEqual } from '@babel/types'
 import { invariant, joinPaths, Params, warning } from '@remix-run/router'
 import { Path, resolveTo, RouteMatch, To } from '@remix-run/router'
 import { watch } from 'vue'
-import { URLSearchParams } from 'url'
 import {
   computed,
   inject,

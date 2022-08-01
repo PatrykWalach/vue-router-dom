@@ -1,5 +1,5 @@
 import { defineComponent, h, computed } from 'vue'
-import { useSearchParams, MemoryRouter, Routes, Route } from '../../src'
+import { useSearchParams, MemoryRouter, Routes, Route } from '~'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 

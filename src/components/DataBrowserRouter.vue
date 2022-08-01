@@ -32,7 +32,7 @@ const router = markRaw(
   createBrowserRouter({
     basename: props.basename,
     hydrationData:
-      props.hydrationData || props.window?.__staticRouterHydrationData,
+      props.hydrationData || (window as any)?.__staticRouterHydrationData,
     window: props.window,
     routes: enumerate(props.routes) ?? [],
   }).initialize(),

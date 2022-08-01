@@ -1,4 +1,4 @@
-import { Routes, Route, MemoryRouter, Link } from '../../src'
+import { Link, MemoryRouter, Routes } from '~'
 import { describe, it, expect } from 'vitest'
 import { onMounted, h, defineComponent, KeepAlive } from 'vue'
 import { mount } from '@vue/test-utils'

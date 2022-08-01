@@ -1,11 +1,11 @@
-import { Routes, Outlet, MemoryRouter, VueRouteObject } from '../../src'
+import { Routes, Outlet, MemoryRouter, VueRouteObject } from '~'
 
 import { h, defineComponent, markRaw, Slot } from 'vue'
-import { useRoutes, useParams } from '../../src'
+import { useRoutes, useParams } from '~'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import { Component } from 'vue'
-import type { RouteObject } from '../../src'
+import type { RouteObject } from '~'
 
 describe('route matching', () => {
   const renderRoutes = (slot: Slot, entry: string) => {

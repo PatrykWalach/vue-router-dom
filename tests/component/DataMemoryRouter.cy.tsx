@@ -1,14 +1,13 @@
-import type { VueRouteObject } from '../../src/remix/types'
-import { defineComponent, withModifiers } from 'vue'
-import DataMemoryRouter from '../../src/remix/DataMemoryRouter.vue'
-import Outlet from '../../src/remix/Outlet.vue'
+import { defineComponent, markRaw, withModifiers } from 'vue'
+import type { RouteObject as VueRouteObject } from '~'
 import {
-  useLoaderData,
+  DataMemoryRouter,
+  Outlet,
   useActionData,
-  useNavigation,
   useDataRouter,
-} from '../../src/remix/keys'
-import { markRaw } from 'vue'
+  useLoaderData,
+  useNavigation,
+} from '~'
 
 describe('<DataMemoryRouter>', () => {
   it('renders the first route that matches the URL', () => {

@@ -21,6 +21,15 @@ import type { VueRouteObject } from './types'
 
 const __DEV__ = process.env.NODE_ENV !== 'production'
 
+export function invariant<T>(
+  value: T | null | undefined,
+  message?: string,
+): asserts value is T {
+  if (!value) {
+    throw new Error(message)
+  }
+}
+
 export const useRoutes = (
   routes: ComputedCallback<VueRouteObject[]>,
   locationArg?: ComputedCallback<Partial<Location> | string | undefined>,
@@ -86,7 +95,7 @@ export const useRoutes = (
           ? router.parsePath(locationArgUnref)
           : locationArgUnref
 
-      router.invariant(
+      invariant(
         parentPathnameBase.value === '/' ||
           parsedLocationArg.pathname?.startsWith(parentPathnameBase.value),
         `When overriding the location using \`<Routes location>\` or \`useRoutes(routes, location)\`, ` +
@@ -169,7 +178,7 @@ export function _renderMatches(
     const errorIndex = renderedMatches.findIndex(
       (m) => m.route.id && errors?.[m.route.id],
     )
-    router.invariant(
+    invariant(
       errorIndex >= 0,
       `Could not find a matching route for the current errors: ${errors}`,
     )
