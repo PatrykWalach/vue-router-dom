@@ -1,27 +1,12 @@
 <script lang="ts" setup>
-import {
-  createBrowserRouter,
-  HydrationState,
-  RouteObject,
-  Router as RemixRouter,
-} from '@remix-run/router'
-import {
-  computed,
-  defineComponent,
-  onBeforeUnmount,
-  onUnmounted,
-  provide,
-  shallowRef,
-  watchEffect,
-} from 'vue'
+import { Router as RemixRouter } from '@remix-run/router'
+import { computed, provide, shallowRef, watchEffect } from 'vue'
 import {
   DataRouterKey,
   DataRouterKeyObject,
   DataRouterStateKey,
+  Navigator,
 } from '../remix/keys'
-import { Navigator } from '../remix/keys'
-import Router from './Router.vue'
-import Routes from './Routes.vue'
 
 interface DataBrowserRouterProps {
   basename?: string

@@ -19,11 +19,10 @@ export function enumerate(
 
 <script lang="ts" setup>
 import { invariant } from '@remix-run/router'
-import { inject } from 'vue'
-import { DataRouterKey, useDataRouter } from '../remix/keys'
+import { useDataRouter } from '../remix/keys'
 import { VueRouteObject } from '../remix/types'
-import Routes from './Routes.vue'
 import Router from './Router.vue'
+import Routes from './Routes.vue'
 
 const dataRouter = useDataRouter()
 

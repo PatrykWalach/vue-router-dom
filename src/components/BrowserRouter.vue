@@ -1,26 +1,7 @@
 <script lang="ts" setup>
-import {
-  createMemoryRouter,
-  HydrationState,
-  RouteObject,
-  InitialEntry,
-  createMemoryHistory,
-  createBrowserHistory,
-} from '@remix-run/router'
-import {
-  provide,
-  shallowRef,
-  toRefs,
-  defineComponent,
-  computed,
-  markRaw,
-  watchEffect,
-} from 'vue'
-import { DataRouterKey, DataRouterStateKey } from '../remix/keys'
-import { VueRouteObject, RemixRouter } from '../remix/types'
-import DataRouterProvider from './DataRouterProvider.vue'
+import { createBrowserHistory } from '@remix-run/router'
+import { shallowRef, watchEffect } from 'vue'
 import Router from './Router.vue'
-import { enumerate } from './DataRouter.vue'
 export interface BrowserRouterProps {
   basename?: string
   window?: Window

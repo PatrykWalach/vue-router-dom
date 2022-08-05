@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { Location } from '@remix-run/router'
 import * as vue from 'vue'
+import { watchEffect } from 'vue'
+import { useDataRouter } from '../remix/keys'
 import { VueRouteObject } from '../remix/types'
 import { useRoutes } from '../remix/useRoutes'
-import { Location } from '@remix-run/router'
-import { PropType } from 'vue'
-import { useDataRouter } from '../remix/keys'
 import { enumerate } from './DataRouter.vue'
 interface RoutesProps {
   location?: Partial<Location> | string

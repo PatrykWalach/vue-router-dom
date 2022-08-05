@@ -2,23 +2,12 @@
 import {
   createMemoryRouter,
   HydrationState,
-  RouteObject,
-  Router,
   InitialEntry,
 } from '@remix-run/router'
-import {
-  provide,
-  shallowRef,
-  toRefs,
-  defineComponent,
-  computed,
-  markRaw,
-} from 'vue'
-import { DataRouterKey, DataRouterStateKey } from '../remix/keys'
-import { VueRouteObject, RemixRouter } from '../remix/types'
+import { markRaw } from 'vue'
+import { VueRouteObject } from '../remix/types'
+import DataRouter, { enumerate } from './DataRouter.vue'
 import DataRouterProvider from './DataRouterProvider.vue'
-import DataRouter from './DataRouter.vue'
-import { enumerate } from './DataRouter.vue'
 interface DataBrowserRouterProps {
   routes?: VueRouteObject[]
   initialEntries?: InitialEntry[]

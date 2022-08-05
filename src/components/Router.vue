@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import {
-  normalizePathname,
+  Action as NavigationType,
+  Location,
   parsePath,
   stripBasename,
   warning,
-  Action as NavigationType,
-  Location,
 } from '@remix-run/router'
-import { computed, provide, toRef, watchEffect, defineComponent } from 'vue'
+import { computed, provide, watchEffect } from 'vue'
 import { LocationKey, NavigationKey, Navigator } from '../remix/keys'
 interface RouterProps {
   basename?: string
