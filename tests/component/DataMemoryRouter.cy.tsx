@@ -1,5 +1,18 @@
-import { defineComponent, markRaw, withModifiers } from 'vue'
+import { defer as deferred } from '@remix-run/router'
+import { divide } from 'cypress/types/lodash'
+import { mount } from 'cypress/vue'
+
+import {
+  defineComponent,
+  markRaw,
+  onErrorCaptured,
+  ref,
+  Suspense,
+  watchEffect,
+  withModifiers,
+} from 'vue'
 import type { RouteObject as VueRouteObject } from '~'
+import { useRouteError } from '~'
 import {
   DataMemoryRouter,
   Outlet,
@@ -7,9 +20,24 @@ import {
   useDataRouter,
   useLoaderData,
   useNavigation,
+  Await,
+  useAsyncValue,
+  useAsyncError,
 } from '~'
 
 describe('<DataMemoryRouter>', () => {
+  // let consoleWarn: SpyInstance
+  // let consoleError: SpyInstance
+  beforeEach(() => {
+    // window.location.href = 'http://localhost:8080'
+    //   consoleWarn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    //   consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  // afterEach(() => {
+  //   consoleWarn.mockRestore()
+  //   consoleError.mockRestore()
+  // })
   it('renders the first route that matches the URL', () => {
     const routes: VueRouteObject[] = [
       {
@@ -124,11 +152,6 @@ describe('<DataMemoryRouter>', () => {
       })
     })
   })
-
-  function defer<T>(data: T) {
-    return new Promise<T>((resolve) => setTimeout(resolve, 100, data))
-  }
-
   ;(
     [
       [
@@ -222,23 +245,6 @@ describe('<DataMemoryRouter>', () => {
     })
 
     cy.get('h1').contains('Bar Heading')
-  })
-
-  const MemoryNavigate = defineComponent({
-    name: 'MemoryNavigate',
-    props: ['to'],
-    setup(props) {
-      const { router } = useDataRouter()
-
-      return () => (
-        <a
-          href={props.to}
-          onClick={withModifiers(() => router.navigate(props.to), ['prevent'])}
-        >
-          Link to {props.to}
-        </a>
-      )
-    },
   })
 
   it('handles link navigations', () => {
@@ -360,4 +366,524 @@ describe('<DataMemoryRouter>', () => {
       cy.get('h1').contains('Bar Loader')
     })
   })
+})
+
+describe('defer', () => {
+  ;(
+    [
+      ['allows loaders to return deffered data (child component)'],
+      [
+        'allows loaders to return deferred data (render prop)',
+        { useRenderProp: true },
+      ],
+    ] as const
+  ).forEach(([test, options]) =>
+    it(test, () => {
+      setupDeferred({
+        data: deferred({
+          critical: 'CRITICAL',
+          lazy: defer('LAZY', 200),
+        }),
+        ...options,
+      })
+
+      cy.contains('Link to /bar').click()
+
+      cy.get('div').within(() => {
+        cy.get('a')
+        cy.get('p').contains('loading')
+        cy.get('h1').contains('Foo')
+      })
+
+      cy.contains('idle')
+
+      cy.get('div').within(() => {
+        cy.get('a')
+        cy.get('p').contains('idle')
+        cy.get('p').contains('CRITICAL')
+        cy.get('p').contains('Loading...')
+      })
+
+      cy.contains('LAZY')
+
+      cy.get('div').within(() => {
+        cy.get('a')
+        cy.get('p').contains('idle')
+        cy.get('p').contains('CRITICAL')
+        cy.get('p').contains('LAZY')
+      })
+    }),
+  )
+
+  it('sends data errors to the provided error', () => {
+    setupDeferred({
+      data: deferred({
+        critical: 'CRITICAL',
+        lazy: reject(new Error('Kaboom!'), 200),
+      }),
+      hasRouteErrorElement: true,
+      hasAwaitErrorElement: true,
+    })
+
+    cy.contains('Link to /bar').click()
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('loading')
+      cy.get('h1').contains('Foo')
+    })
+
+    cy.contains('idle')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Loading...')
+    })
+
+    cy.contains('Await Error: Kaboom!')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Await Error: Kaboom!')
+    })
+  })
+
+  it('sends unhandled data errors to the nearest route error boundary', () => {
+    setupDeferred({
+      data: deferred({
+        critical: 'CRITICAL',
+        lazy: reject(new Error('Kaboom!'), 200),
+      }),
+      hasRouteErrorElement: true,
+    })
+
+    cy.contains('Link to /bar').click()
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('loading')
+      cy.get('h1').contains('Foo')
+    })
+
+    cy.contains('idle')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Loading...')
+    })
+
+    cy.contains('Loading...').should('not.exist')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL').should('not.exist')
+      cy.get('p').contains('Route Error: Kaboom!')
+    })
+  })
+
+  it('sends render errors to the provided errorElement', () => {
+    setupDeferred({
+      data: deferred({
+        critical: 'CRITICAL',
+        lazy: defer('LAZY', 200),
+      }),
+      hasRouteErrorElement: true,
+      hasAwaitErrorElement: true,
+      triggerRenderError: true,
+    })
+
+    cy.contains('Link to /bar').click()
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('loading')
+      cy.get('h1').contains('Foo')
+    })
+
+    cy.contains('idle')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Loading...')
+    })
+
+    cy.contains('Loading...').should('not.exist')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Await Error: Unexpected end of JSON input')
+    })
+  })
+
+  it('sends unhandled render errors to the nearest route error boundary', () => {
+    setupDeferred({
+      data: deferred({
+        critical: 'CRITICAL',
+        lazy: defer('LAZY', 200),
+      }),
+      hasRouteErrorElement: true,
+      triggerRenderError: true,
+    })
+
+    cy.contains('Link to /bar').click()
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('loading')
+      cy.get('h1').contains('Foo')
+    })
+
+    cy.contains('idle')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL')
+      cy.get('p').contains('Loading...')
+    })
+
+    cy.contains('Loading...').should('not.exist')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL').should('not.exist')
+      cy.get('p').contains('Route Error: Unexpected end of JSON input')
+    })
+  })
+
+  it('does not handle error render errors in the Deferred errorElement', () => {
+    setupDeferred({
+      data: deferred({
+        critical: 'CRITICAL',
+        lazy: defer('LAZY', 200),
+      }),
+      hasRouteErrorElement: true,
+      hasAwaitErrorElement: true,
+      triggerRenderError: true,
+      triggerFallbackError: true,
+    })
+
+    cy.contains('Link to /bar').click()
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('loading')
+      cy.get('h1').contains('Foo')
+    })
+
+    cy.contains('idle')
+
+    cy.get('div').within(() => {
+      cy.get('a')
+      cy.get('p').contains('idle')
+      cy.get('p').contains('CRITICAL').should('not.exist')
+      cy.get('p').contains('Route Error: Unexpected end of JSON input')
+    })
+  })
+
+  it('can render raw resolved promises with <Await>', () => {
+    cy.mount(() => (
+      <div>
+        <Suspense
+          v-slots={{
+            fallback: () => <p>Loading...</p>,
+            default: () => (
+              <Await
+                resolve={defer('RESOLVED')}
+                v-slots={{ default: ({ data }) => <p>{data}</p> }}
+              ></Await>
+            ),
+          }}
+        ></Suspense>
+      </div>
+    ))
+
+    cy.get('p').contains('Loading...')
+    cy.get('p').contains('Loading...').should('not.exist')
+    cy.get('p').contains('RESOLVED')
+  })
+
+  it('can render raw rejected promises with <Await>', () => {
+    const ErrorElement = defineComponent(function ErrorElement() {
+      const error = useAsyncError()
+      return () => <p>Error: {error.value}</p>
+    })
+
+    cy.mount(() => (
+      <div>
+        <Suspense
+          v-slots={{
+            fallback: () => <p>Loading...</p>,
+            default: () => (
+              <Await
+                resolve={reject('REJECTED')}
+                v-slots={{
+                  error: () => <ErrorElement />,
+                  default: ({ data }) => <p>{data}</p>,
+                }}
+              />
+            ),
+          }}
+        ></Suspense>
+      </div>
+    ))
+
+    cy.get('p').contains('Loading...')
+    cy.get('p').contains('Loading...').should('not.exist')
+    cy.get('p').contains('Error: REJECTED')
+  })
+})
+
+function setupDeferred({
+  hasAwaitErrorElement = false,
+  useRenderProp = false,
+  triggerFallbackError = false,
+  triggerRenderError = false,
+  data,
+  hasRouteErrorElement = false,
+}: {
+  hasAwaitErrorElement?: boolean
+  useRenderProp?: boolean
+  triggerFallbackError?: boolean
+  triggerRenderError?: boolean
+  data: {}
+  hasRouteErrorElement?: boolean
+}) {
+  const Layout = defineComponent(function Layout() {
+    const navigation = useNavigation()
+    return () => (
+      <>
+        <MemoryNavigate to="/bar"></MemoryNavigate>
+        <p>{navigation.value.state}</p>
+        <Outlet></Outlet>
+      </>
+    )
+  })
+  const Bar = defineComponent(function Bar() {
+    const data = useLoaderData()
+
+    return () => (
+      <>
+        <p>{data.value.critical}</p>
+        <Suspense
+          v-slots={{
+            fallback: () => <LazyFallback />,
+            default: () => (
+              <Await
+                resolve={data.value.lazy}
+                v-slots={{
+                  error: hasAwaitErrorElement ? () => <LazyError /> : undefined,
+                  default: ({ data }) =>
+                    useRenderProp ? <p>{data}</p> : <LazyData />,
+                }}
+              />
+            ),
+          }}
+        />
+      </>
+    )
+  })
+  function Foo() {
+    return <h1>Foo</h1>
+  }
+
+  function LazyFallback() {
+    return triggerFallbackError ? <p>{JSON.parse('"')}</p> : <p>Loading...</p>
+  }
+
+  const LazyData = defineComponent(function LazyData() {
+    let data = useAsyncValue()
+
+    return () =>
+      triggerRenderError ? <p>{JSON.parse('"')}</p> : <p>{data.value}</p>
+  })
+
+  const LazyError = defineComponent(function LazyError() {
+    let data = useAsyncError()
+    return () => <p>Await Error: {data.value.message}</p>
+  })
+
+  const RouteError = defineComponent(function RouteError() {
+    let error = useRouteError()
+    return () => <p>Route Error: {error.value.message}</p>
+  })
+
+  cy.mount(DataMemoryRouter, {
+    props: {
+      initialEntries: ['/foo'],
+      hydrationData: {},
+      routes: markRaw([
+        {
+          path: '/',
+          element: Layout,
+          children: [
+            {
+              path: 'foo',
+              element: Foo,
+            },
+            {
+              path: 'bar',
+              loader: () => defer(data),
+              element: Bar,
+              errorElement: hasRouteErrorElement ? RouteError : undefined,
+            },
+          ],
+        },
+      ]),
+    },
+  })
+}
+
+// it("executes route actions/loaders on submission navigations", async () => {
+//   let barDefer = defer();
+//   let barActionDefer = defer();
+//   let formData = new FormData();
+//   formData.append("test", "value");
+
+//   let { container } = render(
+//     <DataMemoryRouter
+//       errorElement={<span />}
+//       initialEntries={["/foo"]}
+//       hydrationData={{}}
+//     >
+//       <Route path="/" element={<Layout />}>
+//         <Route path="foo" element={<Foo />} />
+//         <Route
+//           path="bar"
+//           action={() => barActionDefer.promise}
+//           loader={() => barDefer.promise}
+//           element={<Bar />}
+//         />
+//       </Route>
+//     </DataMemoryRouter>
+//   );
+
+//   function Layout() {
+//     let navigation = useNavigation();
+//     return (
+//       <div>
+//         <MemoryNavigate to="/bar" formMethod="post" formData={formData}>
+//           Post to Bar
+//         </MemoryNavigate>
+//         <p>{navigation.state}</p>
+//         <Outlet />
+//       </div>
+//     );
+//   }
+
+//   function Foo() {
+//     return <h1>Foo</h1>;
+//   }
+//   function Bar() {
+//     let data = useLoaderData();
+//     let actionData = useActionData();
+//     return (
+//       <h1>
+//         {data}
+//         {actionData}
+//       </h1>
+//     );
+//   }
+
+//   expect(getHtml(container)).toMatchInlineSnapshot(`
+//     "<div>
+//       <div>
+//         <form>
+//           Post to Bar
+//         </form>
+//         <p>
+//           idle
+//         </p>
+//         <h1>
+//           Foo
+//         </h1>
+//       </div>
+//     </div>"
+//   `);
+
+//   fireEvent.click(screen.getByText("Post to Bar"));
+//   expect(getHtml(container)).toMatchInlineSnapshot(`
+//     "<div>
+//       <div>
+//         <form>
+//           Post to Bar
+//         </form>
+//         <p>
+//           submitting
+//         </p>
+//         <h1>
+//           Foo
+//         </h1>
+//       </div>
+//     </div>"
+//   `);
+
+//   barActionDefer.resolve("Bar Action");
+//   await waitFor(() => screen.getByText("loading"));
+//   expect(getHtml(container)).toMatchInlineSnapshot(`
+//     "<div>
+//       <div>
+//         <form>
+//           Post to Bar
+//         </form>
+//         <p>
+//           loading
+//         </p>
+//         <h1>
+//           Foo
+//         </h1>
+//       </div>
+//     </div>"
+//   `);
+
+//   barDefer.resolve("Bar Loader");
+//   await waitFor(() => screen.getByText("idle"));
+//   expect(getHtml(container)).toMatchInlineSnapshot(`
+//     "<div>
+//       <div>
+//         <form>
+//           Post to Bar
+//         </form>
+//         <p>
+//           idle
+//         </p>
+//         <h1>
+//           Bar Loader
+//           Bar Action
+//         </h1>
+//       </div>
+//     </div>"
+//   `);
+// });
+
+function defer<T>(data: T, timeMs = 100) {
+  return new Promise<T>((resolve) => setTimeout(resolve, timeMs, data))
+}
+
+function reject<T>(data: T, timeMs = 100) {
+  return new Promise<T>((_, reject) => setTimeout(reject, timeMs, data))
+}
+
+const MemoryNavigate = defineComponent({
+  name: 'MemoryNavigate',
+  props: ['to'],
+  setup(props) {
+    const { router } = useDataRouter()
+
+    return () => (
+      <a
+        href={props.to}
+        onClick={withModifiers(() => router.navigate(props.to), ['prevent'])}
+      >
+        Link to {props.to}
+      </a>
+    )
+  },
 })

@@ -27,10 +27,12 @@ export interface VueRouteObject {
   id?: string
   loader?: LoaderFunction
   action?: ActionFunction
-  fallback?: Component
+  errorElement?: Component
   shouldRevalidate?: ShouldRevalidateFunction
-  handle?: any
+  handle?: Handle
 }
+
+export interface Handle {}
 
 export type RouterParams = Record<string, string>
 

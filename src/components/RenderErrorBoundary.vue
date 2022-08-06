@@ -22,6 +22,6 @@ vue.provide(RouteErrorKey, error)
 </script>
 
 <template>
-  <slot name="fallback" v-if="error" />
+  <slot name="error" v-if="error" />
   <slot v-else />
 </template>

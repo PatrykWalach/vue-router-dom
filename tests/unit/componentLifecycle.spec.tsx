@@ -1,7 +1,7 @@
-import { Link, MemoryRouter, Routes } from '~'
-import { describe, it, expect } from 'vitest'
-import { onMounted, h, defineComponent, KeepAlive } from 'vue'
 import { mount } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
+import { defineComponent, h, onMounted } from 'vue'
+import { Link, MemoryRouter, Routes } from '~'
 
 describe('when the same component is mounted by two different routes', () => {
   it('mounts only once', async () => {
@@ -24,13 +24,7 @@ describe('when the same component is mounted by two different routes', () => {
             { path: 'home', element: Home },
             { path: 'another-home', element: Home },
           ]}
-        >
-          {({ component }) => (
-            <KeepAlive>
-              <component></component>
-            </KeepAlive>
-          )}
-        </Routes>
+        ></Routes>
       </MemoryRouter>
     ))
 

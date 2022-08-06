@@ -20,7 +20,7 @@
     "codecov": "codecov",
     "test": "vitest",
     "ct:test": "cypress run --component",
-    "ct:dev": "cypress open --component",
+    "open": "cypress open --component",
     "prepare": "husky install"
   },
   "keywords": [
@@ -44,20 +44,20 @@
     "@vitejs/plugin-vue-jsx": "^2.0.0",
     "@vue/test-utils": "^2.0.2",
     "c8": "^7.12.0",
-    "cypress": "^10.3.1",
+    "cypress": "^10.4.0",
     "happy-dom": "^6.0.4",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4",
     "vite": "^3.0.4",
-    "vite-plugin-dts": "^1.4.0",
+    "vite-plugin-dts": "^1.4.1",
     "vitest": "^0.19.1",
     "vue": "^3.2.37",
-    "vue-tsc": "^0.39.2"
+    "vue-tsc": "^0.39.4"
   },
   "dependencies": {
-    "@remix-run/router": "^0.2.0-pre.5"
+    "@remix-run/router": "^0.2.0-pre.6"
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": "prettier --write"

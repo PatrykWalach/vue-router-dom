@@ -12,8 +12,7 @@ import {
   watchEffect,
 } from 'vue'
 import { ComputedCallback, unwrap } from '../utils/useComputedCallback'
-// import DefaultFallback from './DefaultFallback.vue'
-import DefaultFallback from '../components/DefaultFallback.vue'
+import DefaultErrorElement from '../components/DefaultErrorElement.vue'
 import { RouteKey, useLocation, useRoute, useRouterState } from './keys'
 import Provider from '../components/Provider.vue'
 import RenderErrorBoundary from '../components/RenderErrorBoundary.vue'
@@ -192,8 +191,8 @@ export function _renderMatches(
     (outlet, match, index): Component | null => {
       const error = match.route.id ? errors?.[match.route.id] : null
       // Only data routers handle errors
-      const Fallback = dataRouterState
-        ? match.route.fallback || DefaultFallback
+      const ErrorElement = dataRouterState
+        ? match.route.errorElement || DefaultErrorElement
         : null
 
       function Children() {
@@ -208,7 +207,7 @@ export function _renderMatches(
             }}
           >
             {error ? (
-              Fallback && h(Fallback)
+              ErrorElement && h(ErrorElement)
             ) : match.route.element !== undefined ? (
               h(match.route.element)
             ) : (
@@ -221,7 +220,7 @@ export function _renderMatches(
       // Only wrap in an error boundary within data router usages when we have an
       // errorElement on this route.  Otherwise let it bubble up to an ancestor
       // errorElement
-      if (!(dataRouterState && (match.route.fallback || index === 0))) {
+      if (!(dataRouterState && (match.route.errorElement || index === 0))) {
         return Children
       }
 
@@ -229,7 +228,7 @@ export function _renderMatches(
         return (
           <RenderErrorBoundary
             v-slots={{
-              fallback: () => Fallback && h(Fallback),
+              error: () => ErrorElement && h(ErrorElement),
               default: () => <Children />,
             }}
             location={dataRouterState.location}

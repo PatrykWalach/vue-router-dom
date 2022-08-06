@@ -14,6 +14,7 @@ import {
 } from 'vue'
 import { ComputedCallback, unwrap } from '../utils/useComputedCallback'
 import {
+  AwaitKey,
   NavigateOptions,
   NavigationKey,
   RouteKey,
@@ -115,7 +116,7 @@ export function useNavigate(): NavigateFunction {
   ) => {
     warning(
       activeRef.value,
-      `You should call navigate() in a React.useEffect(), not when ` +
+      `You should call navigate() in a watchEffect(), not when ` +
         `your component is first rendered.`,
     )
 
@@ -351,4 +352,20 @@ export function useSearchParams() {
       return params.value.values()
     },
   }
+}
+
+/**
+ * Returns the happy-path data from the nearest ancestor <Await /> value
+ */
+export function useAsyncValue(): unknown {
+  let promise = inject(AwaitKey)
+  return computed(() => promise?.value._data)
+}
+
+/**
+ * Returns the error from the nearest ancestor <Await /> value
+ */
+export function useAsyncError(): unknown {
+  let promise = inject(AwaitKey)
+  return computed(() => promise?.value._error)
 }

@@ -2,6 +2,7 @@ import type {
   Action as NavigationType,
   History,
   Location,
+  TrackedPromise,
 } from '@remix-run/router'
 import { To } from '@remix-run/router'
 import { invariant, RouteMatch, Router } from '@remix-run/router'
@@ -194,3 +195,6 @@ export function useNavigation() {
     return state.value.navigation
   })
 }
+
+export const AwaitKey: vue.InjectionKey<vue.Ref<TrackedPromise>> =
+  Symbol('AwaitKey')

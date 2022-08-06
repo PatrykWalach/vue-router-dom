@@ -39,6 +39,6 @@ const style = {
     You can provide a way better UX than this when your app throws errors by
     providing your own&nbsp;
     <code :style="style">errorElement</code> props on&nbsp;
-    <code :style="style">&lt;Route&gt;</code>
+    <code :style="style">&lt;RouteObject&gt;</code>
   </p>
 </template>
