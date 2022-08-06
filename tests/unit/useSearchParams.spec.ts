@@ -1,17 +1,18 @@
 import { defineComponent, h, computed } from 'vue'
-import { useSearchParams, MemoryRouter, Routes, Route } from '../../src'
+import { useSearchParams, MemoryRouter, Routes, Route } from '~'
 import { mount } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
 
 describe('useSearchParams', () => {
   const SearchPage = defineComponent({
     setup() {
-      const [searchParams, setSearchParams] = useSearchParams({ q: '' })
+      const searchParams = useSearchParams()
 
-      const query = computed(() => searchParams.value.get('q'))
+      const query = computed(() => searchParams.get('q') ?? '')
 
       function handleClick(event: MouseEvent) {
         event.preventDefault()
-        setSearchParams({ q: 'Ryan Florence' })
+        searchParams.set('q', 'Ryan Florence')
       }
 
       return () =>
@@ -23,12 +24,13 @@ describe('useSearchParams', () => {
   })
 
   it('reads and writes the search string', async () => {
-    const wrapper = mount({
-      render: () =>
-        h(MemoryRouter, { initialEntries: [`/search?q=Michael+Jackson`] }, () =>
-          h(Routes, () => h(Route, { path: 'search', element: h(SearchPage) })),
-        ),
-    })
+    const wrapper = mount(() =>
+      h(MemoryRouter, { initialEntries: [`/search?q=Michael+Jackson`] }, () =>
+        h(Routes, {
+          routes: [{ path: 'search', element: SearchPage }],
+        }),
+      ),
+    )
 
     expect(wrapper.html()).toMatch(/The current query is "Michael Jackson"/)
 

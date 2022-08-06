@@ -1,49 +1,41 @@
-import { Routes, Route, MemoryRouter } from '../../src'
+import { Routes, Route, MemoryRouter, Outlet } from '~'
 
 import { defineComponent, h } from 'vue'
-import { useOutlet } from '../../src'
+import { useOutlet } from '~'
 import { mount } from '@vue/test-utils'
-
+import { describe, it, expect } from 'vitest'
 describe('useOutlet', () => {
   describe('when there is no child route', () => {
     it('returns null', () => {
-      const Home = defineComponent({
-        setup() {
-          const outlet = useOutlet()
-          return () => h(outlet.value)
-        },
-      })
-
       const wrapper = mount({
         render: () =>
           h(MemoryRouter, { initialEntries: ['/home'] }, () =>
-            h(Routes, () => h(Route, { path: '/home', element: h(Home) })),
+            h(Routes, {
+              routes: [{ path: '/home', element: Outlet }],
+            }),
           ),
       })
 
-      expect(wrapper.html()).toMatchInlineSnapshot(`"<!---->"`)
+      expect(wrapper.html()).toMatchInlineSnapshot(`""`)
     })
   })
 
   describe('when there is a child route', () => {
     it('returns an element', () => {
-      const Users = defineComponent({
-        setup() {
-          const outlet = useOutlet()
-          return () => h(outlet.value)
-        },
-      })
-
       const Profile = () => h('p', 'Profile')
 
       const wrapper = mount({
         render: () =>
           h(MemoryRouter, { initialEntries: ['/users/profile'] }, () =>
-            h(Routes, () =>
-              h(Route, { path: 'users', element: h(Users) }, () => [
-                h(Route, { path: 'profile', element: h(Profile) }),
-              ]),
-            ),
+            h(Routes, {
+              routes: [
+                {
+                  path: 'users',
+                  element: Outlet,
+                  children: [{ path: 'profile', element: Profile }],
+                },
+              ],
+            }),
           ),
       })
 

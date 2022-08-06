@@ -1,8 +1,9 @@
-import { Routes, Route, Outlet, MemoryRouter } from '../../src'
+import { Routes, Route, Outlet, MemoryRouter } from '~'
 
 import { mount } from '@vue/test-utils'
 import { h, defineComponent } from 'vue'
-import { useParams } from '../../src'
+import { useParams } from '~'
+import { describe, it, expect } from 'vitest'
 
 describe('A <Routes>', () => {
   it('renders the first route that matches the URL', () => {
@@ -11,7 +12,9 @@ describe('A <Routes>', () => {
     const wrapper = mount({
       render: () =>
         h(MemoryRouter, () =>
-          h(Routes, () => h(Route, { path: '/', element: h(Home) })),
+          h(Routes, {
+            routes: [{ path: '/', element: Home }],
+          }),
         ),
     })
 
@@ -25,44 +28,12 @@ describe('A <Routes>', () => {
     const wrapper = mount({
       render: () =>
         h(MemoryRouter, { initialEntries: ['/home'] }, () =>
-          h(Routes, () => [
-            h(Route, { path: '/home', element: h(Home) }),
-            h(Route, { path: '/home', element: h(Dashboard) }),
-          ]),
-        ),
-    })
-
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('renders with non-element children', () => {
-    const Home = () => h('h1', 'Home')
-
-    const wrapper = mount({
-      render: () =>
-        h(MemoryRouter, () =>
-          h(Routes, () => [
-            h(Route, { path: '/', element: h(Home) }),
-            false,
-            undefined,
-          ]),
-        ),
-    })
-
-    expect(wrapper.html()).toMatchSnapshot()
-  })
-
-  it('renders with Fragment children', () => {
-    const Home = () => h('h1', 'Home')
-    const Admin = () => h('h1', 'Admin')
-
-    const wrapper = mount({
-      render: () =>
-        h(MemoryRouter, { initialEntries: ['/admin'] }, () =>
-          h(Routes, () => [
-            h(Route, { path: '/', element: h(Home) }),
-            h('template', h(Route, { path: '/admin', element: h(Admin) })),
-          ]),
+          h(Routes, {
+            routes: [
+              { path: '/home', element: Home },
+              { path: '/home', element: Dashboard },
+            ],
+          }),
         ),
     })
 
@@ -82,36 +53,46 @@ describe('<Routes> with a basename', () => {
 
   const Dashboard = () => h('h1', 'Dashboard')
 
-  const userRoute = () =>
-    h(Route, { path: 'users/:userId', element: h(User) }, () => [
-      h(Route, { path: 'dashboard', element: h(Dashboard) }),
-    ])
+  const routes = [
+    {
+      path: 'users/:userId',
+      element: User,
+      children: [{ path: 'dashboard', element: Dashboard }],
+    },
+  ]
 
   it('does not match when the URL pathname does not start with that base', () => {
     const wrapper = mount({
       render: () =>
         h(
           MemoryRouter,
-          { initialEntries: ['/app/users/michael/dashboard'] },
-          () => h(Routes, { basename: '/base' }, userRoute),
+          {
+            basename: '/base',
+            initialEntries: ['/app/users/michael/dashboard'],
+          },
+          () => h(Routes, { routes: routes }),
         ),
     })
 
-    expect(wrapper.html()).toMatchInlineSnapshot(`"<!---->"`)
+    expect(wrapper.html()).toMatchInlineSnapshot(`"<!--v-if-->"`)
   })
 
   it('matches when the URL pathname starts with that base', () => {
-    const wrapper = mount({
-      render: () =>
-        h(
-          MemoryRouter,
-          { initialEntries: ['/app/users/michael/dashboard'] },
-          () => h(Routes, { basename: '/app' }, userRoute),
-        ),
+    const wrapper = mount(MemoryRouter, {
+      props: {
+        initialEntries: ['/app/users/michael/dashboard'],
+        basename: '/app',
+      },
+      slots: {
+        default: () => h(Routes, { routes }),
+      },
     })
 
     expect(wrapper.html()).toMatchInlineSnapshot(
-      `"<div><h1>User: michael</h1><h1>Dashboard</h1></div>"`,
+      `"<div>
+  <h1>User: michael</h1>
+  <h1>Dashboard</h1>
+</div>"`,
     )
   })
 })

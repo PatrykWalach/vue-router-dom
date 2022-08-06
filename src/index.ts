@@ -1,27 +1,24 @@
-export * from './components/index'
+export * from './remix/keys'
+export * from './remix/types'
+export * from './remix/hooks'
+export { default as DataBrowserRouter } from './components/DataBrowserRouter.vue'
+export { default as DataMemoryRouter } from './components/DataMemoryRouter.vue'
+export { default as BrowserRouter } from './components/BrowserRouter.vue'
+export { default as MemoryRouter } from './components/MemoryRouter.vue'
+export { default as Link } from './components/Link.vue'
+export { default as Outlet } from './components/Outlet.vue'
+export { default as Await } from './components/Await.vue'
+export { default as Routes } from './components/Routes.vue'
 
-export { useBlocker } from './hooks/useBlocker'
-export { useHref } from './hooks/useHref'
-// export { useInRouterContext } from './hooks/useInRouterContext'
-export { useLocation } from './hooks/useLocation'
-export { useMatch } from './hooks/useMatch'
-export { useNavigate } from './hooks/useNavigate'
-export { useOutlet } from './hooks/useOutlet'
-export { useParams } from './hooks/useParams'
-export { usePrompt } from './hooks/usePrompt'
-export { useResolvedPath } from './hooks/useResolvedPath'
-export { useRoutes } from './hooks/useRoutes'
-export { useSearchParams } from './hooks/useSearchParams'
+export { useRoutes } from './remix/useRoutes'
 
-export { createRoutesFromArray } from './api/createRoutesFromArray'
-export { createRoutesFromChildren } from './api/createRoutesFromChildren'
-export { generatePath } from './api/generatePath'
-export { matchRoutes } from './api/matchRoutes'
-export { matchPath } from './api/matchPath'
-export { resolvePath } from './api/resolvePath'
+export type { VueRouteObject as RouteObject, Handle } from './remix/types'
 
-export * from './api/install'
-export * from './api/keys'
-export * from './api/types'
-
-export * from 'history'
+export { defer } from '@remix-run/router'
+export type {
+  LoaderFunction,
+  LoaderFunctionArgs,
+  ActionFunction,
+  ActionFunctionArgs,
+  ShouldRevalidateFunction,
+} from '@remix-run/router'

@@ -1,0 +1,60 @@
+// Vitest Snapshot v1
+
+exports[`route matching > using a route config object > renders the right elements at / 1`] = `"<p>Home</p>"`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses 1`] = `
+"<div>
+  <h1>Courses</h1>
+  <p>All Courses</p>
+</div>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/advanced-vue 1`] = `
+"<p>
+<h1>Welcome to Vue Training</h1>
+<p>Advanced Vue</p>
+</p>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/new 1`] = `
+"<div>
+  <h1>Courses</h1>
+  <p>New Course</p>
+</div>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/not/found 1`] = `
+"<div>
+  <h1>Courses</h1>
+  <p>Course Not Found</p>
+</div>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/routing 1`] = `
+"<div>
+  <h1>Courses</h1>
+  <div>
+    <h2>Course routing</h2>
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/routing/grades 1`] = `
+"<div>
+  <h1>Courses</h1>
+  <div>
+    <h2>Course routing</h2>
+    <p>Course Grades</p>
+  </div>
+</div>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /courses/vue-fundamentals 1`] = `
+"<p>
+<h1>Welcome to Vue Training</h1>
+<p>Vue Fundamentals</p>
+</p>"
+`;
+
+exports[`route matching > using a route config object > renders the right elements at /not-found 1`] = `"<p>Not Found</p>"`;
